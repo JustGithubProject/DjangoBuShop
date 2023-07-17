@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Чат с {{ chat.receiver.username }}{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <h2>Чат с {{ chat.receiver.username }}</h2>
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="message" style="background-color: {% if message.sender == request.user %}rgb(206, 221, 255){% else %}rgb(242, 244, 245){% endif %}">
+            <p><strong>{{ message.sender.username }}</strong>: {{ message.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="input-container">
+        <form method="POST" action="{% url 'send_message' chat.id %}">
+            {% csrf_token %}
+            <input type="text" name="message" placeholder="Введите сообщение" required>
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</div>
+<script>
+    // Получаем контейнер сообщений
+    var messagesContainer = document.querySelector('.messages-container');
+
+    // При отправке сообщения прокручиваем контейнер к последнему сообщению
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Вызываем функцию прокрутки при загрузке страницы и после каждого обновления сообщений
+    window.onload = scrollToBottom;
+    window.addEventListener('DOMContentLoaded', scrollToBottom);
+</script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Ваши сообщения{% endblock %}
+
+{% block content %}
+<div class="chats-199">
+    <div class="css-1382m1k">
+        <a href="{%url 'user_sell' %}">Продаю</a>
+        <a href="{% url 'user_buy' %}">Покупаю</a>
+    </div>
+    <div class="css-1b3tih6">
+        {%if chats%}
+        {% for chat in chats %}
+        <a href="{%url 'chat' chat.id%}">
+            <div class="chat-container-445">
+                <p class="username-765">{{ chat.sender.username }}</p>
+                <p class="last-message-3451">{{ chat.last_message.content|truncatechars:10 }}</p>
+            </div>
+        </a>
+        {% endfor %}
+        {%else%}
+            <p align="center">Сообщений пока нет</p>
+        {%endif%}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.title }}{% endblock %}
+
+{% block content %}
+<style>
+    .phone-number-container {
+        display: none;
+        margin-top: 10px;
+        color: #000;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+</style>
+
+<div class="product-details-container">
+    <h2 class="product-title">{{ product.title }}</h2>
+    <div class="product-image-container">
+        <div class="image-container">
+            <div class="slideshow">
+                {% if product.thumbnail_1 %}
+                    <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                {% endif %}
+                {% if product.thumbnail_2 %}
+                    <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
+                {% endif %}
+                {% if product.thumbnail_3 %}
+                    <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
+                {% endif %}
+            </div>
+            <div class="arrow-container">
+                <button class="prev-arrow">&lt;</button>
+                <button class="next-arrow">&gt;</button>
+            </div>
+        </div>
+    </div>
+    <p class="product-description">{{ product.description }}</p>
+    <p class="product-price">{{ product.price }} UAH</p>
+</div>
+
+{% with product.user as owner %}
+<div class="product-owner-container">
+    <div class="product-owner-left">
+        <h3 class="product-owner-title">СВЯЗАТЬСЯ С ПРОДАВЦОМ</h3>
+        <h3 class="product-owner-title">Продавец: </h3>
+        <h3 class="product-owner-title">
+            <span class="seller-icon"></span>
+            {{ owner.username }}
+        </h3>
+    </div>
+    <div class="product-owner-right">
+        <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link" onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
+        <div id="phone-number" class="phone-number-container">
+            <p>{{ owner.phone_number }}</p>
+        </div>
+    </div>
+    {% if user.is_authenticated and owner.username != user.username %}
+        <a href="{% url 'create_chat' product.slug %}" class="message-link">Написать</a>
+    {% endif %}
+    {% if owner == user and user.is_authenticated %}
+        <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
+    {% endif %}
+</div>
+{% endwith %}
+
+<script>
+    const slideshows = document.querySelectorAll('.slideshow');
+    slideshows.forEach(slideshow => {
+        const images = Array.from(slideshow.querySelectorAll('img'));
+        let currentIndex = 0;
+        const prevArrow = slideshow.parentElement.querySelector('.prev-arrow');
+        const nextArrow = slideshow.parentElement.querySelector('.next-arrow');
+
+        prevArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage();
+        });
+
+        nextArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage();
+        });
+
+        function showImage() {
+            images.forEach((image, index) => {
+                if (index === currentIndex) {
+                    image.style.display = 'block';
+                } else {
+                    image.style.display = 'none';
+                }
+            });
+        }
+
+        showImage();
+    });
+
+    function togglePhoneNumber(phoneNumber) {
+        var phoneNumberContainer = document.getElementById("phone-number");
+        if (phoneNumberContainer.style.display === "block") {
+            phoneNumberContainer.style.display = "none";
+        } else {
+            phoneNumberContainer.style.display = "block";
+        }
+    }
+</script>
+
+{% endblock %}

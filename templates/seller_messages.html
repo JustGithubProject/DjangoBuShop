@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Все сообщения{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="chat-list">
+            {% for chat in chats %}
+                <div class="chat-item">
+                    <a href="{% url 'chat' chat.id %}" class="chat-link">
+                        <div class="username">
+                            {{ chat.sender.username }}
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
