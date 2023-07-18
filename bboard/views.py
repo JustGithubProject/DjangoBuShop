@@ -155,19 +155,21 @@ def user_sell(request):
     return render(request, "sell.html", {"chats": chats})
 
 
+@login_required
 def create_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
             product = form.save(commit=False)
             product.user = request.user
-            title = form.cleaned_data.get("title")
-            slug = str(slugify(title))
-            print(slug)
-            if not product.slug:
-                product.slug = slug
+            # title = form.cleaned_data.get("title")
+            slug = slugify(product.title)
+            product.slug = slug
             print(product.slug)
             product.save()
+            return redirect("home")
+        else:
+            print(form.errors)
     else:
         form = ProductForm()
     return render(request, 'create_product.html', {'form': form})

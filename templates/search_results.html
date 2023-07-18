@@ -7,23 +7,72 @@
 <div class="product-list">
     <div class="product-row">
         {% for product in products %}
-            <div class="product-box">
-                <div class="product">
-                    <div class="product-image">
-                        <img src="{{ product.thumbnail.url }}" alt="{{ product.title }} thumbnail">
-                    </div>
-                    <div class="product-details">
-                        <h3>{{ product.title }}</h3>
-                        <p>{{ product.description|truncatechars:100 }}</p>
-                        <a href="{% url 'product_detail' product.slug %}">Подробнее</a>
-                        <p>{{ product.price }}UAH</p>
+        <div class="product-box">
+            <div class="product">
+                <div class="product-image">
+                    <div class="image-container">
+                        <div class="slideshow">
+                            {% if product.thumbnail_1 %}
+                            <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                            {% endif %}
+                            {% if product.thumbnail_2 %}
+                            <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
+                            {% endif %}
+                            {% if product.thumbnail_3 %}
+                            <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
+                            {% endif %}
+                        </div>
+                        <div class="arrow-container">
+                            <button class="prev-arrow">&lt;</button>
+                            <button class="next-arrow">&gt;</button>
+                        </div>
                     </div>
                 </div>
+                <div class="product-details">
+                    <h3>{{ product.title }}</h3>
+                    <p>{{ product.description|truncatechars:100 }}</p>
+                    <a href="{% url 'product_detail' product.slug %}">Подробнее</a>
+                    <p>{{ product.price }}UAH</p>
+                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </div>
 {% else %}
-    <p>По вашему запросу "{{ query }}" ничего не найдено.</p>
+<p>По вашему запросу "{{ query }}" ничего не найдено.</p>
 {% endif %}
+
+<script>
+    const slideshows = document.querySelectorAll('.slideshow');
+    slideshows.forEach(slideshow => {
+        const images = slideshow.querySelectorAll('img');
+        let currentIndex = 0;
+        const prevArrow = slideshow.parentElement.querySelector('.prev-arrow');
+        const nextArrow = slideshow.parentElement.querySelector('.next-arrow');
+
+        prevArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage();
+        });
+
+        nextArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage();
+        });
+
+        function showImage() {
+            images.forEach((image, index) => {
+                if (index === currentIndex) {
+                    image.style.display = 'block';
+                } else {
+                    image.style.display = 'none';
+                }
+            });
+        }
+
+        showImage();
+    });
+
+</script>
 {%endblock%}

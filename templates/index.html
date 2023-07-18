@@ -9,7 +9,7 @@
             <select name="category" id="category-dropdown">
                 <option value="">Выберите категорию</option>
                 {% for category in categories %}
-                <option value="{{ category.slug }}">{{ category.name }}</option>
+                <option value="{{ category.slug }}" {% if selected_category_id == category.slug %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
             <button type="submit">Выбрать</button>
@@ -59,22 +59,36 @@
 {% if products.has_other_pages %}
 <div class="pagination">
     {% if products.has_previous %}
+    {% if selected_category_id %}
+    <a href="?category={{ selected_category_id }}&page=1">&laquo; First</a>
+    <a href="?category={{ selected_category_id }}&page={{ products.previous_page_number }}">Previous</a>
+    {% else %}
     <a href="?page=1">&laquo; First</a>
     <a href="?page={{ products.previous_page_number }}">Previous</a>
+    {% endif %}
     {% endif %}
 
     {% for num in products.paginator.page_range %}
     {% if num == products.number %}
     <span class="current-page">{{ num }}</span>
     {% else %}
+    {% if selected_category_id %}
+    <a href="?category={{ selected_category_id }}&page={{ num }}">{{ num }}</a>
+    {% else %}
     <a href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
     {% endif %}
     {% endfor %}
 
     {% if products.has_next %}
-        <a href="?page={{ products.next_page_number }}">Next</a>
-        <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
-    {%endif%}
+    {% if selected_category_id %}
+    <a href="?category={{ selected_category_id }}&page={{ products.next_page_number }}">Next</a>
+    <a href="?category={{ selected_category_id }}&page={{ products.paginator.num_pages }}">Last &raquo;</a>
+    {% else %}
+    <a href="?page={{ products.next_page_number }}">Next</a>
+    <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %}
+    {% endif %}
 </div>
 {% endif %}
 
@@ -110,6 +124,5 @@
 
         showImage();
     });
-
 </script>
 {% endblock %}
