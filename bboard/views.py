@@ -158,7 +158,7 @@ def user_sell(request):
 @login_required
 def create_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.user = request.user
