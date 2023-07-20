@@ -1,0 +1,65 @@
+<!-- create_order.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Create Order{% endblock %}
+
+{% block content %}
+<style>
+    .create-order-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .create-order-form {
+        width: 400px;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 4px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-order-form label {
+        font-weight: bold;
+    }
+
+    .create-order-form input[type="number"],
+    .create-order-form input[type="email"],
+    .create-order-form textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .create-order-form button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .create-order-form button:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<div class="create-order-container">
+    <form class="create-order-form" method="POST">
+        {% csrf_token %}
+        <h2>Create Order</h2>
+        {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

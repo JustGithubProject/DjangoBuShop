@@ -11,6 +11,81 @@
         font-family: Arial, sans-serif;
         font-size: 16px;
     }
+        .buy-button {
+        display: inline-block;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .buy-button:hover {
+        background-color: #45a049;
+    }
+    .product-owner-container {
+    background-color: #f9f9f9;
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+    padding: 20px;
+    margin-left: 100px 0;
+}
+
+    .product-owner-left,
+    .product-owner-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .product-owner-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    .phone-number-link {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .phone-number-link:hover {
+        background-color: #0056b3;
+    }
+
+    .phone-number-container {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .product-owner-container.show-phone .phone-number-container {
+        display: block;
+    }
+
+    .message-link {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        display: block;
+        width: fit-content;
+        margin-top: 10px;
+    }
+
+    .message-link:hover {
+        background-color: #218838;
+    }
+
 </style>
 
 <div class="product-details-container">
@@ -19,13 +94,13 @@
         <div class="image-container">
             <div class="slideshow">
                 {% if product.thumbnail_1 %}
-                    <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
                 {% endif %}
                 {% if product.thumbnail_2 %}
-                    <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
+                <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
                 {% endif %}
                 {% if product.thumbnail_3 %}
-                    <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
+                <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
                 {% endif %}
             </div>
             <div class="arrow-container">
@@ -36,6 +111,9 @@
     </div>
     <p class="product-description">{{ product.description }}</p>
     <p class="product-price">{{ product.price }} UAH</p>
+    {%if product.user.username != user.username%}
+    <a href="{% url 'create_order' product.pk %}" class="buy-button">Купить</a>
+    {%endif%}
 </div>
 
 {% with product.user as owner %}
@@ -49,16 +127,17 @@
         </h3>
     </div>
     <div class="product-owner-right">
-        <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link" onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
+        <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link"
+           onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
         <div id="phone-number" class="phone-number-container">
             <p>{{ owner.phone_number }}</p>
         </div>
     </div>
     {% if user.is_authenticated and owner.username != user.username %}
-        <a href="{% url 'create_chat' product.slug %}" class="message-link">Написать</a>
+    <a href="{% url 'create_chat' product.slug %}" class="message-link">Написать</a>
     {% endif %}
     {% if owner == user and user.is_authenticated %}
-        <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
+    <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
     {% endif %}
 </div>
 {% endwith %}
@@ -102,6 +181,10 @@
             phoneNumberContainer.style.display = "block";
         }
     }
+
+
+
+
 </script>
 
 {% endblock %}

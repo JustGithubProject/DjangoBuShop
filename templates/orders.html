@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои заказы{% endblock %}
+
+{% block content %}
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .order {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 300px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+</style>
+
+<div class="orders-container">
+    {% for order in page_obj %}
+    <div class="order">
+        <p>Имя: {{ order.product.title }}</p>
+        <p>Количество: {{ order.quantity }}</p>
+        <p>Адрес: {{ order.shipping_address }}</p>
+        <p>Создан: {{ order.created_at }}</p>
+        {% if order.status %}
+        <p>Статус: Доставлен</p>
+        {% else %}
+        <p>Статус: В дороге</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <!-- Добавим ссылки на предыдущую и следующую страницы -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        <span class="current-page">{{ page_obj.number }}</span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Предыдущая</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

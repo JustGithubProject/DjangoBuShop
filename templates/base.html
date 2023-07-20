@@ -23,6 +23,9 @@
     <div class="place">
         <a href="{%url 'create_product'%}" style="text-decoration:none">Подать объявление</a>
     </div>
+    <div class="place">
+        <a href="{%url 'orders_of_user'%}" style="text-decoration:none">Ваши заказы</a>
+    </div>
     {%endif%}
     <div class="profile">
         {% if user.is_authenticated %}

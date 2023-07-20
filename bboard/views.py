@@ -7,10 +7,12 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils.text import slugify
+from transliterate import translit
 
-from .forms import ProductForm
+from .forms import ProductForm, OrderForm
 from .models import Chat
 from .models import Message
+from .models import Order
 from .models import Product
 from .models import Category
 
@@ -162,10 +164,12 @@ def create_product(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.user = request.user
-            # title = form.cleaned_data.get("title")
-            slug = slugify(product.title)
+
+            # Generate slug from title and transliterate if necessary
+            title = form.cleaned_data['title']
+            slug = slugify(translit(title, 'ru', reversed=True))
             product.slug = slug
-            print(product.slug)
+
             product.save()
             return redirect("home")
         else:
@@ -173,3 +177,33 @@ def create_product(request):
     else:
         form = ProductForm()
     return render(request, 'create_product.html', {'form': form})
+
+
+@login_required
+def create_order(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    if request.method == "POST" and request.user != product.user:
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.customer_name = request.user
+            order.product = product
+            order.save()
+            return redirect("home")
+        else:
+            print(form.errors)
+    else:
+        form = OrderForm()
+    return render(request, "create_order.html", {"form": form})
+
+
+def orders_of_user(request):
+    orders = Order.objects.filter(customer_name=request.user)
+    paginator = Paginator(orders, 1)  # Показывать по 10 заказов на странице (можешь изменить на свое усмотрение)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "orders.html", {"page_obj": page_obj})
+
+
+
+
