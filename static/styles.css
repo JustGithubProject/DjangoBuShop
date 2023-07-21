@@ -7,6 +7,11 @@ body {
     background-color: #002f34;
     padding: 8px;
     color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,7 +20,9 @@ body {
     border: 1px solid #000;
     box-sizing: border-box;
 }
-
+.content {
+    padding-top: 50px; /* Adjust the value to prevent content from overlapping with the fixed header */
+}
 .header:hover {
     background-color: #ff9800;
     color: #0f0b80;
@@ -285,7 +292,7 @@ body {
     .product-list {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         gap: 20px;
         margin-top: 20px;

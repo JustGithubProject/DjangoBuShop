@@ -31,7 +31,7 @@ def home_view(request):
     else:
         products = Product.objects.order_by('-created_at')[:10]
 
-    paginator = Paginator(products, 1)
+    paginator = Paginator(products, 9)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -68,7 +68,7 @@ def product_detail_view(request, slug):
 # create_chat_view --> обработчик для перехода в чат(если он существует) или создания чата и перехода к нему #
 ##############################################################################################################
 
-
+@login_required
 def create_chat_view(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
@@ -104,7 +104,7 @@ def chat_view(request, chat_id):
 # send_message_view --> отправка сообщений, и редирект для того, чтобы страница обновилась    #
 ###############################################################################################
 
-
+@login_required
 def send_message_view(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
 
@@ -197,6 +197,7 @@ def create_order(request, product_id):
     return render(request, "create_order.html", {"form": form})
 
 
+@login_required
 def orders_of_user(request):
     orders = Order.objects.filter(customer_name=request.user)
     paginator = Paginator(orders, 1)  # Показывать по 10 заказов на странице (можешь изменить на свое усмотрение)

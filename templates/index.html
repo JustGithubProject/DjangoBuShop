@@ -3,6 +3,31 @@
 {% block title %}Домашняя страница{% endblock %}
 
 {% block content %}
+<style>
+    /* Add CSS styles for the product layout */
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* Изменим значение на flex-start */
+        max-width: 1000px; /* Определим максимальную ширину контейнера */
+        margin: 0 auto; /* Центрируем контейнер */
+    }
+    .product-row {
+        display: flex;
+        margin-top:50px;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .product-box {
+        width: 30%;
+        margin-bottom: 20px;
+        /* Изменяем ширину, чтобы вмещалось по три элемента в одной строке */
+        box-sizing: border-box; /* Учитываем padding и border в ширине элемента */
+        padding: 10px; /* Добавим небольшой padding для разделения элементов */
+    }
+
+</style>
 <div class="dropdown-container">
     <div class="dropdown">
         <form action="{% url 'home' %}" method="GET">
@@ -19,8 +44,10 @@
 
 {% if products %}
 <div class="product-list">
+    {% for product in products %}
+    {% if forloop.counter0|divisibleby:3 %}
     <div class="product-row">
-        {% for product in products %}
+   {% endif %}
         <div class="product-box">
             <div class="product">
                 <div class="product-image">
@@ -50,6 +77,10 @@
                 </div>
             </div>
         </div>
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+
         {% empty %}
         <p>Нет продуктов для выбранной категории.</p>
         {% endfor %}
