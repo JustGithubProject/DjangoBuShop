@@ -85,6 +85,11 @@
     .message-link:hover {
         background-color: #218838;
     }
+    .seller-icon{
+         margin-top:10px;
+
+    }
+
 
 </style>
 
@@ -119,18 +124,13 @@
 {% with product.user as owner %}
 <div class="product-owner-container">
     <div class="product-owner-left">
-        <h3 class="product-owner-title">СВЯЗАТЬСЯ С ПРОДАВЦОМ</h3>
-        <h3 class="product-owner-title">Продавец: </h3>
-        <h3 class="product-owner-title">
-            <span class="seller-icon"></span>
-            {{ owner.username }}
-        </h3>
+        <h3 class="product-owner-title">Продавец: {{ owner.username }}</h3>
     </div>
     <div class="product-owner-right">
         <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link"
            onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
         <div id="phone-number" class="phone-number-container">
-            <p>{{ owner.phone_number }}</p>
+            <p style="font-weight: bold;">{{ owner.phone_number }}</p>
         </div>
     </div>
     {% if user.is_authenticated and owner.username != user.username %}

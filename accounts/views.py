@@ -1,6 +1,9 @@
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegistrationForm, LoginForm
+
+from .forms import RegistrationForm, LoginForm, CustomPasswordResetForm
+from .models import User
 
 
 def registration_view(request):
@@ -11,7 +14,7 @@ def registration_view(request):
             return redirect('login')
     else:
         form = RegistrationForm()
-    return render(request, "registration.html", {'form': form})
+    return render(request, "users/registration.html", {'form': form})
 
 
 def login_view(request):
@@ -28,7 +31,7 @@ def login_view(request):
                 form.add_error(None, 'Invalid username or password.')
     else:
         form = LoginForm()
-    return render(request, "login.html", {'form': form})
+    return render(request, "users/login.html", {'form': form})
 
 
 def logout_view(request):
@@ -56,4 +59,19 @@ def profile(request):
 
         return redirect('profile')
 
-    return render(request, 'profile.html', {'user': request.user})
+    return render(request, 'users/profile.html', {'user': request.user})
+
+
+def password_reset(request):
+    if request.method == "POST":
+        form = CustomPasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(
+                request=request,
+                subject_template_name="registration/password_reset_subject.txt",
+                email_template_name='registration/password_reset_email.html',
+            )
+            return redirect('password_reset_done')  # Вернуть редирект, если форма допустима
+    else:
+        form = CustomPasswordResetForm()
+    return render(request, "users/password_reset_form.html", {'form': form})  # Вернуть render вне блока else

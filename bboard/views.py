@@ -35,7 +35,7 @@ def home_view(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'index.html',
+    return render(request, 'products/index.html',
                   {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id})
 
 
@@ -52,7 +52,7 @@ def search_view(request):
         'query': query,
         'products': products,
     }
-    return render(request, 'search_results.html', context)
+    return render(request, 'products/search_results.html', context)
 
 
 ###############################################################################################################
@@ -61,7 +61,7 @@ def search_view(request):
 # @cache_page(300)
 def product_detail_view(request, slug):
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
-    return render(request, 'product_detail.html', {'product': product})
+    return render(request, 'products/product_detail.html', {'product': product})
 
 
 ##############################################################################################################
@@ -97,7 +97,7 @@ def chat_view(request, chat_id):
         return HttpResponse("У вас нет доступа к этому чату.")
     messages = Message.objects.filter(chat=chat).order_by('created_at').select_related('sender')
 
-    return render(request, "chat.html", {"chat": chat, "messages": messages})
+    return render(request, "products/chat.html", {"chat": chat, "messages": messages})
 
 
 ###############################################################################################
@@ -137,7 +137,7 @@ def seller_messages(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
     chats = Chat.objects.filter(receiver=request.user, product=product)
-    return render(request, "seller_messages.html", {"chats": chats, "product": product})
+    return render(request, "products/seller_messages.html", {"chats": chats, "product": product})
 
 
 #######################################################
@@ -146,7 +146,7 @@ def seller_messages(request, slug):
 
 def user_buy(request):
     chats = Chat.objects.filter(sender=request.user).select_related('receiver')
-    return render(request, "buy.html", {"chats": chats})
+    return render(request, "products/buy.html", {"chats": chats})
 
 
 #######################################################
@@ -154,7 +154,7 @@ def user_buy(request):
 #######################################################
 def user_sell(request):
     chats = Chat.objects.filter(receiver=request.user).select_related('sender')
-    return render(request, "sell.html", {"chats": chats})
+    return render(request, "products/sell.html", {"chats": chats})
 
 
 @login_required
@@ -176,7 +176,7 @@ def create_product(request):
             print(form.errors)
     else:
         form = ProductForm()
-    return render(request, 'create_product.html', {'form': form})
+    return render(request, 'products/create_product.html', {'form': form})
 
 
 @login_required
@@ -194,7 +194,7 @@ def create_order(request, product_id):
             print(form.errors)
     else:
         form = OrderForm()
-    return render(request, "create_order.html", {"form": form})
+    return render(request, "products/create_order.html", {"form": form})
 
 
 @login_required
@@ -203,7 +203,7 @@ def orders_of_user(request):
     paginator = Paginator(orders, 1)  # Показывать по 10 заказов на странице (можешь изменить на свое усмотрение)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, "orders.html", {"page_obj": page_obj})
+    return render(request, "products/orders.html", {"page_obj": page_obj})
 
 
 
