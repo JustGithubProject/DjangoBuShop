@@ -130,7 +130,6 @@ body {
 }
 
 
-
 .form-group {
   margin-bottom: 20px;
 }
@@ -146,24 +145,6 @@ body {
   cursor: pointer;
 }
 
-.registration-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: calc(100vh - 100px);
-  color: #ffffff;
-}
-
-.registration-box {
-  width: 400px;
-  padding: 60px;
-  background-color: #0c0d0c;
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
 
   .form-group {
     margin-bottom: 20px;
