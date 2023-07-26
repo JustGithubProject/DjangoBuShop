@@ -1,0 +1,177 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+.product-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius:50px;
+    margin-top:20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.product-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.product-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.slideshow {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.slideshow img {
+    max-width: 100%;
+    height: auto;
+}
+
+.arrow-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+}
+
+.prev-arrow,
+.next-arrow {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+
+.product-description {
+    color: #555;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.buy-button {
+    display: block;
+    width: 25%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    margin-left:290px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
+    background-color: #45a049;
+}
+
+.product-owner-container {
+    border-radius:50px;
+    display: grid;
+    grid-template-columns: 1fr;
+    background-color: #fff;
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.product-owner-left,
+.product-owner-right {
+    text-align: center;
+    padding:5px;
+}
+
+    /* Style for the seller's username */
+.product-owner-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+    /* Style for the "Show Phone Number" link */
+.phone-number-link {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    margin-left: 250px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.phone-number-link:hover {
+    background-color: #0056b3;
+}
+
+    /* Style for the phone number container */
+.phone-number-container {
+    display: none;
+    margin-top: 10px;
+}
+
+.phone-number-container p {
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 250px;
+    color: #333;
+    margin: 0;
+}
+
+    /* Style for the "Message" link */
+.message-link {
+    background-color: #28a745;
+    color: white;
+    width:100px;
+    margin-left: 330px;
+    padding: 15x 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.message-link:hover {
+    background-color: #218838;
+}
+
+/* Style for the seller's icon (if applicable) */
+.seller-icon {
+    margin-top: 10px;
+}

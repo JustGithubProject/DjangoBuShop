@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from .models import User
 
@@ -24,9 +25,12 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'custom-input', 'placeholder': 'Password'}))
 
 
-class CustomPasswordResetForm(PasswordResetForm):
+class CustomPasswordResetEmailForm(PasswordResetForm):
     email = forms.EmailField(label="Email", max_length=254, widget=forms.EmailInput(attrs={'autocomplete': 'email'}))
 
+
+class CustomPasswordResetForm(SetPasswordForm):
+    pass
 
 
 

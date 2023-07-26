@@ -129,22 +129,7 @@ body {
   background-color: #45a049;
 }
 
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Изменено на flex-start */
-  height: calc(100vh - 100px);
-  color: #ffffff;
-}
 
-.login-box {
-  width: 400px;
-  padding: 60px;
-  background-color: #0c0d0c;
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3); /* Серая тень */
-  margin-top: 20px; /* Добавлен отступ сверху */
-}
 
 .form-group {
   margin-bottom: 20px;
@@ -386,49 +371,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.prev-arrow,
-.next-arrow {
-    padding: 5px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: none;
-    border-radius: 50%;
-    color: #333;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.prev-arrow:hover,
-.next-arrow:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-
-
-.product-details-container {
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    margin-top: 20px;
-    background-color: #f9f9f9; /* Добавлен фоновый цвет */
-}
-
-.product-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #333333;
-}
-
-.product-image-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
 }
 
 .product-image {

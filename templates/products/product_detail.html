@@ -1,97 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ product.title }}{% endblock %}
 
+{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'product_detail_styles.css' %}">{% endblock %}
+
 {% block content %}
-<style>
-    .phone-number-container {
-        display: none;
-        margin-top: 10px;
-        color: #000;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-    }
-        .buy-button {
-        display: inline-block;
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .buy-button:hover {
-        background-color: #45a049;
-    }
-    .product-owner-container {
-    background-color: #f9f9f9;
-    border: 1px solid #e2e2e2;
-    border-radius: 5px;
-    padding: 20px;
-    margin-left: 100px 0;
-}
-
-    .product-owner-left,
-    .product-owner-right {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .product-owner-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
-    .phone-number-link {
-        background-color: #007bff;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .phone-number-link:hover {
-        background-color: #0056b3;
-    }
-
-    .phone-number-container {
-        display: none;
-        margin-top: 10px;
-    }
-
-    .product-owner-container.show-phone .phone-number-container {
-        display: block;
-    }
-
-    .message-link {
-        background-color: #28a745;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-        display: block;
-        width: fit-content;
-        margin-top: 10px;
-    }
-
-    .message-link:hover {
-        background-color: #218838;
-    }
-    .seller-icon{
-         margin-top:10px;
-
-    }
-
-
-</style>
 
 <div class="product-details-container">
     <h2 class="product-title">{{ product.title }}</h2>
@@ -116,9 +30,9 @@
     </div>
     <p class="product-description">{{ product.description }}</p>
     <p class="product-price">{{ product.price }} UAH</p>
-    {%if product.user.username != user.username%}
+    {% if product.user.username != user.username %}
     <a href="{% url 'create_order' product.pk %}" class="buy-button">Купить</a>
-    {%endif%}
+    {% endif %}
 </div>
 
 {% with product.user as owner %}
@@ -130,7 +44,7 @@
         <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link"
            onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
         <div id="phone-number" class="phone-number-container">
-            <p style="font-weight: bold;">{{ owner.phone_number }}</p>
+            <p align="center" style="font-weight: bold;">{{ owner.phone_number }}</p>
         </div>
     </div>
     {% if user.is_authenticated and owner.username != user.username %}
@@ -181,10 +95,6 @@
             phoneNumberContainer.style.display = "block";
         }
     }
-
-
-
-
 </script>
 
 {% endblock %}

@@ -1,0 +1,16 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Изменено на flex-start */
+  height: calc(100vh - 100px);
+  color: #ffffff;
+}
+
+.login-box {
+  width: 400px;
+  padding: 60px;
+  background-color: #0c0d0c;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3); /* Серая тень */
+  margin-top: 20px; /* Добавлен отступ сверху */
+}

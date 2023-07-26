@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="icon" href="{%static 'icons8-товары-48.png' %}" type="image/x-icon">
+    <link rel="icon" href="{%static 'icons/icons8-товары-48.png' %}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    {%block styles%}{% endblock %}
 </head>
 <body>
+
 <div class="header">
     <div class="search-form">
          <a href="{% url 'home' %}" class="home-icon" style="text-decoration: none; color: white;">Главная</a>
