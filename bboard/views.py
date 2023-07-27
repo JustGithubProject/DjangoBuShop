@@ -6,9 +6,8 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
-from django.utils.text import slugify
-from transliterate import translit
 
+from .utils import transliterate
 from .forms import ProductForm, OrderForm
 from .models import Chat
 from .models import Message
@@ -167,7 +166,9 @@ def create_product(request):
 
             # Generate slug from title and transliterate if necessary
             title = form.cleaned_data['title']
-            slug = slugify(translit(title, 'ru', reversed=True))
+            print(title)
+            slug = transliterate(title)
+            print(slug)
             product.slug = slug
 
             product.save()
