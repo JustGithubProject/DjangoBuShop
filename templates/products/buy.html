@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Ваши сообщения{% endblock %}
+
+{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'buy_styles.css' %}">{% endblock %}
+
 
 {% block content %}
 <div class="chats-199">

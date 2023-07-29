@@ -207,5 +207,12 @@ def orders_of_user(request):
     return render(request, "products/orders.html", {"page_obj": page_obj})
 
 
+############################################################
+# zoomed_images -> Обработчик для увеличенных изображений  #
+############################################################
+
+def zoomed_images(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'products/zoomed_images.html', {'product': product})
 
 

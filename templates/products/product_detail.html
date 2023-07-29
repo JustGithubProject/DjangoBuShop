@@ -3,7 +3,8 @@
 
 {% block title %}{{ product.title }}{% endblock %}
 
-{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'product_detail_styles.css' %}">{% endblock %}
+{%block styles%}
+<link rel="stylesheet" type="text/css" href="{% static 'product_detail_styles.css' %}">{% endblock %}
 
 {% block content %}
 
@@ -21,6 +22,7 @@
                 {% if product.thumbnail_3 %}
                 <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
                 {% endif %}
+
             </div>
             <div class="arrow-container">
                 <button class="prev-arrow">&lt;</button>
@@ -34,6 +36,7 @@
     <a href="{% url 'create_order' product.pk %}" class="buy-button">Купить</a>
     {% endif %}
 </div>
+
 
 {% with product.user as owner %}
 <div class="product-owner-container">
@@ -55,6 +58,10 @@
     {% endif %}
 </div>
 {% endwith %}
+
+<a href="{% url 'zoomed_images' product.pk %}" class="fullscreen-button">
+    <img src="https://www.olx.ua/app/static/media/full-screen.5555ba1b6.svg" alt="Fullscreen">
+</a>
 
 <script>
     const slideshows = document.querySelectorAll('.slideshow');
@@ -95,6 +102,8 @@
             phoneNumberContainer.style.display = "block";
         }
     }
+
+
 </script>
 
 {% endblock %}

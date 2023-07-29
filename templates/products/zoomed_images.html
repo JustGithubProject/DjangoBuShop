@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Увеличенные изображения - {{ product.title }}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'zoomed_images_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-details-container">
+    <div class="product-image-container">
+        <div class="image-container">
+            <div class="slideshow">
+                {% if product.image_1 %}
+                <img src="{{ product.image_1.url }}" alt="{{ product.title }} image 1" width="300" height="400">
+                {% endif %}
+                {% if product.image_2 %}
+                <img src="{{ product.image_2.url }}" alt="{{ product.title }} image 2" width="300" height="400">
+                {% endif %}
+                {% if product.image_3 %}
+                <img src="{{ product.image_3.url }}" alt="{{ product.title }} image 3" width="300" height="400">
+                {% endif %}
+            </div>
+
+            <div class="arrow-container">
+                <button class="prev-arrow">&lt;</button>
+                <button class="next-arrow">&gt;</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const slideshows = document.querySelectorAll('.slideshow');
+    slideshows.forEach(slideshow => {
+        const images = Array.from(slideshow.querySelectorAll('img'));
+        let currentIndex = 0;
+        const prevArrow = slideshow.parentElement.querySelector('.prev-arrow');
+        const nextArrow = slideshow.parentElement.querySelector('.next-arrow');
+
+        prevArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage();
+        });
+
+        nextArrow.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage();
+        });
+
+        function showImage() {
+            images.forEach((image, index) => {
+                if (index === currentIndex) {
+                    image.style.display = 'block';
+                } else {
+                    image.style.display = 'none';
+                }
+            });
+        }
+
+        showImage();
+
+        // Добавляем обработчик клика для увеличения изображения
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                slideshow.classList.toggle('zoomed'); // Переключаем класс для увеличения изображения
+            });
+        });
+    });
+
+    function togglePhoneNumber(phoneNumber) {
+        var phoneNumberContainer = document.getElementById("phone-number");
+        if (phoneNumberContainer.style.display === "block") {
+            phoneNumberContainer.style.display = "none";
+        } else {
+            phoneNumberContainer.style.display = "block";
+        }
+    }
+
+</script>
+{% endblock %}

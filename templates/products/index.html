@@ -1,33 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Домашняя страница{% endblock %}
 
+{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">{% endblock %}
+
 {% block content %}
-<style>
-    /* Add CSS styles for the product layout */
-    .product-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start; /* Изменим значение на flex-start */
-        max-width: 1000px; /* Определим максимальную ширину контейнера */
-        margin: 0 auto; /* Центрируем контейнер */
-    }
-    .product-row {
-        display: flex;
-        margin-top:50px;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .product-box {
-        width: 30%;
-        margin-bottom: 20px;
-        /* Изменяем ширину, чтобы вмещалось по три элемента в одной строке */
-        box-sizing: border-box; /* Учитываем padding и border в ширине элемента */
-        padding: 10px; /* Добавим небольшой padding для разделения элементов */
-    }
-
-</style>
 <div class="dropdown-container">
     <div class="dropdown">
         <form action="{% url 'home' %}" method="GET">

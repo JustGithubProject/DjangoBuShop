@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Чат с {{ chat.receiver.username }}{% endblock %}
+
+
+{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}">{% endblock %}
 
 {% block content %}
 <div class="chat-container">
     <h2>Чат с {{ chat.receiver.username }}</h2>
-    <div class="messages-container">
+    <div class="messages-container-new">
         {% for message in messages %}
-        <div class="message" style="background-color: {% if message.sender == request.user %}rgb(206, 221, 255){% else %}rgb(242, 244, 245){% endif %}">
+        <div class="message-new" style="background-color: {% if message.sender == request.user %}rgb(206, 221, 255){% else %}rgb(242, 244, 245){% endif %}">
             <p><strong>{{ message.sender.username }}</strong>: {{ message.content }}</p>
         </div>
         {% endfor %}
     </div>
-    <div class="input-container">
+    <div class="input-container-new">
         <form method="POST" action="{% url 'send_message' chat.id %}">
             {% csrf_token %}
             <input type="text" name="message" placeholder="Введите сообщение" required>

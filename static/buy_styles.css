@@ -1,0 +1,80 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Chats Container */
+.chats-199 {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Links */
+.css-1382m1k {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.css-1382m1k a {
+    display: inline-block;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #3498db;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.css-1382m1k a:hover {
+    background-color: #2980b9;
+}
+
+/* Chat List */
+.css-1b3tih6 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+}
+
+/* Chat Item */
+.chat-container-445 {
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.chat-container-445:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Username */
+.username-765 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+/* Last Message */
+.last-message-3451 {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+/* Remove text-decoration for links */
+a {
+    text-decoration: none;
+}

@@ -13,5 +13,6 @@ urlpatterns = [
     path('user_sell', views.user_sell, name="user_sell"),
     path('create/', views.create_product, name='create_product'),
     path("create_order/<int:product_id>/", views.create_order, name="create_order"),
-    path("orders_of_user/", views.orders_of_user, name="orders_of_user")
+    path("orders_of_user/", views.orders_of_user, name="orders_of_user"),
+    path('zoomed_images/<int:pk>/', views.zoomed_images, name='zoomed_images'),
 ]
