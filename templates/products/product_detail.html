@@ -57,11 +57,15 @@
     <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
     {% endif %}
 </div>
+
+
 {% endwith %}
 
 <a href="{% url 'zoomed_images' product.pk %}" class="fullscreen-button">
     <img src="https://www.olx.ua/app/static/media/full-screen.5555ba1b6.svg" alt="Fullscreen">
 </a>
+
+
 
 <script>
     const slideshows = document.querySelectorAll('.slideshow');
@@ -105,5 +109,8 @@
 
 
 </script>
+
+
+
 
 {% endblock %}

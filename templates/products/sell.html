@@ -5,16 +5,20 @@
 {% block content %}
 <div class="chats-199">
     <div class="css-1382m1k">
-        <a href="{%url 'user_sell' %}">Продаю</a>
-        <a href="{% url 'user_buy' %}">Покупаю</a>
+        <a href="{%url 'user_sell' %}" class="{% if temp == 'sell' %}current-page{%endif%}">Продаю</a>
+        <a href="{% url 'user_buy' %}" class="{% if temp == 'buy' %}current-page{%endif%}">Покупаю</a>
     </div>
     <div class="css-1b3tih6">
         {%if chats%}
         {% for chat in chats %}
         <a href="{%url 'chat' chat.id%}">
             <div class="chat-container-445">
-                <p class="username-765">{{ chat.sender.username }}</p>
+                <p class="username-765">{{ chat.sender.username }} - {{chat.product.title}} </p>
                 <p class="last-message-3451">{{ chat.last_message.content|truncatechars:10 }}</p>
+                <form action="{% url 'delete_chat' chat.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Delete chat</button>
+                </form>
             </div>
         </a>
         {% endfor %}

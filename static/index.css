@@ -20,3 +20,79 @@
     box-sizing: border-box; /* Учитываем padding и border в ширине элемента */
     padding: 10px; /* Добавим небольшой padding для разделения элементов */
 }
+
+.footer {
+    text-align: center; /* Центрируем содержимое внутри футера */
+    margin-top: 30px; /* Добавим небольшой отступ сверху для красоты */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center; /* Центрируем содержимое внутри footer-content */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    padding: 10px;
+}
+
+.social-media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.social-media a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.social-media img {
+    width: 30px;
+    height: 30px;
+}
+
+
+#footerc {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+}
+
+#footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#copy {
+  flex: 1;
+  margin: 0;
+}
+
+#copy a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+ul li {
+  margin-left: 20px;
+}
+
+ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}

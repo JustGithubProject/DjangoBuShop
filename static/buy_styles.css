@@ -78,3 +78,14 @@ body {
 a {
     text-decoration: none;
 }
+
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Стили для ссылок с классом "current-page" (текущая страница) */
+a.current-page {
+  color: #00ff80; /* Измените этот цвет на серый или другой цвет по вашему желанию */
+}

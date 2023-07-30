@@ -143,9 +143,11 @@ def seller_messages(request, slug):
 #  user_buy --> чаты, где пользователь что-то покупает#
 #######################################################
 
+
 def user_buy(request):
     chats = Chat.objects.filter(sender=request.user).select_related('receiver')
-    return render(request, "products/buy.html", {"chats": chats})
+    temp = "buy"
+    return render(request, "products/buy.html", {"chats": chats, "temp": temp})
 
 
 #######################################################
@@ -153,7 +155,8 @@ def user_buy(request):
 #######################################################
 def user_sell(request):
     chats = Chat.objects.filter(receiver=request.user).select_related('sender')
-    return render(request, "products/sell.html", {"chats": chats})
+    temp = "sell"
+    return render(request, "products/sell.html", {"chats": chats, "temp": temp})
 
 
 @login_required
@@ -215,4 +218,13 @@ def zoomed_images(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/zoomed_images.html', {'product': product})
 
+
+def delete_chat(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if chat.receiver == request.user or chat.sender == request.user:
+        chat.delete()
+        return redirect("user_sell")
+    else:
+        return HttpResponse("У вас нет прав на удаление этого чата.")
 
