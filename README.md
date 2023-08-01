@@ -14,8 +14,14 @@
 1. Склонируйте данный репозиторий на ваш компьютер и перейдите в папку проекта:
 
 ```
-git clone https://github.com/JustGithubProject/DjangoBuShop.git project
+git clone https://github.com/JustGithubProject/DjangoBuShop.git
+```
+```
 cd project
+```
+```
 docker-compose build
+```
+```
 docker-compose up
 ```
