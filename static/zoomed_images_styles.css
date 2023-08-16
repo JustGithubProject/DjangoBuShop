@@ -24,15 +24,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 90%; /* Limit the maximum width of the zoomed image container */
-    max-height: 90vh; /* Limit the maximum height of the zoomed image container */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle box-shadow to the zoomed image container */
     background-color: #fff; /* White background color for the zoomed image container */
 }
 
 .slideshow.zoomed img {
-    max-height: 90vh; /* Limit the maximum height of the zoomed image to 90% of viewport height */
     max-width: 100%; /* Ensure the image does not exceed the container width */
+    max-height: 100%; /* Ensure the image does not exceed the container height */
     cursor: pointer; /* Add a pointer cursor when hovering over the image */
     transition: transform 0.3s ease; /* Add a smooth transition when zooming in and out */
 }

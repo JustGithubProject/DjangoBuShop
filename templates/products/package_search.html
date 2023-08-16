@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Поиск посылки по номеру декларации{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'package_search.css' %}">
+<style>
+    /* Добавляем стили для подложки */
+
+    /* Стили для анимации */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="background-overlay" id="overlay"></div>
+<div class="search-container" id="search-container">
+    <h2>Информация о посылке</h2>
+    <form id="search-form">
+        <input type="text" id="package-number" name="package_number" placeholder="Введите номер декларации">
+        <button type="submit" id="search-button">Поиск</button>
+    </form>
+</div>
+{% endblock %}
+
+
+

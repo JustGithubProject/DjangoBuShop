@@ -10,3 +10,5 @@ services:
       - .:/app
       # Монтируем базу данных SQLite в контейнер
       - ./db.sqlite3:/app/db.sqlite3
+
+

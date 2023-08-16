@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Часто задаваемые вопросы{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'faq_styles.css' %}">
+<style>
+    /* Дополнительные стили для панели */
+    .answer-panel {
+        display: none;
+        background-color: #f7f7f7;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    .answer-panel.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 align="center">Часто задаваемые вопросы</h1>
+    <ul>
+        {% for faq in faqs %}
+        <li>
+            <strong>{{ faq.question }}</strong>
+            <p>
+                <button class="toggle-answer">Показать ответ</button>
+                <span class="answer-panel">{{ faq.answer }}</span>
+            </p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    // JavaScript для панели
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButtons = document.querySelectorAll('.toggle-answer');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const answerPanel = button.nextElementSibling;
+                answerPanel.classList.toggle('active');
+            });
+        });
+    });
+</script>
+{% endblock %}

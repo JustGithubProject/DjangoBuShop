@@ -18,7 +18,7 @@ class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, db_index=True, max_length=400, verbose_name="URL", blank=True)
+    slug = models.SlugField(unique=True, max_length=400, verbose_name="URL", blank=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image_1 = models.ImageField(upload_to="products", null=True, blank=True)
@@ -30,6 +30,7 @@ class Product(models.Model):
                                  processors=[ResizeToFill(200, 200)],
                                  format='JPEG',
                                  options={'quality': 100})
+
     thumbnail_2 = ImageSpecField(source='image_2',
                                  processors=[ResizeToFill(200, 200)],
                                  format='JPEG',
@@ -45,11 +46,13 @@ class Product(models.Model):
 
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
     customer_name = models.ForeignKey(User, on_delete=models.CASCADE)
-    customer_email = models.EmailField()
-    shipping_address = models.TextField()
-    status = models.BooleanField(default=False)
+    email = models.EmailField()
+    name = models.CharField(max_length=100, null=True)
+    surname = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=100, null=True)
+    department = models.CharField(max_length=600, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -71,8 +74,13 @@ class Chat(models.Model):
 class Message(models.Model):
     chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE, verbose_name='chat_message')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(db_index=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message of {self.sender}"
+
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255)
+    answer = models.TextField()

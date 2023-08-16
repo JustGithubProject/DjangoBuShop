@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+DB_NAME = os.getenv("POSTGRES_DB")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bboard.apps.BboardConfig',
     'accounts.apps.AccountsConfig',
-    'multiupload'
+    'api.apps.ApiConfig',
+    'multiupload',
+    'rest_framework',
+    'corsheaders'
 ]
+
+# settings.py
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -152,6 +167,27 @@ EMAIL_HOST_USER = "OnlineShop85192202@gmail.com"
 EMAIL_HOST_PASSWORD = "cmbqeysibyneoglh"
 
 
+##############################################
+# Additional settings for rest_framework     #
+##############################################
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Подставьте адрес вашего React-приложения
+]
 
+
+##########################################
+#   НОВАЯ ПОЧТА                          #
+##########################################
+
+
+NOVA_POSHTA_API_KEY = "6464fe6f6083efffef033d3c491832c2"
+NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/"

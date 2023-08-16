@@ -1,6 +1,13 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #90caf9, #f48fb1, #ffb74d);
+    background-size: cover; /* Масштабируем фон, чтобы заполнить всю видимую область */
+    background-repeat: no-repeat; /* Запрещаем повторение фона */
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .header {

@@ -8,6 +8,7 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 
+
 # Копируем все содержимое проекта в рабочую директорию образа
 COPY . /app/
 

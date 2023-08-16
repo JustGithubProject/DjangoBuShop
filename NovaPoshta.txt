@@ -1,0 +1,64 @@
+import requests
+import datetime
+
+# Замените 'Ваш_ключ_API_2.0' на ваш ключ API
+API_KEY = 'Ваш_ключ_API_2.0'
+BASE_URL = 'https://api.novaposhta.ua/v2.0/json/'
+
+# Функция для выполнения POST-запросов к API Нова Пошта
+def make_request(method, params=None):
+    data = {
+        'apiKey': API_KEY,
+        'modelName': 'InternetDocument',
+        'calledMethod': method,
+        'methodProperties': params or {}
+    }
+    response = requests.post(BASE_URL, json=data)
+    return response.json()
+
+# Отправитель и получатель
+sender = {
+    'FirstName': 'Имя отправителя',
+    'MiddleName': 'Отчество отправителя',
+    'LastName': 'Фамилия отправителя',
+    'City': 'Белгород-Днестровский',  # Место отправления
+}
+
+recipient = {
+    'FirstName': 'Сидор',
+    'MiddleName': 'Сидорович',
+    'LastName': 'Сиродов',
+    'Phone': '0509998877',
+    'City': 'Киев',
+    'Warehouse': 'Отделение №3: ул. Калачевская, 13 (Старая Дарница)',  # Место доставки
+}
+
+# Данные для создания новой ЕН
+data = {
+    'DateTime': datetime.datetime.now().strftime('%d.%m.%Y'),
+    'ServiceType': 'WarehouseWarehouse',  # Тип доставки
+    'PaymentMethod': 'Cash',  # Тип оплаты
+    'PayerType': 'Recipient',  # Кто платит за доставку
+    'Cost': '500',  # Стоимость вантажа в гривнах
+    'SeatsAmount': '1',  # Количество мест
+    'Description': 'Кастрюля',  # Описание вантажа
+    'CargoType': 'Cargo',  # Тип вантажа
+    'Weight': '10',  # Вес вантажа
+    'VolumeGeneral': '0.5',  # Объем вантажа в кубических метрах
+    'BackwardDeliveryData': [
+        {
+            'PayerType': 'Recipient',  # Кто платит за обратную доставку
+            'CargoType': 'Money',  # Тип обратной доставки
+            'RedeliveryString': '4552',  # Сумма обратной доставки
+        }
+    ]
+}
+
+# Создание новой ЕН
+response = make_request('save', {
+    'NewData': data,
+    'Sender': sender,
+    'Recipient': recipient
+})
+
+print(response)

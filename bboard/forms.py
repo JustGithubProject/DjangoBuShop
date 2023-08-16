@@ -14,4 +14,4 @@ class OrderForm(forms.ModelForm):
     """The Form to create a order"""
     class Meta:
         model = Order
-        fields = ["quantity", "customer_email", "shipping_address"]
+        fields = ["name", "surname", "city", "department", "phone_number", "email"]

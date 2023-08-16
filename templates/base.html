@@ -28,6 +28,9 @@
     <div class="place">
         <a href="{%url 'orders_of_user'%}" style="text-decoration:none">Ваши заказы</a>
     </div>
+    <div class="place">
+        <a href="{%url 'package_search'%}" style="text-decoration:none">Информация о посылке (Новая Почта)</a>
+    </div>
     {%endif%}
     <div class="profile">
         {% if user.is_authenticated %}

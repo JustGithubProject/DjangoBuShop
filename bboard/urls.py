@@ -16,4 +16,8 @@ urlpatterns = [
     path("orders_of_user/", views.orders_of_user, name="orders_of_user"),
     path('zoomed_images/<int:pk>/', views.zoomed_images, name='zoomed_images'),
     path('delete_chat/<int:chat_id>/', views.delete_chat, name='delete_chat'),
+    path('faq/', views.faq_list, name='faq_list'),
+    path('get-document-tracking/<str:tracking_number>/', views.get_document_tracking, name='get_document_tracking'),
+    path("package_search/", views.package_search, name="package_search"),
+#    path("get_department/", views.get_department, name="get_department")
 ]

@@ -11,14 +11,8 @@
     {% for order in page_obj %}
     <div class="order">
         <p>Имя: {{ order.product.title }}</p>
-        <p>Количество: {{ order.quantity }}</p>
-        <p>Адрес: {{ order.shipping_address }}</p>
+        <p>Адрес: {{ order.city }}</p>
         <p>Создан: {{ order.created_at }}</p>
-        {% if order.status %}
-        <p>Статус: Доставлен</p>
-        {% else %}
-        <p>Статус: В дороге</p>
-        {% endif %}
     </div>
     {% endfor %}
 

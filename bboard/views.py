@@ -1,5 +1,8 @@
+import requests
+from PIL import Image
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -7,13 +10,17 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
 
+from project import settings
 from .utils import transliterate
-from .forms import ProductForm, OrderForm
+from .utils import decode_status
+from .forms import ProductForm
+from .forms import OrderForm
 from .models import Chat
 from .models import Message
 from .models import Order
 from .models import Product
 from .models import Category
+from .models import FAQ
 
 
 ################################################################
@@ -186,6 +193,7 @@ def create_product(request):
 @login_required
 def create_order(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
+
     if request.method == "POST" and request.user != product.user:
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -198,6 +206,7 @@ def create_order(request, product_id):
             print(form.errors)
     else:
         form = OrderForm()
+
     return render(request, "products/create_order.html", {"form": form})
 
 
@@ -216,7 +225,30 @@ def orders_of_user(request):
 
 def zoomed_images(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'products/zoomed_images.html', {'product': product})
+
+    # Определяем размеры увеличенных изображений
+    width = 800
+    height = 600
+
+    # Открываем изображение 1
+    image_1 = Image.open(product.image_1)
+    image_1 = image_1.resize((width, height), Image.ANTIALIAS)
+
+    # Открываем изображение 2
+    image_2 = Image.open(product.image_2)
+    image_2 = image_2.resize((width, height), Image.ANTIALIAS)
+
+    # Открываем изображение 3
+    image_3 = Image.open(product.image_3)
+    image_3 = image_3.resize((width, height), Image.ANTIALIAS)
+
+    # Возвращаем увеличенные изображения в шаблон
+    return render(request, 'products/zoomed_images.html', {
+        'product': product,
+        'image_1': image_1,
+        'image_2': image_2,
+        'image_3': image_3,
+    })
 
 
 def delete_chat(request, chat_id):
@@ -227,4 +259,91 @@ def delete_chat(request, chat_id):
         return redirect("user_sell")
     else:
         return HttpResponse("У вас нет прав на удаление этого чата.")
+
+
+########################################
+# Часто задаваемые вопросы -> faq_list#
+#######################################
+
+
+def faq_list(request):
+    faqs = FAQ.objects.all()
+    return render(request, 'products/faq_list.html', {'faqs': faqs})
+
+
+###############################################
+# Новая Почта
+###############################################
+
+
+def get_document_tracking(request, tracking_number):
+    api_url = f"{settings.NOVA_POSHTA_API_URL}"
+    payload = {
+        "apiKey": settings.NOVA_POSHTA_API_KEY,
+        "modelName": "TrackingDocument",
+        "calledMethod": "getStatusDocuments",
+        "methodProperties": {
+            "Documents": [
+                {"DocumentNumber": tracking_number}
+            ]
+        }
+    }
+
+    response = requests.post(api_url, json=payload)
+    data = response.json()
+    ####################################
+    # Получение данных из json
+    weight = data["data"][0]["DocumentWeight"]
+    cost_of_delivery = data["data"][0]["DocumentCost"]
+    status_code = data["data"][0]["StatusCode"]
+    status_code_decoding = decode_status[str(status_code)]
+    number_squad = data["data"][0]["WarehouseRecipientNumber"]
+    city_sender = data["data"][0]["CitySender"]
+    decoded_city_sender = city_sender.encode().decode()
+    city_recipient = data["data"][0]["CityRecipient"]
+    decoded_city_recipient = city_recipient.encode().decode()
+    ######################################
+
+    context = {
+        "weight": weight,
+        "cost_of_delivery": cost_of_delivery,
+        "status_code_decoding": status_code_decoding,
+        "number_squad": number_squad,
+        "decoded_city_sender": decoded_city_sender,
+        "decoded_city_recipient": decoded_city_recipient
+    }
+
+    return render(request, "products/get_document_tracking.html", context=context)
+
+
+def package_search(request):
+    declaration = request.GET.get("package_number")
+    if declaration:
+        return redirect('get_document_tracking', declaration)
+    return render(request, "products/package_search.html", {"declaration": declaration})
+
+
+# def get_department(request):
+#     api_url = f"{settings.NOVA_POSHTA_API_URL}"
+#
+#     payload = {
+#         "apiKey": f"{settings.NOVA_POSHTA_API_KEY}",
+#         "modelName": "Address",
+#         "calledMethod": "getWarehouses",
+#         "methodProperties": {
+#             "CityName": "Дніпро",
+#             "CityRef": "",
+#             "Page": "1",
+#             "Limit": "50",
+#             "Language": "UA",
+#             "TypeOfWarehouseRef": "",
+#             "WarehouseId": ""
+#         }
+#     }
+#
+#     response = requests.post(api_url, json=payload)
+#     data = response.json()
+#     for i in range(50):
+#         print(f"{data['data'][i]['SiteKey']}----{data['data'][i]['Description']}")
+
 

@@ -12,8 +12,13 @@ body {
     margin: 20px auto;
     padding: 20px;
     border-radius: 15px;
-    background-color: #f9f9f9;
+    background-color: #fff; /* Используем цветовой фон, добавленный на предыдущей странице */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease; /* Добавляем анимацию при наведении */
+}
+
+.product-details-container:hover {
+    transform: translateY(-5px); /* Поднимаем блок немного при наведении */
 }
 
 .product-title {
