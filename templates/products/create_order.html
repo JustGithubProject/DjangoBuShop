@@ -6,6 +6,7 @@
 {% block content %}
 <style>
     .create-order-container {
+
         display: flex;
         justify-content: center;
         align-items: center;
@@ -47,6 +48,11 @@
     .create-order-form button:hover {
         background-color: #45a049;
     }
+    .create-order-form #departmentSelect {
+        width: 60%; /* Занимает всю доступную ширину */
+        height: 50px; /* Задает фиксированную высоту */
+        overflow-y: auto; /* Добавление вертикальной прокрутки при необходимости */
+    }
 </style>
 
 <div class="create-order-container">
@@ -58,7 +64,7 @@
         <input type="text" name="{{ form.surname.name }}" placeholder="Фамилия">
         <input type="text" name="{{ form.city.name }}" id="cityInput" placeholder="Населенный пункт">
 
-        <select name="{{ form.department.name }}" id="departmentSelect">
+        <select name="{{ form.department.name }}" id="departmentSelect" class="department-select">
             <option value="" selected disabled>Выберите отделение</option>
         </select>
         <input type="hidden" name="{{ form.department.name }}" id="selectedDepartment" value="">

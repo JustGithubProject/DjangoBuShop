@@ -6,18 +6,26 @@
 {%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">{% endblock %}
 
 {% block content %}
-
 <div class="orders-container">
+    {% if page_obj %}
     {% for order in page_obj %}
     <div class="order">
         <p>Имя: {{ order.product.title }}</p>
-        <p>Адрес: {{ order.city }}</p>
+        <p>Откуда: {{ order.product.user.city }}</p>
+        <p>Куда: {{ order.city }}</p>
+        <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
+        <p>Номер Покупателя: {{ order.phone_number }}</p>
+        {% if order.product.user.phone_number %}
+        <p>Номер продавца: {{ order.product.user.phone_number }}</p>
+        {% endif %}
+        <p>Продавец: {{ order.product.user.username }}</p>
+        <p>Отделение: {{ order.department }}</p>
         <p>Создан: {{ order.created_at }}</p>
     </div>
     {% endfor %}
+    {% endif %}
 
-    <!-- Добавим ссылки на предыдущую и следующую страницы -->
-
+    {% if page_obj.has_previous or page_obj.has_next %}
     <div class="pagination">
         {% if page_obj.has_previous %}
         <a href="?page=1">Первая</a>
@@ -28,8 +36,9 @@
 
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Предыдущая</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
         {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endblock %}
