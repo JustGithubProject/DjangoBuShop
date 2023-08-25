@@ -193,6 +193,12 @@
                                     <p>
                                         {{ review.content }}
                                     </p>
+                                    {% if user.is_superuser %}
+                                    <form action="{% url 'delete_review' review.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit">Удалить</button>
+                                     </form>
+                                    {%endif%}
                                 </div>
                             </div>
                         </div>

@@ -46,6 +46,25 @@ def home_view(request):
 
     return render(request, "products/new/index.html", {"products": products, "form": form, "reviews": reviews})
 
+# def delete_chat(request, chat_id):
+#     chat = get_object_or_404(Chat, id=chat_id)
+#
+#     if chat.receiver == request.user or chat.sender == request.user:
+#         chat.delete()
+#         return redirect("user_sell")
+#     else:
+#         return HttpResponse("У вас нет прав на удаление этого чата.")
+
+
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    if request.user.is_superuser:
+        review.delete()
+        return redirect("home")
+    else:
+        return HttpResponse("У вас нет прав на удаление этого комментария")
+
 
 ################################################################
 # search_view --> Поле поиска                                  #
