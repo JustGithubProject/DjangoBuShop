@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'products/new/base.html' %}
 {% load static %}
 {% block title %}Ваши сообщения{% endblock %}
 {%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'buy_styles.css' %}">{% endblock %}
@@ -17,7 +17,7 @@
                 <p class="last-message-3451">{{ chat.last_message.content|truncatechars:10 }}</p>
                 <form action="{% url 'delete_chat' chat.id %}" method="POST">
                     {% csrf_token %}
-                    <button type="submit">Delete chat</button>
+                    <button type="submit">Удалить чат</button>
                 </form>
             </div>
         </a>

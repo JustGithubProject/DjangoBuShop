@@ -27,16 +27,16 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     thumbnail_1 = ImageSpecField(source='image_1',
-                                 processors=[ResizeToFill(200, 200)],
+                                 processors=[ResizeToFill(500, 500)],
                                  format='JPEG',
                                  options={'quality': 100})
 
     thumbnail_2 = ImageSpecField(source='image_2',
-                                 processors=[ResizeToFill(200, 200)],
+                                 processors=[ResizeToFill(500, 500)],
                                  format='JPEG',
                                  options={'quality': 100})
     thumbnail_3 = ImageSpecField(source='image_3',
-                                 processors=[ResizeToFill(200, 200)],
+                                 processors=[ResizeToFill(500, 500)],
                                  format='JPEG',
                                  options={'quality': 100})
 
@@ -81,6 +81,10 @@ class Message(models.Model):
         return f"Message of {self.sender}"
 
 
-class FAQ(models.Model):
-    question = models.CharField(max_length=255)
-    answer = models.TextField()
+class Review(models.Model):
+    reviewer_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Пользователь - {self.reviewer_name} оставил комментарий"

@@ -1,36 +1,44 @@
 <!-- create_order.html -->
-{% extends 'base.html' %}
+{% extends 'products/new/base.html' %}
 
 {% block title %}Create Order{% endblock %}
 
 {% block content %}
 <style>
     .create-order-container {
-
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
+        background-color: #f0f2f5;
     }
 
     .create-order-form {
         width: 400px;
-        padding: 50px;
-        background-color: #f2f2f2;
+        padding: 30px;
+        background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .create-order-form label {
-        font-weight: bold;
+    .create-order-form h2 {
+        margin-bottom: 20px;
     }
 
+    .create-order-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .create-order-form input[type="text"],
     .create-order-form input[type="number"],
     .create-order-form input[type="email"],
-    .create-order-form textarea {
+    .create-order-form textarea,
+    .create-order-form select {
         width: 100%;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
@@ -43,15 +51,11 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        transition: background-color 0.2s ease;
     }
 
     .create-order-form button:hover {
         background-color: #45a049;
-    }
-    .create-order-form #departmentSelect {
-        width: 60%; /* Занимает всю доступную ширину */
-        height: 50px; /* Задает фиксированную высоту */
-        overflow-y: auto; /* Добавление вертикальной прокрутки при необходимости */
     }
 </style>
 

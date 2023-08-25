@@ -7,7 +7,7 @@ from bboard.models import Product
 from bboard.models import Order
 from bboard.models import Chat
 from bboard.models import Message
-from bboard.models import FAQ
+
 
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -51,8 +51,5 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class FAQViewsSet(viewsets.ModelViewSet):
-    queryset = FAQ.objects.all()
-    serializer_class = serializers.FAQSerializer
-    permission_classes = [permissions.AllowAny]
+
 

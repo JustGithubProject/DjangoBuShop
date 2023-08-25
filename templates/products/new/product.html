@@ -1,0 +1,110 @@
+{% extends 'products/new/base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<!-- jQery -->
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<!-- popper js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous">
+</script>
+<!-- bootstrap js -->
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<!-- custom js -->
+<script type="text/javascript" src="js/custom.js"></script>
+<!-- Google Map -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+</script>
+
+<section class="product_section ">
+    <div class="container">
+        <div class="product_heading">
+            <h2>
+                Последние добавленные
+            </h2>
+        </div>
+        <div class="product_container">
+            {% for product in products %}
+            <div class="box">
+                <div class="box-content">
+                    <div class="img-box">
+                        <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                    </div>
+                    <div class="detail-box">
+                        <div class="text">
+                            <h6>
+                                <p>{{ product.title|truncatechars:25 }}</p>
+                            </h6>
+                            <h5>
+                                {{ product.price }}<span>UAH</span>
+                            </h5>
+                        </div>
+                        <div class="product-details">
+                            <a href="{% url 'product_detail' product.slug %}">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="pagination">
+    <ul class="pagination-list">
+        {% if products.has_previous %}
+        <li class="pagination-item">
+            {% if selected_category_id %}
+            <a href="?category={{ selected_category_id }}&page=1">&laquo; First</a>
+            {% else %}
+            <a href="?page=1">&laquo; First</a>
+            {% endif %}
+        </li>
+        <li class="pagination-item">
+            {% if selected_category_id %}
+            <a href="?category={{ selected_category_id }}&page={{ products.previous_page_number }}">Previous</a>
+            {% else %}
+            <a href="?page={{ products.previous_page_number }}">Previous</a>
+            {% endif %}
+        </li>
+        {% endif %}
+
+        {% for num in products.paginator.page_range %}
+        <li class="pagination-item {% if num == products.number %}active{% endif %}">
+            {% if selected_category_id %}
+            <a href="?category={{ selected_category_id }}&page={{ num }}">{{ num }}</a>
+            {% else %}
+            <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li class="pagination-item">
+            {% if selected_category_id %}
+            <a href="?category={{ selected_category_id }}&page={{ products.next_page_number }}">Next</a>
+            {% else %}
+            <a href="?page={{ products.next_page_number }}">Next</a>
+            {% endif %}
+        </li>
+        <li class="pagination-item">
+            {% if selected_category_id %}
+            <a href="?category={{ selected_category_id }}&page={{ products.paginator.num_pages }}">Last &raquo;</a>
+            {% else %}
+            <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+</section>
+
+
+        <!-- end product section -->
+
+        <!-- info section -->
+{% include 'products/new/footer.html' %}
+
+{% endblock %}

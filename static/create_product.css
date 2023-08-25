@@ -6,13 +6,16 @@ body {
 }
 
 .product-form {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 50%;
+  margin: 0 auto; /* Центрирование по горизонтали */
   padding: 20px;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+
+
+
 
 .form-group-cr {
   margin-bottom: 20px;
@@ -28,13 +31,14 @@ body {
 .form-group-cr textarea,
 .form-group-cr select,
 .form-group-cr input[type="file"] {
-  width: 100%;
+  width: 100%; /* Ширина полей теперь будет 100% от максимальной ширины формы */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  box-sizing: border-box; /* Ensure padding and border do not add to the width */
+  box-sizing: border-box;
 }
+
 
 .form-group-cr select {
   appearance: none;

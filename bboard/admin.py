@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, Order, Chat, Message, FAQ
+from .models import Product, Category, Order, Chat, Message, Review
 
 
 @admin.register(Product)
@@ -26,9 +26,8 @@ class ChatAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     pass
 
-
-@admin.register(FAQ)
-class FAQAdmin(admin.ModelAdmin):
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
     pass
 
 

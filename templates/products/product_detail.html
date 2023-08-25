@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'products/new/base.html' %}
 {% load static %}
 
 {% block title %}{{ product.title }}{% endblock %}
@@ -12,18 +12,20 @@
     <h2 class="product-title">{{ product.title }}</h2>
     <div class="product-image-container">
         <div class="image-container">
-            <div class="slideshow">
-                {% if product.thumbnail_1 %}
-                <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
-                {% endif %}
-                {% if product.thumbnail_2 %}
-                <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
-                {% endif %}
-                {% if product.thumbnail_3 %}
-                <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
-                {% endif %}
 
-            </div>
+                <div class="slideshow">
+                    {% if product.thumbnail_1 %}
+                    <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                    {% endif %}
+                    {% if product.thumbnail_2 %}
+                    <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
+                    {% endif %}
+                    {% if product.thumbnail_3 %}
+                    <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
+                    {% endif %}
+
+                </div>
+
             <div class="arrow-container">
                 <button class="prev-arrow">&lt;</button>
                 <button class="next-arrow">&gt;</button>
@@ -35,35 +37,32 @@
     {% if product.user.username != user.username %}
     <a href="{% url 'create_order' product.pk %}" class="buy-button">Купить</a>
     {% endif %}
-</div>
 
-
-{% with product.user as owner %}
-<div class="product-owner-container">
-    <div class="product-owner-left">
-        <h3 class="product-owner-title">Продавец: {{ owner.username }}</h3>
-    </div>
-    <div class="product-owner-right">
-        <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link"
-           onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
-        <div id="phone-number" class="phone-number-container">
-            <p align="center" style="font-weight: bold;">{{ owner.phone_number }}</p>
+    {% with product.user as owner %}
+    <div class="product-owner-container">
+        <div class="product-owner-left">
+            <h3 class="product-owner-title">Продавец: {{ owner.username }}</h3>
         </div>
+        <div class="product-owner-right">
+            <a href="javascript:void(0);" style="text-decoration:none; color: white" class="phone-number-link"
+               onclick="togglePhoneNumber('{{ owner.phone_number }}')">ПОКАЗАТЬ НОМЕР ТЕЛЕФОНА</a>
+            <div id="phone-number" class="phone-number-container">
+                <p align="center" style="font-weight: bold;">{{ owner.phone_number }}</p>
+            </div>
+        </div>
+        {% if user.is_authenticated and owner.username != user.username %}
+        <a href="{% url 'create_chat' product.slug %}" class="message-link">Написать</a>
+        {% endif %}
+        {% if owner == user and user.is_authenticated %}
+        <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
+        {% endif %}
     </div>
-    {% if user.is_authenticated and owner.username != user.username %}
-    <a href="{% url 'create_chat' product.slug %}" class="message-link">Написать</a>
-    {% endif %}
-    {% if owner == user and user.is_authenticated %}
-    <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
-    {% endif %}
+
+
+    {% endwith %}
 </div>
 
 
-{% endwith %}
-
-<a href="{% url 'zoomed_images' product.pk %}" class="fullscreen-button">
-    <img src="https://www.olx.ua/app/static/media/full-screen.5555ba1b6.svg" alt="Fullscreen">
-</a>
 
 
 
@@ -108,9 +107,9 @@
     }
 
 
+
+
 </script>
-
-
 
 
 {% endblock %}

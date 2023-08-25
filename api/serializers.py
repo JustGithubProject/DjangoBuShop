@@ -4,7 +4,6 @@ from bboard.models import Product
 from bboard.models import Order
 from bboard.models import Chat
 from bboard.models import Message
-from bboard.models import FAQ
 from rest_framework import serializers
 
 
@@ -44,10 +43,6 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class FAQSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FAQ
-        fields = "__all__"
 
 
 

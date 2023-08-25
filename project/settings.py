@@ -48,7 +48,12 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'multiupload',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 # settings.py
@@ -135,6 +140,28 @@ STATICFILES_DIRS = [
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '799455162174-3qrcal681krq3ufne08m74ntk3027uqi.apps.googleusercontent.com',
+            'secret': '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',
+            'key': '',
+        }
+    }
+}
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = "/"
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

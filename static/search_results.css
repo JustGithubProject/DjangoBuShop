@@ -1,0 +1,123 @@
+/* Common styles */
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f0f2f5; /* Add a subtle background color */
+}
+
+/* Styles for the product list */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 20px; /* Add some padding for breathing space */
+}
+
+.product-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    height: 100%; /* Make the product box square */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+
+.product-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-image {
+    position: relative;
+    margin-bottom: 10px;
+    overflow: hidden; /* Hide overflowing images */
+    border-radius: 8px;
+}
+
+.slideshow {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the image */
+    height: 100%; /* Make the slideshow container square */
+}
+
+.slideshow img {
+    max-width: 100%;
+    max-height: 100%; /* Make the image fill the square container */
+    object-fit: contain; /* Maintain aspect ratio and fit inside the container */
+}
+
+.arrow-container {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prev-arrow,
+.next-arrow {
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+    font-size: 18px;
+    border-radius: 50%;
+    margin: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.prev-arrow:hover,
+.next-arrow:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+/* Styles for product details */
+.product-details h3 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #333; /* Darken the title color */
+}
+
+.product-details p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #555; /* Slightly darker text color */
+}
+
+.product-details a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.product-details a:hover {
+    color: #0056b3; /* Darken the link color on hover */
+}
+
+.product-details p:last-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e74c3c; /* Red price color */
+}

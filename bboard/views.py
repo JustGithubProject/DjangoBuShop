@@ -2,7 +2,6 @@ import requests
 from PIL import Image
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -11,6 +10,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 
 from project import settings
+from .forms import ReviewForm
+from .models import Review
 from .utils import transliterate
 from .utils import decode_status
 from .forms import ProductForm
@@ -20,15 +21,57 @@ from .models import Message
 from .models import Order
 from .models import Product
 from .models import Category
-from .models import FAQ
 
 
 ################################################################
-# home_view --> Главная страница с пагинацией                  #
+# home_view --> Главная страница                               #
 ################################################################
 
-# @cache_page(300)
+
 def home_view(request):
+    products = Product.objects.order_by('-created_at')[:5]
+    reviews = Review.objects.order_by("date_posted")[:10]
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.reviewer_name = request.user
+            review.save()
+            return redirect("home")
+        else:
+            print(form.errors)
+    else:
+        form = ReviewForm()
+
+    return render(request, "products/new/index.html", {"products": products, "form": form, "reviews": reviews})
+
+
+################################################################
+# search_view --> Поле поиска                                  #
+################################################################
+
+
+def search_view(request):
+    query = request.GET.get("query")
+
+    if not query:
+        products = None
+    else:
+        products = Product.objects.filter(title__icontains=query)
+    context = {
+        'query': query,
+        'products': products,
+    }
+    return render(request, 'products/search_results.html', context)
+
+
+
+#############################################
+#    get_products                           #
+#############################################
+
+def get_products(request):
     categories = Category.objects.all()
     selected_category_id = request.GET.get('category')
 
@@ -41,24 +84,8 @@ def home_view(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'products/index.html',
+    return render(request, 'products/new/product.html',
                   {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id})
-
-
-################################################################
-# search_view --> Поле поиска                                  #
-################################################################
-
-
-def search_view(request):
-    query = request.GET.get("query")
-
-    products = Product.objects.filter(title__icontains=query)
-    context = {
-        'query': query,
-        'products': products,
-    }
-    return render(request, 'products/search_results.html', context)
 
 
 ###############################################################################################################
@@ -138,7 +165,7 @@ def send_message_view(request, chat_id):
 #    seller_messages --> продавец может посмотреть тех, кто оправлял ему сообщения #
 ####################################################################################
 
-
+@login_required
 def seller_messages(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
@@ -150,7 +177,7 @@ def seller_messages(request, slug):
 #  user_buy --> чаты, где пользователь что-то покупает#
 #######################################################
 
-
+@login_required
 def user_buy(request):
     chats = Chat.objects.filter(sender=request.user).select_related('receiver')
     temp = "buy"
@@ -160,6 +187,7 @@ def user_buy(request):
 #######################################################
 #  user_sell --> чаты, где пользователь что-то продает#
 #######################################################
+@login_required
 def user_sell(request):
     chats = Chat.objects.filter(receiver=request.user).select_related('sender')
     temp = "sell"
@@ -208,6 +236,10 @@ def create_order(request, product_id):
         form = OrderForm()
 
     return render(request, "products/create_order.html", {"form": form})
+
+
+
+
 
 
 @login_required
@@ -261,22 +293,13 @@ def delete_chat(request, chat_id):
         return HttpResponse("У вас нет прав на удаление этого чата.")
 
 
-########################################
-# Часто задаваемые вопросы -> faq_list#
-#######################################
-
-
-def faq_list(request):
-    faqs = FAQ.objects.all()
-    return render(request, 'products/faq_list.html', {'faqs': faqs})
-
-
 ###############################################
 # Новая Почта
 ###############################################
 
 
 def get_document_tracking(request, tracking_number):
+    """Информация о посылке по накладной"""
     api_url = f"{settings.NOVA_POSHTA_API_URL}"
     payload = {
         "apiKey": settings.NOVA_POSHTA_API_KEY,
@@ -323,27 +346,37 @@ def package_search(request):
     return render(request, "products/package_search.html", {"declaration": declaration})
 
 
-# def get_department(request):
+# def create_express_invoice_for_product(request):
 #     api_url = f"{settings.NOVA_POSHTA_API_URL}"
-#
 #     payload = {
-#         "apiKey": f"{settings.NOVA_POSHTA_API_KEY}",
-#         "modelName": "Address",
-#         "calledMethod": "getWarehouses",
+#         "apiKey": settings.NOVA_POSHTA_API_KEY,
+#         "modelName": "InternetDocument",
+#         "calledMethod": "save",
 #         "methodProperties": {
-#             "CityName": "Дніпро",
-#             "CityRef": "",
-#             "Page": "1",
-#             "Limit": "50",
-#             "Language": "UA",
-#             "TypeOfWarehouseRef": "",
-#             "WarehouseId": ""
+#             "SenderWarehouseIndex": "101/102",
+#             "RecipientWarehouseIndex": "101/102",
+#             "PayerType": "ThirdPerson",
+#             "PaymentMethod": "NonCash",
+#             "DateTime": "дд.мм.рррр",
+#             "CargoType": "Cargo",
+#             "VolumeGeneral": "0.45",
+#             "Weight": "0.5",
+#             "ServiceType": "DoorsWarehouse",
+#             "SeatsAmount": "2",
+#             "Description": "Додатковий опис відправлення",
+#             "Cost": "15000",
+#             "CitySender": "00000000-0000-0000-0000-000000000000",
+#             "Sender": "00000000-0000-0000-0000-000000000000",
+#             "SenderAddress": "00000000-0000-0000-0000-000000000000",
+#             "ContactSender": "00000000-0000-0000-0000-000000000000",
+#             "SendersPhone": "380660000000",
+#             "CityRecipient": "00000000-0000-0000-0000-000000000000",
+#             "Recipient": "00000000-0000-0000-0000-000000000000",
+#             "RecipientAddress": "00000000-0000-0000-0000-000000000000",
+#             "ContactRecipient": "00000000-0000-0000-0000-000000000000",
+#             "RecipientsPhone": "380660000000"
 #         }
 #     }
-#
-#     response = requests.post(api_url, json=payload)
-#     data = response.json()
-#     for i in range(50):
-#         print(f"{data['data'][i]['SiteKey']}----{data['data'][i]['Description']}")
+
 
 

@@ -19,8 +19,8 @@
         </form>
     </div>
     {%if user.is_authenticated%}
-    <div class="messages">
-        <a href="{% url 'user_buy' %}">Сообщения</a>
+    <div class="place">
+        <a style="text-decoration:none" href="{% url 'user_buy' %}">Сообщения</a>
     </div>
     <div class="place">
         <a href="{%url 'create_product'%}" style="text-decoration:none">Подать объявление</a>

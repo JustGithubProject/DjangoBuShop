@@ -1,47 +1,53 @@
-{% extends 'base.html' %}
+{% extends 'products/new/base.html' %}
+{% load static%}
 
 {%block title%}Search{%endblock%}
 
+
+{%block styles%}
+<link rel="stylesheet" type="text/css" href="{% static 'search_results.css' %}">
+
+{% endblock %}
+
+
+
+
 {%block content%}
 {% if products %}
-<div class="product-list">
-    <div class="product-row">
-        {% for product in products %}
-        <div class="product-box">
-            <div class="product">
-                <div class="product-image">
-                    <div class="image-container">
-                        <div class="slideshow">
-                            {% if product.thumbnail_1 %}
-                            <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
-                            {% endif %}
-                            {% if product.thumbnail_2 %}
-                            <img src="{{ product.thumbnail_2.url }}" alt="{{ product.title }} thumbnail">
-                            {% endif %}
-                            {% if product.thumbnail_3 %}
-                            <img src="{{ product.thumbnail_3.url }}" alt="{{ product.title }} thumbnail">
-                            {% endif %}
-                        </div>
-                        <div class="arrow-container">
-                            <button class="prev-arrow">&lt;</button>
-                            <button class="next-arrow">&gt;</button>
+<div class="centered-content">
+    <div class="product-list">
+        <div class="product-row">
+            {% for product in products %}
+            <div class="product-box">
+                <div class="product">
+                    <div class="product-image">
+                        <div class="image-container">
+                            <div class="slideshow">
+                                {% if product.thumbnail_1 %}
+                                <img src="{{ product.thumbnail_1.url }}" alt="{{ product.title }} thumbnail">
+                                {% endif %}
+                            </div>
+                            <div class="arrow-container">
+                                <button class="prev-arrow">&lt;</button>
+                                <button class="next-arrow">&gt;</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="product-details">
-                    <h3>{{ product.title }}</h3>
-                    <p>{{ product.description|truncatechars:100 }}</p>
-                    <a href="{% url 'product_detail' product.slug %}">Подробнее</a>
-                    <p>{{ product.price }}UAH</p>
+                    <div class="product-details">
+                        <h3>{{ product.title }}</h3>
+                        <p>{{ product.description|truncatechars:100 }}</p>
+                        <a href="{% url 'product_detail' product.slug %}">Подробнее</a>
+                        <p>{{ product.price }}UAH</p>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
+    {% else %}
+    <p align="center" style="margin-top:200px; ">По вашему запросу "{{ query }}" ничего не найдено.</p>
+    {% endif %}
 </div>
-{% else %}
-<p>По вашему запросу "{{ query }}" ничего не найдено.</p>
-{% endif %}
 
 <script>
     const slideshows = document.querySelectorAll('.slideshow');
@@ -73,6 +79,8 @@
 
         showImage();
     });
+
+
 
 </script>
 {%endblock%}

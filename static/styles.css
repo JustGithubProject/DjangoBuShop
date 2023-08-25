@@ -1,13 +1,12 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Open Sans", sans-serif;
     background: linear-gradient(135deg, #90caf9, #f48fb1, #ffb74d);
-    background-size: cover; /* Масштабируем фон, чтобы заполнить всю видимую область */
-    background-repeat: no-repeat; /* Запрещаем повторение фона */
+    background-size: cover;
+    background-repeat: no-repeat;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
-
 }
 
 .header {
@@ -24,8 +23,14 @@ body {
     align-items: center;
     transition: background-color 0.2s ease, color 0.2s ease;
     margin-top: 0;
-    border: 1px solid #000;
+    border: none; /* Убираем рамку для более современного вида */
     box-sizing: border-box;
+
+    /* Добавляем тень для визуальной глубины */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    /* Добавляем анимацию при появлении */
+    animation: fadeInDown 0.5s ease both;
 }
 .content {
     padding-top: 50px; /* Adjust the value to prevent content from overlapping with the fixed header */
@@ -84,14 +89,50 @@ body {
     border-radius: 4px;
     display: inline-block;
 }
-.place{
+/* Вариант 2 */
+.place {
     margin-top: 10px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: #f7f7f7; /* Светло-серый фон */
     border-radius: 4px;
     display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
+.place:hover {
+    background-color: #e74c3c; /* Яркий красный цвет при наведении */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.place a {
+    color: #333; /* Темно-серый цвет текста */
+    transition: color 0.2s ease;
+}
+
+.place:hover a {
+    color: #fff; /* Белый цвет текста при наведении */
+}
+
+
+
+/* Анимация при появлении */
+.place.animation {
+    animation: fadeInUp 0.5s ease both;
+}
+
+/* Анимация появления снизу */
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 .messages a,
 .profile a {
     margin-right: 10px;
@@ -100,11 +141,8 @@ body {
     transition: color 0.3s ease;
 }
 
-.messages a:hover,
-.profile a:hover {
-    color: #0f0b80;
-    text-decoration: none;
-}
+
+
 
 .header > div:not(:last-child) {
     margin-right: 20px;
@@ -700,4 +738,81 @@ button:hover {
 
 .btn-primary:hover {
     background-color: #0069d9;
+}
+
+.custom-heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.animated-heading {
+    animation: fadeInUp 1s ease;
+}
+
+.message-block {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.message-block:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.custom-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-to-top:hover {
+    opacity: 0.8;
+}
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Это для вертикального выравнивания на всю высоту экрана */
+    /* Дополнительные стили по вашему усмотрению */
 }

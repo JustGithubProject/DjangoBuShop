@@ -1,6 +1,8 @@
-{% extends 'base.html' %}
-
+{% extends 'products/new/base.html' %}
+{% load static %}
 {% block title %}Профиль пользователя{% endblock %}
+
+{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}">{% endblock %}
 
 {% block content %}
 <div class="profile-container">

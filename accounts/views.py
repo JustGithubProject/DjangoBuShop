@@ -1,5 +1,5 @@
 from django.contrib.auth.tokens import default_token_generator
-from django.core.checks import messages
+from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate
@@ -38,6 +38,8 @@ def login_view(request):
                 return redirect('home')
             else:
                 form.add_error(None, 'Invalid username or password.')
+                messages.error(request, "Введен неверный пароль!\n\rПроверьте раскладку клавиатуры и Caps Lock")
+
     else:
         form = LoginForm()
     return render(request, "users/login.html", {'form': form})

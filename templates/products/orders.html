@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'products/new/base.html' %}
 {% load static %}
 
 {% block title %}Мои заказы{% endblock %}
@@ -6,7 +6,7 @@
 {%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">{% endblock %}
 
 {% block content %}
-<div class="orders-container">
+<div class="orders">
     {% if page_obj %}
     {% for order in page_obj %}
     <div class="order">

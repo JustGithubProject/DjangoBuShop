@@ -1,16 +1,66 @@
 .login-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Изменено на flex-start */
+  align-items: center;
   height: calc(100vh - 100px);
-  color: #ffffff;
+  background-color: #f0f0f0;
 }
 
 .login-box {
-  width: 400px;
-  padding: 60px;
-  background-color: #0c0d0c;
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3); /* Серая тень */
-  margin-top: 20px; /* Добавлен отступ сверху */
+  width: 500px;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.custom-button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+}
+
+.login-box h1 {
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.messages {
+    border: 2px solid red;
+    background-color: #ffb0b3;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.message {
+    margin: 5px 0;
 }
