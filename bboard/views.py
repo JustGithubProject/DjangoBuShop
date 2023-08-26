@@ -29,8 +29,8 @@ from .models import Category
 
 
 def home_view(request):
-    products = Product.objects.order_by('-created_at')[:5]
-    reviews = Review.objects.order_by("date_posted")[:10]
+    products = Product.objects.order_by('-created_at').select_related('user')[:5]
+    reviews = Review.objects.order_by("date_posted").select_related('reviewer_name')[:10]
 
     if request.method == 'POST':
         form = ReviewForm(request.POST)
@@ -45,15 +45,6 @@ def home_view(request):
         form = ReviewForm()
 
     return render(request, "products/new/index.html", {"products": products, "form": form, "reviews": reviews})
-
-# def delete_chat(request, chat_id):
-#     chat = get_object_or_404(Chat, id=chat_id)
-#
-#     if chat.receiver == request.user or chat.sender == request.user:
-#         chat.delete()
-#         return redirect("user_sell")
-#     else:
-#         return HttpResponse("У вас нет прав на удаление этого чата.")
 
 
 def delete_review(request, review_id):
@@ -198,7 +189,8 @@ def seller_messages(request, slug):
 
 @login_required
 def user_buy(request):
-    chats = Chat.objects.filter(sender=request.user).select_related('receiver')
+    chats = Chat.objects.filter(sender=request.user).select_related('receiver', 'product')
+
     temp = "buy"
     return render(request, "products/buy.html", {"chats": chats, "temp": temp})
 
@@ -259,11 +251,10 @@ def create_order(request, product_id):
 
 
 
-
-
 @login_required
 def orders_of_user(request):
-    orders = Order.objects.filter(customer_name=request.user)
+    orders = Order.objects.select_related('product__user').filter(customer_name=request.user)
+
     paginator = Paginator(orders, 1)  # Показывать по 10 заказов на странице (можешь изменить на свое усмотрение)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -273,33 +264,33 @@ def orders_of_user(request):
 ############################################################
 # zoomed_images -> Обработчик для увеличенных изображений  #
 ############################################################
-
-def zoomed_images(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-
-    # Определяем размеры увеличенных изображений
-    width = 800
-    height = 600
-
-    # Открываем изображение 1
-    image_1 = Image.open(product.image_1)
-    image_1 = image_1.resize((width, height), Image.ANTIALIAS)
-
-    # Открываем изображение 2
-    image_2 = Image.open(product.image_2)
-    image_2 = image_2.resize((width, height), Image.ANTIALIAS)
-
-    # Открываем изображение 3
-    image_3 = Image.open(product.image_3)
-    image_3 = image_3.resize((width, height), Image.ANTIALIAS)
-
-    # Возвращаем увеличенные изображения в шаблон
-    return render(request, 'products/zoomed_images.html', {
-        'product': product,
-        'image_1': image_1,
-        'image_2': image_2,
-        'image_3': image_3,
-    })
+#
+# def zoomed_images(request, pk):
+#     product = get_object_or_404(Product, pk=pk)
+#
+#     # Определяем размеры увеличенных изображений
+#     width = 800
+#     height = 600
+#
+#     # Открываем изображение 1
+#     image_1 = Image.open(product.image_1)
+#     image_1 = image_1.resize((width, height), Image.ANTIALIAS)
+#
+#     # Открываем изображение 2
+#     image_2 = Image.open(product.image_2)
+#     image_2 = image_2.resize((width, height), Image.ANTIALIAS)
+#
+#     # Открываем изображение 3
+#     image_3 = Image.open(product.image_3)
+#     image_3 = image_3.resize((width, height), Image.ANTIALIAS)
+#
+#     # Возвращаем увеличенные изображения в шаблон
+#     return render(request, 'products/zoomed_images.html', {
+#         'product': product,
+#         'image_1': image_1,
+#         'image_2': image_2,
+#         'image_3': image_3,
+#     })
 
 
 def delete_chat(request, chat_id):

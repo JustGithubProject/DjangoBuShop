@@ -14,7 +14,6 @@ urlpatterns = [
     path('create/post-product-add/', views.create_product, name='create_product'),
     path("create_order/<int:product_id>/", views.create_order, name="create_order"),
     path("orders_of_user/", views.orders_of_user, name="orders_of_user"),
-    path('zoomed_images/<int:pk>/', views.zoomed_images, name='zoomed_images'),
     path('delete_chat/<int:chat_id>/', views.delete_chat, name='delete_chat'),
     path('delete_review/<int:review_id>/', views.delete_review, name="delete_review"),
     path('get-document-tracking/<str:tracking_number>/', views.get_document_tracking, name='get_document_tracking'),
