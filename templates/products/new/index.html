@@ -142,13 +142,6 @@
             </form>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="map_container">
-            <div class="map">
-                <div id="googleMap"></div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
@@ -233,8 +226,13 @@
 <!-- custom js -->
 <script type="text/javascript" src="{% static 'js/custom.js'%}"></script>
 <!-- Google Map -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
 <!-- End Google Map -->
 
 {% endblock %}

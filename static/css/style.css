@@ -967,3 +967,34 @@ a:focus {
     cursor: pointer;
     font-size: 14px;
 }
+
+
+
+.user_optio_box {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    content: "\25BC"; /* Unicode downward arrow */
+    margin-left: 0.3em;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+    padding: 8px 15px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
