@@ -1,4 +1,3 @@
-/* Global styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -12,13 +11,16 @@ body {
     margin: 20px auto;
     padding: 20px;
     border-radius: 15px;
-    background-color: #fff; /* Используем цветовой фон, добавленный на предыдущей странице */
+    background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease; /* Добавляем анимацию при наведении */
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .product-details-container:hover {
-    transform: translateY(-5px); /* Поднимаем блок немного при наведении */
+    transform: translateY(-5px);
 }
 
 .product-title {
@@ -26,7 +28,16 @@ body {
     font-weight: bold;
     color: #444;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.product-text-block {
+    background-color: #f9f9f9; /* Background color for text block */
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: justify;
+    color: #555;
 }
 
 .product-image-container {
@@ -34,17 +45,18 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-
 }
 
 .slideshow {
     display: flex;
     transition: transform 0.3s ease;
+    overflow: hidden;
 }
 
 .slideshow img {
     max-width: 100%;
     height: auto;
+    object-fit: contain;
 }
 
 .arrow-container {
@@ -85,9 +97,9 @@ body {
 .product-price {
     font-size: 20px;
     font-weight: bold;
-    color: #2ecc71;
+    color: #black;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .buy-button {
@@ -197,3 +209,28 @@ body {
 
 
 
+.right-there {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    width: 40%; /* Указываем ширину блока */
+    margin-top:20px;
+}
+
+.right-there:hover {
+    transform: translateY(-5px);
+}
+
+.con {
+    display: flex;
+    justify-content: space-between; /* Равномерное распределение между блоками */
+    align-items: flex-start; /* Выравнивание элементов по верхнему краю */
+    max-width: 1200px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центрирование на странице */
+    padding: 20px;
+}
