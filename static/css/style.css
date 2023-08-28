@@ -974,10 +974,7 @@ a:focus {
     position: relative;
 }
 
-.dropdown-toggle::after {
-    content: "\25BC"; /* Unicode downward arrow */
-    margin-left: 0.3em;
-}
+
 
 .dropdown-menu {
     position: absolute;

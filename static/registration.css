@@ -53,3 +53,16 @@
   margin-bottom: 20px;
   color: #333333;
 }
+
+.messages {
+    border: 2px solid red;
+    background-color: #ffb0b3;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.message {
+    margin: 5px 0;
+}

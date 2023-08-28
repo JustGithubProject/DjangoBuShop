@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
 
 from project import settings
 from .forms import ReviewForm
@@ -101,7 +102,7 @@ def get_products(request):
 ###############################################################################################################
 # product_detail_view --> Детально про продукт, где можно написать продавцу или продавцу посмотреть сообщения #
 ###############################################################################################################
-# @cache_page(300)
+
 def product_detail_view(request, slug):
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
     return render(request, 'products/product_detail.html', {'product': product})
@@ -206,6 +207,7 @@ def user_sell(request):
 
 
 @login_required
+@cache_page(300)
 def create_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)

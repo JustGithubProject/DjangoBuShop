@@ -21,6 +21,10 @@ def registration_view(request):
         if form.is_valid():
             form.save()
             return redirect('login')
+        else:
+            form.add_error(None, 'Invalid username or password.')
+            messages.error(request, "Возможно пользователь с таким именем уже существует")
+
     else:
         form = RegistrationForm()
     return render(request, "users/registration.html", {'form': form})
