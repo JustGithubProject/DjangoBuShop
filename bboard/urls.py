@@ -18,5 +18,6 @@ urlpatterns = [
     path('delete_review/<int:review_id>/', views.delete_review, name="delete_review"),
     path('get-document-tracking/<str:tracking_number>/', views.get_document_tracking, name='get_document_tracking'),
     path("package_search/", views.package_search, name="package_search"),
-    path("get_products/", views.get_products, name="get_products")
+    path("get_products/", views.get_products, name="get_products"),
+    path('rate_user/<str:username>/', views.rate_user, name='rate_user'),
 ]

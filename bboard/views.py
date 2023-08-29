@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
 
+from accounts.models import User
 from project import settings
 from .forms import ReviewForm
 from .models import Review
@@ -390,5 +391,13 @@ def package_search(request):
 #         }
 #     }
 
+######################################
+#  rate_user -> оценка пользователя  #
+######################################
 
-
+def rate_user(request, username):
+    if request.method == "POST":
+        rating = int(request.POST.get("rating", 0))
+        user = User.objects.get(username=username)
+        user.rate(rating)
+    return redirect('home')

@@ -35,7 +35,7 @@
             <p class="product-description">{{ product.description }}</p>
         </div>
     </div>
-        <div class="right-there">
+    <div class="right-there">
         <p class="product-price">{{ product.price }} грн</p>
         {% if product.user.username != user.username %}
         <a href="{% url 'create_order' product.pk %}" class="buy-button">Купить</a>
@@ -60,6 +60,25 @@
             <a href="{% url 'seller_messages' product.slug %}" class="message-link">Посмотреть сообщения</a>
             {% endif %}
         </div>
+
+        <div class="rating">
+            {% if owner.username != user.username%}
+            <form method="post" action="{% url 'rate_user' owner.username %}">
+                {% csrf_token %}
+                <label for="rating">Оценить пользователя:</label>
+                <select name="rating" id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button type="submit">Оценить</button>
+            </form>
+            {%endif%}
+            <p>Средний рейтинг пользователя: {{owner.average_rating}}</p>
+        </div>
+
 
 
         {% endwith %}
@@ -105,6 +124,7 @@
             phoneNumberContainer.style.display = "block";
         }
     }
+
 
 
 
