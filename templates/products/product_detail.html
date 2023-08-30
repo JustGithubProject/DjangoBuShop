@@ -62,7 +62,7 @@
         </div>
 
         <div class="rating">
-            {% if owner.username != user.username%}
+            {% if owner.username != user.username %}
             <form method="post" action="{% url 'rate_user' owner.username %}">
                 {% csrf_token %}
                 <label for="rating">Оценить пользователя:</label>
@@ -75,10 +75,13 @@
                 </select>
                 <button type="submit">Оценить</button>
             </form>
-            {%endif%}
-            <p>Средний рейтинг пользователя: {{owner.average_rating}}</p>
-        </div>
+            {% endif %}
+            <p>Средний рейтинг пользователя: {{ owner.average_rating }}</p>
 
+            {% if error_message %}
+            <p>{{ error_message }}</p>
+            {% endif %}
+        </div>
 
 
         {% endwith %}
@@ -124,6 +127,7 @@
             phoneNumberContainer.style.display = "block";
         }
     }
+
 
 
 

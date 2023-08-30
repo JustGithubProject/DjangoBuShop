@@ -1,5 +1,4 @@
 import requests
-from PIL import Image
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
@@ -76,7 +75,6 @@ def search_view(request):
         'products': products,
     }
     return render(request, 'products/search_results.html', context)
-
 
 
 #############################################
@@ -252,8 +250,6 @@ def create_order(request, product_id):
     return render(request, "products/create_order.html", {"form": form})
 
 
-
-
 @login_required
 def orders_of_user(request):
     orders = Order.objects.select_related('product__user').filter(customer_name=request.user)
@@ -399,5 +395,14 @@ def rate_user(request, username):
     if request.method == "POST":
         rating = int(request.POST.get("rating", 0))
         user = User.objects.get(username=username)
-        user.rate(rating)
+
+        try:
+            request.user.rate_(rating, user)
+        except ValueError as e:
+            error_message = str(e)
+            messages.error(request, error_message)  # Добавляем сообщение об ошибке
+        else:
+            messages.success(request,
+                             f"Вы успешно оценили пользователя {user.username}!")  # Добавляем сообщение об успехе
+
     return redirect('home')
