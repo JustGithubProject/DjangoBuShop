@@ -404,5 +404,5 @@ def rate_user(request, username):
         else:
             messages.success(request,
                              f"Вы успешно оценили пользователя {user.username}!")  # Добавляем сообщение об успехе
-
-    return redirect('home')
+    prev_url = request.META.get("HTTP_REFERER", "home")
+    return redirect(prev_url)
