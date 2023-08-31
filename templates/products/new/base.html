@@ -40,6 +40,7 @@
     <!-- header section strats -->
     <header class="header_section">
         <div class="container-fluid">
+            {% with request.resolver_match.url_name as current_page %}
             <nav class="navbar navbar-expand-lg custom_nav-container ">
                 <a class="navbar-brand" href="{% url 'home'%}">
             <span>
@@ -61,26 +62,26 @@
                             <button type="submit">Найти</button>
                         </form>
                     </div>
-                    <ul class="navbar-nav  ">
-                        <li class="nav-item active">
+                    <ul class="navbar-nav">
+                        <li class="nav-item {% if current_page == 'home' %}active{%endif%}">
                             <a class="nav-link" href="{% url 'home' %}">Главная <span
                                     class="sr-only">(current)</span></a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item {%if current_page == 'get_products' %}active{%endif%}">
                             <a class="nav-link" href="{% url 'get_products' %}">Товары</a>
                         </li>
 
                         {%if user.is_authenticated%}
-                        <li class="nav-item">
+                        <li class="nav-item {%if current_page == 'user_buy' %}active{%endif%}">
                             <a class="nav-link" href="{% url 'user_buy' %}">Сообщения</a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item {%if current_page == 'create_product' %}active{%endif%}">
                             <a class="nav-link" href="{%url 'create_product'%}" style="text-decoration:none">Подать
                                 объявление</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {% if current_page == 'orders_of_user'%}active{%endif%}">
                             <a class="nav-link" href="{%url 'orders_of_user'%}" style="text-decoration:none">Ваши
                                 заказы</a>
                         </li>
@@ -113,6 +114,8 @@
 
                 </div>
             </nav>
+            {% endwith %}
+
         </div>
     </header>
     {% block content %}
