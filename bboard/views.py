@@ -48,6 +48,11 @@ def home_view(request):
     return render(request, "products/new/index.html", {"products": products, "form": form, "reviews": reviews})
 
 
+#######################################################################
+#    delete_review -> удалить  комментарий                            #
+#######################################################################
+
+
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
 
@@ -78,7 +83,7 @@ def search_view(request):
 
 
 #############################################
-#    get_products                           #
+#    get_products   -> все товары           #
 #############################################
 
 def get_products(request):
@@ -99,7 +104,7 @@ def get_products(request):
 
 
 ###############################################################################################################
-# product_detail_view --> Детально про продукт, где можно написать продавцу или продавцу посмотреть сообщения #
+# product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения #
 ###############################################################################################################
 
 def product_detail_view(request, slug):
@@ -205,6 +210,11 @@ def user_sell(request):
     return render(request, "products/sell.html", {"chats": chats, "temp": temp})
 
 
+################################################################################################
+#    create_product ->  view для создания Товара, любой пользователь может добавить свой товар #
+################################################################################################
+
+
 @login_required
 @cache_page(300)
 def create_product(request):
@@ -230,6 +240,11 @@ def create_product(request):
     return render(request, 'products/create_product.html', {'form': form})
 
 
+########################################################
+#    create_order -> Делает заказ и сохраняет его в бд #
+########################################################
+
+
 @login_required
 def create_order(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
@@ -250,6 +265,10 @@ def create_order(request, product_id):
     return render(request, "products/create_order.html", {"form": form})
 
 
+###########################################################
+# orders_of_users -> Все заказы определенного пользователя#
+###########################################################
+
 @login_required
 def orders_of_user(request):
     orders = Order.objects.select_related('product__user').filter(customer_name=request.user)
@@ -260,36 +279,9 @@ def orders_of_user(request):
     return render(request, "products/orders.html", {"page_obj": page_obj})
 
 
-############################################################
-# zoomed_images -> Обработчик для увеличенных изображений  #
-############################################################
-#
-# def zoomed_images(request, pk):
-#     product = get_object_or_404(Product, pk=pk)
-#
-#     # Определяем размеры увеличенных изображений
-#     width = 800
-#     height = 600
-#
-#     # Открываем изображение 1
-#     image_1 = Image.open(product.image_1)
-#     image_1 = image_1.resize((width, height), Image.ANTIALIAS)
-#
-#     # Открываем изображение 2
-#     image_2 = Image.open(product.image_2)
-#     image_2 = image_2.resize((width, height), Image.ANTIALIAS)
-#
-#     # Открываем изображение 3
-#     image_3 = Image.open(product.image_3)
-#     image_3 = image_3.resize((width, height), Image.ANTIALIAS)
-#
-#     # Возвращаем увеличенные изображения в шаблон
-#     return render(request, 'products/zoomed_images.html', {
-#         'product': product,
-#         'image_1': image_1,
-#         'image_2': image_2,
-#         'image_3': image_3,
-#     })
+#########################################################################################
+#    delete_chat -> view для удаления чата, каждый пользователь может удалить свои чаты #
+#########################################################################################
 
 
 def delete_chat(request, chat_id):
@@ -346,6 +338,11 @@ def get_document_tracking(request, tracking_number):
     }
 
     return render(request, "products/get_document_tracking.html", context=context)
+
+
+##################################################################################################
+#  package_search -> обработчик для формы, которая ищет информацию по декларации новой почты     #
+##################################################################################################
 
 
 def package_search(request):

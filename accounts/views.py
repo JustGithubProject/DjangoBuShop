@@ -19,11 +19,14 @@ def registration_view(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            if form.cleaned_data.get("captcha"):
+                form.save()
+                return redirect('login')
+            else:
+                messages.error(request, "Please complete the reCAPTCHA.")
         else:
             form.add_error(None, 'Invalid username or password.')
-            messages.error(request, "Возможно пользователь с таким именем уже существует")
+            messages.error(request, "Что-то пошло не так.Попробуйте еще раз")
 
     else:
         form = RegistrationForm()

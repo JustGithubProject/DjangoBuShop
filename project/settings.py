@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'debug_toolbar',
+    'captcha',
 ]
 
 # settings.py
@@ -220,3 +221,11 @@ CORS_ALLOWED_ORIGINS = [
 
 NOVA_POSHTA_API_KEY = "6464fe6f6083efffef033d3c491832c2"
 NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/"
+
+
+########################
+# GOOGLE CAPTCHA      #
+#######################
+
+RECAPTCHA_PUBLIC_KEY = '6LcT7PInAAAAAG05tXtdk7l2sLWOGPgaK4FxV--r'
+RECAPTCHA_PRIVATE_KEY = '6LcT7PInAAAAAPfXGSkxVshUZdk88XxmqbTAESbf'

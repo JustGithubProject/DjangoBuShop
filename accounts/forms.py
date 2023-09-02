@@ -2,11 +2,13 @@ from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from .models import User
+from captcha.fields import ReCaptchaField
 
 
 class RegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    captcha = ReCaptchaField()
 
     class Meta:
         model = User
