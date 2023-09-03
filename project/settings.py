@@ -229,3 +229,8 @@ NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/"
 
 RECAPTCHA_PUBLIC_KEY = '6LcT7PInAAAAAG05tXtdk7l2sLWOGPgaK4FxV--r'
 RECAPTCHA_PRIVATE_KEY = '6LcT7PInAAAAAPfXGSkxVshUZdk88XxmqbTAESbf'
+
+
+
+# settings.py
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

@@ -5,10 +5,10 @@ from .utils import CITY_CHOICES
 
 
 class User(AbstractUser):
-    phone_number = models.CharField(max_length=20)
-    city = models.CharField(max_length=100, choices=CITY_CHOICES)
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    total_ratings = models.PositiveIntegerField(default=0)
+    phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
+    city = models.CharField(max_length=100, choices=CITY_CHOICES, verbose_name="Населенный пункт")
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0, verbose_name="Средний рейтинг")
+    total_ratings = models.PositiveIntegerField(default=0, verbose_name="Количество оценок")
 
     def has_rated(self, user_id):
         """
@@ -35,9 +35,14 @@ class User(AbstractUser):
 
 
 class Rating(models.Model):
-    rater = models.ForeignKey(User, on_delete=models.CASCADE)  # rater (Оценивающий):
-    rated = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_ratings')  # rated (Оцениваемый)
-    rating = models.PositiveIntegerField()
+    rater = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Оценивающий")  # rater (Оценивающий):
+    rated = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_ratings', verbose_name="Оцениваемый")  # rated (Оцениваемый)
+    rating = models.PositiveIntegerField(verbose_name="Рейтинг")
+
+    def __str__(self):
+        return f"{self.rater} оценил {self.rated} в {self.rating} баллов"
 
     class Meta:
         unique_together = ['rater', 'rated']
+        verbose_name = "Оценка"
+        verbose_name_plural = "Оценки"

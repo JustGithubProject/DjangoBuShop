@@ -109,7 +109,7 @@ def get_products(request):
 
 def product_detail_view(request, slug):
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
-    return render(request, 'products/product_detail.html', {'product': product})
+    return render(request, 'products/product_detail.html', {'product': product, 'messages': messages})
 
 
 ##############################################################################################################

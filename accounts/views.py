@@ -26,7 +26,7 @@ def registration_view(request):
                 messages.error(request, "Please complete the reCAPTCHA.")
         else:
             form.add_error(None, 'Invalid username or password.')
-            messages.error(request, "Что-то пошло не так.Попробуйте еще раз")
+            messages.error(request, "Что-то пошло не так. Попробуйте еще раз")
 
     else:
         form = RegistrationForm()

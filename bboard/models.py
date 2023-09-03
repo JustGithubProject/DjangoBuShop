@@ -7,24 +7,28 @@ from accounts.models import User
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name="Название категории")
     slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
 
 class Product(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
     slug = models.SlugField(unique=True, max_length=400, verbose_name="URL", blank=True)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image_1 = models.ImageField(upload_to="products", null=True, blank=True)
-    image_2 = models.ImageField(upload_to='products', null=True, blank=True)
-    image_3 = models.ImageField(upload_to='products', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    description = models.TextField(verbose_name="Описание")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    image_1 = models.ImageField(upload_to="products", null=True, blank=True, verbose_name="Первое изображение")
+    image_2 = models.ImageField(upload_to='products', null=True, blank=True, verbose_name="Второе изображение")
+    image_3 = models.ImageField(upload_to='products', null=True, blank=True, verbose_name="Третье изображение")
+    created_at = models.DateTimeField(auto_now_add=True, null=True, verbose_name="Дата создания")
 
     thumbnail_1 = ImageSpecField(source='image_1',
                                  processors=[ResizeToFill(500, 500)],
@@ -43,48 +47,68 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = "Товар"
+        verbose_name_plural = "Товары"
+
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    customer_name = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField()
-    name = models.CharField(max_length=100, null=True)
-    surname = models.CharField(max_length=100, null=True)
-    phone_number = models.CharField(max_length=50, null=True)
-    city = models.CharField(max_length=100, null=True)
-    department = models.CharField(max_length=600, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    customer_name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Клиент")
+    email = models.EmailField(verbose_name="Email")
+    name = models.CharField(max_length=100, null=True, verbose_name="Имя клиента")
+    surname = models.CharField(max_length=100, null=True, verbose_name="Фамилия клиента")
+    phone_number = models.CharField(max_length=50, null=True, verbose_name="Номер телефона")
+    city = models.CharField(max_length=100, null=True, verbose_name="Населенный пункт")
+    department = models.CharField(max_length=600, null=True, verbose_name="Отделение")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):
         return f"Order #{self.pk}"
 
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+
 
 class Chat(models.Model):
-    sender = models.ForeignKey(User, related_name='sent_chats', on_delete=models.CASCADE, null=True)
-    receiver = models.ForeignKey(User, related_name='received_chats', on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(User, related_name='sent_chats', on_delete=models.CASCADE, null=True, verbose_name='Отправитель')
+    receiver = models.ForeignKey(User, related_name='received_chats', on_delete=models.CASCADE, null=True, verbose_name='Получатель')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     last_message = models.ForeignKey('Message', null=True, blank=True, on_delete=models.SET_NULL,
-                                     related_name='chat_messages')
+                                     related_name='chat_messages', verbose_name='Последнее сообщение')
 
     def __str__(self):
         return f"Chat -> sender={self.sender}, receiver={self.receiver}, product={self.product}"
 
+    class Meta:
+        verbose_name = "Чат"
+        verbose_name_plural = "Чаты"
+
 
 class Message(models.Model):
-    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE, verbose_name='chat_message')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField(db_index=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE, verbose_name='Чат')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Отправитель')
+    content = models.TextField(db_index=False, verbose_name='Содержание')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     def __str__(self):
         return f"Message of {self.sender}"
 
+    class Meta:
+        verbose_name = "Сообщение"
+        verbose_name_plural = "Сообщения"
+
 
 class Review(models.Model):
-    reviewer_name = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
-    date_posted = models.DateTimeField(auto_now_add=True)
+    reviewer_name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    content = models.TextField(verbose_name='Комментарий')
+    date_posted = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
 
     def __str__(self):
         return f"Пользователь - {self.reviewer_name} оставил комментарий"
+
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
