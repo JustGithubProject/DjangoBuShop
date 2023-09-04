@@ -44,8 +44,9 @@ def home_view(request):
             print(form.errors)
     else:
         form = ReviewForm()
-
-    return render(request, "products/new/index.html", {"products": products, "form": form, "reviews": reviews})
+    quantity_users = User.objects.count()
+    return render(request, "products/new/index.html",
+                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users})
 
 
 #######################################################################
