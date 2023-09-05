@@ -404,3 +404,13 @@ def rate_user(request, username):
                              f"Вы успешно оценили пользователя {user.username}!")  # Добавляем сообщение об успехе
     prev_url = request.META.get("HTTP_REFERER", "home")
     return redirect(prev_url)
+
+
+##################################
+#     top_rated_users            #
+##################################
+
+def top_rated_users(request):
+    users = User.objects.filter(average_rating__gt=4).order_by('-average_rating')[:10]
+
+    return render(request, "products/new/top_rated_users.html", {"users": users})

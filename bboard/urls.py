@@ -20,4 +20,5 @@ urlpatterns = [
     path("package_search/", views.package_search, name="package_search"),
     path("get_products/", views.get_products, name="get_products"),
     path('rate_user/<str:username>/', views.rate_user, name='rate_user'),
+    path('top_rated_users', views.top_rated_users, name='top_rated_users')
 ]

@@ -1,0 +1,22 @@
+{% extends 'products/new/base.html' %}
+{% load static %}
+{% block title %}Элитные Пользователи{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'top_rated_users.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">ТОП 10 Элитных пользователей</h1>
+    <div class="user-cards">
+        {% for user in users %}
+        <div class="user-card">
+            <div class="user-info">
+                <p class="username">{{ user.username }}</p>
+                <p class="rating">Рейтинг: {{ user.average_rating }} <span class="heart">❤</span></p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
