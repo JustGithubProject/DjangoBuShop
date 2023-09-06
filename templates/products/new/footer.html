@@ -12,7 +12,7 @@
         <div class="col-md-3">
           <div class="info_contact">
             <h5>
-              About Shop
+              О магазине
             </h5>
             <div>
               <div class="img-box">
@@ -97,10 +97,11 @@
         <div class="col-md-3">
           <div class="info_form ">
             <h5>
-              Newsletter
+              Новостная рассылка
             </h5>
-            <form action="">
-              <input type="email" placeholder="Enter your email">
+            <form method="POST" action="{% url 'subscribe' %}">
+              {% csrf_token %}
+              <input name="email" type="email" placeholder="Enter your email">
               <button>
                 Subscribe
               </button>

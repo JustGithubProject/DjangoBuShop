@@ -1,3 +1,7 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 import requests
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -7,10 +11,15 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
+from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
 from accounts.models import User
 from project import settings
+from project.settings import EMAIL_HOST
+from project.settings import EMAIL_HOST_PASSWORD
+from project.settings import EMAIL_HOST_USER
+from project.settings import EMAIL_PORT
 from .forms import ReviewForm
 from .models import Review
 from .utils import transliterate
@@ -406,11 +415,50 @@ def rate_user(request, username):
     return redirect(prev_url)
 
 
-##################################
-#     top_rated_users            #
-##################################
+#############################################################################################
+#     top_rated_users -> обработчик для пользователей, у которых рейтинг больше 4           #
+#############################################################################################
 
 def top_rated_users(request):
     users = User.objects.filter(average_rating__gt=4).order_by('-average_rating')[:10]
-
     return render(request, "products/new/top_rated_users.html", {"users": users})
+
+
+def subscribe(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            # Настройте параметры SMTP-сервера
+            smtp_host = EMAIL_HOST  # Замените на адрес вашего SMTP-сервера
+            smtp_port = EMAIL_PORT  # Замените на порт вашего SMTP-сервера
+            smtp_username = EMAIL_HOST_USER  # Замените на свое имя пользователя SMTP
+            smtp_password = EMAIL_HOST_PASSWORD  # Замените на свой пароль SMTP
+
+            # Создайте сообщение
+            subject = 'Subscription Confirmation'
+            message = f'Thank you for subscribing! Click the link to visit our website: http://127.0.0.1:8000/'
+            from_email = EMAIL_HOST_USER  # Замените на вашу электронную почту
+            to_email = email
+
+            msg = MIMEMultipart()
+            msg['From'] = from_email
+            msg['To'] = to_email
+            msg['Subject'] = subject
+
+            body = message
+            msg.attach(MIMEText(body, 'plain'))
+
+            # Отправьте сообщение через SMTP
+            try:
+                server = smtplib.SMTP(smtp_host, smtp_port)
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                server.sendmail(from_email, to_email, msg.as_string())
+                server.quit()
+
+                return redirect("home")
+
+            except Exception as e:
+                print(e)
+
+    return render(request, 'products/new/footer.html')
