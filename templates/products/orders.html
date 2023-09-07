@@ -6,8 +6,8 @@
 {%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">{% endblock %}
 
 {% block content %}
+{% if page_obj %}
 <div class="orders">
-    {% if page_obj %}
     {% for order in page_obj %}
     <div class="order">
         <p>Имя: {{ order.product.title }}</p>
@@ -23,7 +23,7 @@
         <p>Создан: {{ order.created_at }}</p>
     </div>
     {% endfor %}
-    {% endif %}
+
 
     {% if page_obj.has_previous or page_obj.has_next %}
     <div class="pagination">
@@ -41,4 +41,7 @@
     </div>
     {% endif %}
 </div>
+{%else%}
+    <h1 align="center">У вас нет заказов</h1>
+{%endif%}
 {% endblock %}

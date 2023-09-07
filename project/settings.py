@@ -193,8 +193,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "OnlineShop85192202@gmail.com"
-EMAIL_HOST_PASSWORD = "cmbqeysibyneoglh"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 ##############################################
@@ -219,7 +219,7 @@ CORS_ALLOWED_ORIGINS = [
 ##########################################
 
 
-NOVA_POSHTA_API_KEY = "6464fe6f6083efffef033d3c491832c2"
+NOVA_POSHTA_API_KEY = os.getenv("NOVA_POSHTA_API_KEY")
 NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/"
 
 
@@ -227,8 +227,8 @@ NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/"
 # GOOGLE CAPTCHA      #
 #######################
 
-RECAPTCHA_PUBLIC_KEY = '6LcT7PInAAAAAG05tXtdk7l2sLWOGPgaK4FxV--r'
-RECAPTCHA_PRIVATE_KEY = '6LcT7PInAAAAAPfXGSkxVshUZdk88XxmqbTAESbf'
+RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
 
 
 
