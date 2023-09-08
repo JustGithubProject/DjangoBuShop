@@ -1,0 +1,152 @@
+.product-details {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease; /* Добавим плавное изменение при наведении */
+}
+
+.product-details:hover {
+  transform: scale(1.03); /* Увеличим блок при наведении */
+}
+
+.product-details a:hover {
+  background-color: #ff8a65;
+}
+
+/* Стили для кнопки "Подробнее" */
+.product-details a {
+  display: inline-block;
+  background-color: #f48fb1;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.product-details a:hover {
+  background-color: #ff8a65; /* Цвет фона для кнопки при наведении */
+}
+
+.product-details h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.product-details p {
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+
+
+    /* Add CSS styles for the product layout */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Изменим значение на flex-start */
+    max-width: 1000px; /* Определим максимальную ширину контейнера */
+    margin: 0 auto; /* Центрируем контейнер */
+}
+.product-row {
+    display: flex;
+    margin-top:50px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.product-box {
+  width: 30%;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.product-box:hover {
+  transform: translateY(-5px); /* Поднимаем блок немного при наведении */
+}
+
+.footer {
+    text-align: center; /* Центрируем содержимое внутри футера */
+    margin-top: 30px; /* Добавим небольшой отступ сверху для красоты */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center; /* Центрируем содержимое внутри footer-content */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    padding: 10px;
+}
+
+.social-media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.social-media a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.social-media img {
+    width: 30px;
+    height: 30px;
+}
+
+
+#footerc {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+}
+
+#footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#copy {
+  flex: 1;
+  margin: 0;
+}
+
+#copy a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+ul li {
+  margin-left: 20px;
+}
+
+ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+

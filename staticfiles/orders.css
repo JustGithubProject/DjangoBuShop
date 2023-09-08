@@ -1,0 +1,74 @@
+
+
+/* Стили для контейнера заказов */
+.orders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 81%;
+    max-width: 1100px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для блока заказа */
+.order {
+    background-color: #fff;
+    border: 1px solid #3498db; /* Синяя рамка для этого блока */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    min-height: 150px; /* Минимальная высота */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.order:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Стили для второго блока синяя рамка */
+.another-block {
+    background-color: #fff;
+    border: 1px solid #3498db; /* Синяя рамка для второго блока */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    min-height: 150px; /* Минимальная высота */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.another-block:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Стили для пагинации */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #444; /* Изменен цвет ссылок пагинации */
+    transition: color 0.3s ease;
+}
+
+.pagination a:hover {
+    color: #ff7f50;
+}
+
+.current-page {
+    margin: 0 5px;
+    font-weight: bold;
+    color: #ff7f50;
+}

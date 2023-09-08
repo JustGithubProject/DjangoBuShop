@@ -1,0 +1,47 @@
+body {
+  background-color: #f1f1f1; /* Set a background color for the whole page */
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.centered-form {
+  width: 350px; /* Slightly wider form for better spacing */
+  padding: 40px;
+  background-color: #fff; /* White background for the form */
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.centered-form button {
+  margin-top: 20px; /* Increased top margin for the button */
+  width: 100%; /* Make the button take up the full width of the form */
+  background-color: #4CAF50; /* Green button background color */
+  color: #fff; /* White button text color */
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.centered-form button:hover {
+  background-color: #45a049; /* Darker green color on hover */
+}
+
+  /* Optional: Add some styles to the form fields for better visibility */
+.centered-form input[type="text"],
+.centered-form input[type="email"],
+.centered-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}

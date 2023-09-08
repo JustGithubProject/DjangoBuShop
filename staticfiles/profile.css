@@ -1,0 +1,61 @@
+/* Center the profile form vertically and horizontally */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Set the container to cover the viewport height */
+    background-color: white; /* Set white background */
+}
+
+/* Style the profile box */
+.profile-box {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Adjust this value as needed */
+    width: 100%;
+}
+
+/* Style the heading */
+.profile-heading {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style the form groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Style form labels */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Style form inputs */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style the custom button */
+.custom-button {
+    background-color: #0099cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.custom-button:hover {
+    background-color: #0077b3;
+}

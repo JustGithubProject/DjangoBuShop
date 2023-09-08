@@ -1,0 +1,57 @@
+/* Общие стили для контейнера */
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Заголовок */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Стили для контейнера с карточками пользователей */
+.user-cards {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Стили для карточек пользователей */
+.user-card {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 200px; /* Ширина карточки */
+    text-align: center;
+    background-color: #fff;
+    transition: transform 0.3s ease-in-out;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Стили для имени пользователя */
+.username {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Стили для рейтинга пользователя */
+.rating {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Стили для сердца */
+.heart {
+    color: red;
+}

@@ -1,0 +1,81 @@
+/* Стили для страницы с увеличенными изображениями */
+body {
+    background-color: black; /* Light gray background color */
+    margin: 0;
+    padding: 0;
+}
+
+.product-details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* At least full viewport height */
+}
+
+.product-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1000px; /* Limit the maximum width of the product image container */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+.slideshow.zoomed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle box-shadow to the zoomed image container */
+    background-color: #fff; /* White background color for the zoomed image container */
+}
+
+.slideshow.zoomed img {
+    max-width: 100%; /* Ensure the image does not exceed the container width */
+    max-height: 100%; /* Ensure the image does not exceed the container height */
+    cursor: pointer; /* Add a pointer cursor when hovering over the image */
+    transition: transform 0.3s ease; /* Add a smooth transition when zooming in and out */
+}
+
+/* Remove text-decoration */
+a {
+    text-decoration: none;
+}
+
+/* Additional styles */
+/* Add some padding to the product image container */
+.product-image-container {
+    padding: 20px;
+}
+
+/* Style the previous and next arrow buttons */
+.prev-arrow,
+.next-arrow {
+    background-color: rgba(0, 0, 0, 0.8); /* Darken the arrow buttons */
+    color: #fff; /* White arrow button text color */
+    border: none;
+    font-size: 24px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.prev-arrow:hover,
+.next-arrow:hover {
+    background-color: rgba(0, 0, 0, 1); /* Hover effect to fully darken the arrow buttons */
+}
+
+/* Customize scrollbar */
+.slideshow.zoomed::-webkit-scrollbar {
+    width: 8px;
+}
+
+.slideshow.zoomed::-webkit-scrollbar-thumb {
+    background-color: #0f0b80; /* Color of the scrollbar thumb */
+    border-radius: 10px;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 600px) {
+    .product-details-container {
+        padding: 10px;
+    }
+}
