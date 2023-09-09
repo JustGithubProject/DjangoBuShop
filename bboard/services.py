@@ -1,4 +1,6 @@
 from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
@@ -98,3 +100,42 @@ def get_chat_and_messages(user, chat_id):
 
     messages = Message.objects.filter(chat=chat).order_by('created_at').select_related('sender')
     return chat, messages
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  send_message_view                    #
+#####################################################################
+
+def create_and_save_message(chat, sender, content):
+    try:
+        message = Message(chat=chat, sender=sender, content=content)
+        message.save()
+        return True
+    except Exception as e:
+        print(f"{e}")
+        return False
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  seller_messages                    #
+#####################################################################
+
+def get_seller_chats(user, product):
+    """Возвращает чаты, где пользователь продавец и связаны с конкретным продуктом."""
+    return Chat.objects.filter(receiver=user, product=product).select_related('sender', 'product')
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  user_buy  и user_sell                #
+#####################################################################
+
+
+def get_user_chats(user, chat_type):
+    """Возвращает чаты в зависимости от типа (покупка или продажа)."""
+    if chat_type == "buy":
+        return Chat.objects.filter(sender=user).select_related('receiver', 'product')
+    elif chat_type == "sell":
+        return Chat.objects.filter(receiver=user).select_related('sender')
+    else:
+        # Обработка некорректного типа чата (по умолчанию показываем покупки)
+        return Chat.objects.filter(sender=user).select_related('receiver', 'product')
+

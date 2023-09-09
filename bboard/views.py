@@ -112,12 +112,9 @@ def chat_view(request, chat_id):
     return render(request, "products/chat.html", {"chat": chat, "messages": messages})
 
 
-###############################################################################################
-# send_message_view --> отправка сообщений, и редирект для того, чтобы страница обновилась    #
-###############################################################################################
-
 @login_required
 def send_message_view(request, chat_id):
+    """send_message_view --> отправка сообщений, и редирект для того, чтобы страница обновилась """
     chat = get_object_or_404(Chat, id=chat_id)
 
     # Проверяем, авторизован ли пользователь
@@ -131,47 +128,34 @@ def send_message_view(request, chat_id):
     if request.method == 'POST':
         message_content = request.POST.get('message')
 
-        # Создаем новое сообщение
-        message = Message(chat=chat, sender=request.user, content=message_content)
-        message.save()
-
-        messages.success(request, 'Сообщение успешно отправлено')
+        result = services.create_and_save_message(chat, request.user, message_content)
+        if result:
+            messages.success(request, "Сообщение успешно отправлено")
 
     return redirect('chat', chat_id=chat_id)
 
 
-####################################################################################
-#    seller_messages --> продавец может посмотреть тех, кто оправлял ему сообщения #
-####################################################################################
-
 @login_required
 def seller_messages(request, slug):
+    """seller_messages --> продавец может посмотреть тех, кто оправлял ему сообщения"""
     product = get_object_or_404(Product, slug=slug)
 
-    chats = Chat.objects.filter(receiver=request.user, product=product)
+    chats = services.get_seller_chats(request.user, product)
     return render(request, "products/seller_messages.html", {"chats": chats, "product": product})
 
 
-#######################################################
-#  user_buy --> чаты, где пользователь что-то покупает#
-#######################################################
-
 @login_required
 def user_buy(request):
-    chats = Chat.objects.filter(sender=request.user).select_related('receiver', 'product')
+    """user_buy --> чаты, где пользователь что-то покупает"""
+    chats = services.get_user_chats(request.user, chat_type="buy")
+    return render(request, "products/buy.html", {"chats": chats, "temp": "buy"})
 
-    temp = "buy"
-    return render(request, "products/buy.html", {"chats": chats, "temp": temp})
 
-
-#######################################################
-#  user_sell --> чаты, где пользователь что-то продает#
-#######################################################
 @login_required
 def user_sell(request):
-    chats = Chat.objects.filter(receiver=request.user).select_related('sender')
-    temp = "sell"
-    return render(request, "products/sell.html", {"chats": chats, "temp": temp})
+    """user_sell --> чаты, где пользователь что-то продает"""
+    chats = services.get_user_chats(request.user, chat_type="sell")
+    return render(request, "products/sell.html", {"chats": chats, "temp": "sell"})
 
 
 ################################################################################################
