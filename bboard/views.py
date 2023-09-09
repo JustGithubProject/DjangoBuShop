@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
-from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
 from accounts.models import User
@@ -22,6 +21,7 @@ from project.settings import EMAIL_HOST_USER
 from project.settings import EMAIL_PORT
 from .forms import ReviewForm
 from .models import Review
+
 from .utils import transliterate
 from .utils import decode_status
 from .forms import ProductForm
@@ -31,39 +31,33 @@ from .models import Message
 from .models import Order
 from .models import Product
 from .models import Category
-
-
-################################################################
-# home_view --> Главная страница                               #
-################################################################
+from .services import get_recent_products_with_users
+from .services import get_recent_reviews_with_reviewers
+from .services import process_review_form
+from .services import get_user_count
+from .services import search_products
+from .services import get_all_categories
+from .services import get_products_by_category
+from .services import paginate_products
 
 
 def home_view(request):
-    products = Product.objects.order_by('-created_at').select_related('user')[:5]
-    reviews = Review.objects.order_by("date_posted").select_related('reviewer_name')[:10]
+    """home_view --> Главная страница   """
+    products = get_recent_products_with_users()
+    reviews = get_recent_reviews_with_reviewers()
 
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.reviewer_name = request.user
-            review.save()
-            return redirect("home")
-        else:
-            print(form.errors)
-    else:
-        form = ReviewForm()
-    quantity_users = User.objects.count()
+    if process_review_form(request):
+        return redirect("home")
+
+    form = ReviewForm()
+
+    quantity_users = get_user_count()
     return render(request, "products/new/index.html",
                   {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users})
 
 
-#######################################################################
-#    delete_review -> удалить  комментарий                            #
-#######################################################################
-
-
 def delete_review(request, review_id):
+    """delete_review -> удалить  комментарий """
     review = get_object_or_404(Review, id=review_id)
 
     if request.user.is_superuser:
@@ -73,18 +67,11 @@ def delete_review(request, review_id):
         return HttpResponse("У вас нет прав на удаление этого комментария")
 
 
-################################################################
-# search_view --> Поле поиска                                  #
-################################################################
-
-
 def search_view(request):
+    """search_view - Поле поиска """
     query = request.GET.get("query")
+    products = search_products(query)
 
-    if not query:
-        products = None
-    else:
-        products = Product.objects.filter(title__icontains=query)
     context = {
         'query': query,
         'products': products,
@@ -92,22 +79,12 @@ def search_view(request):
     return render(request, 'products/search_results.html', context)
 
 
-#############################################
-#    get_products   -> все товары           #
-#############################################
-
 def get_products(request):
-    categories = Category.objects.all()
+    categories = get_all_categories()
     selected_category_id = request.GET.get('category')
-
-    if selected_category_id:
-        products = Product.objects.filter(category__slug=selected_category_id)
-    else:
-        products = Product.objects.order_by('-created_at')[:10]
-
-    paginator = Paginator(products, 9)
+    products = get_products_by_category(selected_category_id)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginate_products(products, page_number)
 
     return render(request, 'products/new/product.html',
                   {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id})
