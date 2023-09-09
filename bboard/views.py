@@ -31,27 +31,20 @@ from .models import Message
 from .models import Order
 from .models import Product
 from .models import Category
-from .services import get_recent_products_with_users
-from .services import get_recent_reviews_with_reviewers
-from .services import process_review_form
-from .services import get_user_count
-from .services import search_products
-from .services import get_all_categories
-from .services import get_products_by_category
-from .services import paginate_products
+from . import services
 
 
 def home_view(request):
     """home_view --> Главная страница   """
-    products = get_recent_products_with_users()
-    reviews = get_recent_reviews_with_reviewers()
+    products = services.get_recent_products_with_users()
+    reviews = services.get_recent_reviews_with_reviewers()
 
-    if process_review_form(request):
+    if services.process_review_form(request):
         return redirect("home")
 
     form = ReviewForm()
 
-    quantity_users = get_user_count()
+    quantity_users = services.get_user_count()
     return render(request, "products/new/index.html",
                   {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users})
 
@@ -70,7 +63,7 @@ def delete_review(request, review_id):
 def search_view(request):
     """search_view - Поле поиска """
     query = request.GET.get("query")
-    products = search_products(query)
+    products = services.search_products(query)
 
     context = {
         'query': query,
@@ -80,57 +73,41 @@ def search_view(request):
 
 
 def get_products(request):
-    categories = get_all_categories()
+    categories = services.get_all_categories()
     selected_category_id = request.GET.get('category')
-    products = get_products_by_category(selected_category_id)
+    products = services.get_products_by_category(selected_category_id)
     page_number = request.GET.get("page")
-    page_obj = paginate_products(products, page_number)
+    page_obj = services.paginate_products(products, page_number)
 
     return render(request, 'products/new/product.html',
                   {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id})
 
 
-###############################################################################################################
-# product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения #
-###############################################################################################################
-
 def product_detail_view(request, slug):
+    """product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения"""
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
     return render(request, 'products/product_detail.html', {'product': product, 'messages': messages})
 
 
-##############################################################################################################
-# create_chat_view --> обработчик для перехода в чат(если он существует) или создания чата и перехода к нему #
-##############################################################################################################
-
 @login_required
 def create_chat_view(request, slug):
+    """create_chat_view --> обработчик для перехода в чат(если он существует) или создания чата и перехода к нему"""
     product = get_object_or_404(Product, slug=slug)
 
     if not request.user.is_authenticated:
         return redirect("login")
 
-    # Проверяем существование чата между отправителем и получателем
-    chat_exists = Chat.objects.filter(sender=request.user, receiver=product.user, product=product).first()
+    chat = services.create_or_get_chat(request.user, product)
 
-    if chat_exists:
-        # Если чат уже существует, перенаправляем пользователя на страницу чата
-        return redirect("chat", chat_id=chat_exists.id)
-
-    # Если чат не существует, создаем его
-    chat = Chat.objects.create(sender=request.user, receiver=product.user, product=product)
     return redirect("chat", chat_id=chat.id)
 
 
-################################################
-# chat_view --> чат между двумя пользователями #
-################################################
 @login_required
 def chat_view(request, chat_id):
-    chat = get_object_or_404(Chat.objects.select_related('receiver'), id=chat_id)
-    if request.user != chat.sender and request.user != chat.receiver:
+    """chat_view --> чат между двумя пользователями"""
+    chat, messages = services.get_chat_and_messages(request.user, chat_id)
+    if chat is None:
         return HttpResponse("У вас нет доступа к этому чату.")
-    messages = Message.objects.filter(chat=chat).order_by('created_at').select_related('sender')
 
     return render(request, "products/chat.html", {"chat": chat, "messages": messages})
 
