@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from .models import Category
 from .models import Chat
 from .models import Message
+from .models import Order
 from .models import Product, Review
 from accounts.models import User
 from .forms import ReviewForm
@@ -15,6 +16,8 @@ from .forms import ReviewForm
 ####################################################################
 #               БИЗНЕС ЛОГИКА ДЛЯ HOME_VIEW                        #
 ####################################################################
+from .utils import transliterate
+
 
 def get_recent_products_with_users():
     return Product.objects.order_by('-created_at').select_related('user')[:5]
@@ -139,3 +142,47 @@ def get_user_chats(user, chat_type):
         # Обработка некорректного типа чата (по умолчанию показываем покупки)
         return Chat.objects.filter(sender=user).select_related('receiver', 'product')
 
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  create_product                       #
+#####################################################################
+
+def save_product(request, form):
+    """Сохраняет товар и генерирует slug."""
+    product = form.save(commit=False)
+    product.user = request.user
+
+    # Generate slug from title and transliterate if necessary
+    title = form.cleaned_data['title']
+    slug = transliterate(title)
+    product.slug = slug
+
+    product.save()
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  create_order                         #
+#####################################################################
+
+def save_order(request, form, product):
+    """Сохраняет заказ."""
+    order = form.save(commit=False)
+    order.customer_name = request.user
+    order.product = product
+    order.save()
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  orders_of_users                      #
+#####################################################################
+
+def get_user_orders(user):
+    """Retrieve and return the orders of a specific user."""
+    return Order.objects.select_related('product__user').filter(customer_name=user)
+
+
+def paginate_orders(request, orders, per_page=10):
+    """Paginate a list of orders."""
+    paginator = Paginator(orders, per_page)
+    page_number = request.GET.get('page')
+    return paginator.get_page(page_number)

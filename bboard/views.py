@@ -158,28 +158,14 @@ def user_sell(request):
     return render(request, "products/sell.html", {"chats": chats, "temp": "sell"})
 
 
-################################################################################################
-#    create_product ->  view для создания Товара, любой пользователь может добавить свой товар #
-################################################################################################
-
-
 @login_required
 @cache_page(300)
 def create_product(request):
+    """create_product ->  view для создания Товара, любой пользователь может добавить свой товар"""
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            product = form.save(commit=False)
-            product.user = request.user
-
-            # Generate slug from title and transliterate if necessary
-            title = form.cleaned_data['title']
-            print(title)
-            slug = transliterate(title)
-            print(slug)
-            product.slug = slug
-
-            product.save()
+            services.save_product(request, form)
             return redirect("home")
         else:
             print(form.errors)
@@ -188,22 +174,18 @@ def create_product(request):
     return render(request, 'products/create_product.html', {'form': form})
 
 
-########################################################
-#    create_order -> Делает заказ и сохраняет его в бд #
-########################################################
+
 
 
 @login_required
 def create_order(request, product_id):
+    """ create_order -> Делает заказ и сохраняет его в бд"""
     product = get_object_or_404(Product, pk=product_id)
 
     if request.method == "POST" and request.user != product.user:
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.customer_name = request.user
-            order.product = product
-            order.save()
+            services.save_order(request, form, product)
             return redirect("home")
         else:
             print(form.errors)
@@ -213,17 +195,12 @@ def create_order(request, product_id):
     return render(request, "products/create_order.html", {"form": form})
 
 
-###########################################################
-# orders_of_users -> Все заказы определенного пользователя#
-###########################################################
 
 @login_required
 def orders_of_user(request):
-    orders = Order.objects.select_related('product__user').filter(customer_name=request.user)
-
-    paginator = Paginator(orders, 1)  # Показывать по 10 заказов на странице (можешь изменить на свое усмотрение)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    """orders_of_users -> Все заказы определенного пользователя"""
+    orders = services.get_user_orders(request.user)
+    page_obj = services.paginate_orders(request, orders)
     return render(request, "products/orders.html", {"page_obj": page_obj})
 
 
