@@ -316,7 +316,7 @@ def package_search(request):
 def rate_user(request, username):
     if request.method == "POST":
         rating = int(request.POST.get("rating", 0))
-        user = User.objects.get(username=username)
+        user = services.get_user_by_username(username)
 
         try:
             request.user.rate_(rating, user)
@@ -335,7 +335,7 @@ def rate_user(request, username):
 #############################################################################################
 
 def top_rated_users(request):
-    users = User.objects.filter(average_rating__gt=4).order_by('-average_rating')[:10]
+    users = services.get_users_with_high_ratings()
     return render(request, "products/new/top_rated_users.html", {"users": users})
 
 

@@ -186,3 +186,16 @@ def paginate_orders(request, orders, per_page=10):
     paginator = Paginator(orders, per_page)
     page_number = request.GET.get('page')
     return paginator.get_page(page_number)
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  top_rated_users                      #
+#####################################################################
+
+def get_users_with_high_ratings():
+    return User.objects.filter(average_rating__gt=4).order_by('-average_rating')[:10]
+
+
+def get_user_by_username(username_):
+    return User.objects.get(username=username_)
+
