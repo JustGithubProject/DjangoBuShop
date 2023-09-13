@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
+from django.utils import translation
 from django.views.decorators.cache import cache_page
 
 from accounts.models import User
@@ -313,6 +314,7 @@ def package_search(request):
 #  rate_user -> оценка пользователя  #
 ######################################
 
+@login_required
 def rate_user(request, username):
     if request.method == "POST":
         rating = int(request.POST.get("rating", 0))
@@ -377,3 +379,8 @@ def subscribe(request):
                 print(e)
 
     return render(request, 'products/new/footer.html')
+
+
+
+
+

@@ -14,20 +14,13 @@ from .forms import LoginForm
 from .forms import CustomPasswordResetForm
 from .models import User
 
+from . import services
+
 
 def registration_view(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data.get("captcha"):
-                form.save()
-                return redirect('login')
-            else:
-                messages.error(request, "Please complete the reCAPTCHA.")
-        else:
-            form.add_error(None, 'Invalid username or password.')
-            messages.error(request, "Что-то пошло не так. Попробуйте еще раз")
-
+        services.handle_registration(request, form)
     else:
         form = RegistrationForm()
     return render(request, "users/registration.html", {'form': form})
