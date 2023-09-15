@@ -85,14 +85,18 @@ def get_products(request):
 
 
 def product_detail_view(request, slug):
-    """product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения"""
+    """
+    product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения
+    """
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
     return render(request, 'products/product_detail.html', {'product': product, 'messages': messages})
 
 
 @login_required
 def create_chat_view(request, slug):
-    """create_chat_view --> обработчик для перехода в чат(если он существует) или создания чата и перехода к нему"""
+    """
+    create_chat_view --> обработчик для перехода в чат(если он существует) или создания чата и перехода к нему
+    """
     product = get_object_or_404(Product, slug=slug)
 
     if not request.user.is_authenticated:
@@ -105,7 +109,9 @@ def create_chat_view(request, slug):
 
 @login_required
 def chat_view(request, chat_id):
-    """chat_view --> чат между двумя пользователями"""
+    """
+    chat_view --> чат между двумя пользователями
+    """
     chat, messages = services.get_chat_and_messages(request.user, chat_id)
     if chat is None:
         return HttpResponse("У вас нет доступа к этому чату.")
@@ -115,7 +121,9 @@ def chat_view(request, chat_id):
 
 @login_required
 def send_message_view(request, chat_id):
-    """send_message_view --> отправка сообщений, и редирект для того, чтобы страница обновилась """
+    """
+    send_message_view --> отправка сообщений, и редирект для того, чтобы страница обновилась
+    """
     chat = get_object_or_404(Chat, id=chat_id)
 
     # Проверяем, авторизован ли пользователь
@@ -138,7 +146,9 @@ def send_message_view(request, chat_id):
 
 @login_required
 def seller_messages(request, slug):
-    """seller_messages --> продавец может посмотреть тех, кто оправлял ему сообщения"""
+    """
+    seller_messages --> продавец может посмотреть тех, кто оправлял ему сообщения
+    """
     product = get_object_or_404(Product, slug=slug)
 
     chats = services.get_seller_chats(request.user, product)
@@ -147,14 +157,18 @@ def seller_messages(request, slug):
 
 @login_required
 def user_buy(request):
-    """user_buy --> чаты, где пользователь что-то покупает"""
+    """
+    user_buy --> чаты, где пользователь что-то покупает
+    """
     chats = services.get_user_chats(request.user, chat_type="buy")
     return render(request, "products/buy.html", {"chats": chats, "temp": "buy"})
 
 
 @login_required
 def user_sell(request):
-    """user_sell --> чаты, где пользователь что-то продает"""
+    """
+    user_sell --> чаты, где пользователь что-то продает
+    """
     chats = services.get_user_chats(request.user, chat_type="sell")
     return render(request, "products/sell.html", {"chats": chats, "temp": "sell"})
 
@@ -162,7 +176,9 @@ def user_sell(request):
 @login_required
 @cache_page(300)
 def create_product(request):
-    """create_product ->  view для создания Товара, любой пользователь может добавить свой товар"""
+    """
+    create_product -> view для создания Товара, любой пользователь может добавить свой товар
+    """
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
@@ -175,12 +191,11 @@ def create_product(request):
     return render(request, 'products/create_product.html', {'form': form})
 
 
-
-
-
 @login_required
 def create_order(request, product_id):
-    """ create_order -> Делает заказ и сохраняет его в бд"""
+    """
+    create_order -> Делает заказ и сохраняет его в бд
+    """
     product = get_object_or_404(Product, pk=product_id)
 
     if request.method == "POST" and request.user != product.user:
@@ -199,18 +214,18 @@ def create_order(request, product_id):
 
 @login_required
 def orders_of_user(request):
-    """orders_of_users -> Все заказы определенного пользователя"""
+    """
+    orders_of_users -> Все заказы определенного пользователя
+    """
     orders = services.get_user_orders(request.user)
     page_obj = services.paginate_orders(request, orders)
     return render(request, "products/orders.html", {"page_obj": page_obj})
 
 
-#########################################################################################
-#    delete_chat -> view для удаления чата, каждый пользователь может удалить свои чаты #
-#########################################################################################
-
-
 def delete_chat(request, chat_id):
+    """
+    delete_chat -> view для удаления чата, каждый пользователь может удалить свои чаты
+    """
     chat = get_object_or_404(Chat, id=chat_id)
 
     if chat.receiver == request.user or chat.sender == request.user:
@@ -226,7 +241,9 @@ def delete_chat(request, chat_id):
 
 
 def get_document_tracking(request, tracking_number):
-    """Информация о посылке по накладной"""
+    """
+    Информация о посылке по накладной
+    """
     api_url = f"{settings.NOVA_POSHTA_API_URL}"
     payload = {
         "apiKey": settings.NOVA_POSHTA_API_KEY,

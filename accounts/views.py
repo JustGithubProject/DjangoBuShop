@@ -51,22 +51,7 @@ def logout_view(request):
 
 def profile(request):
     if request.method == "POST":
-        # Получаем значения из формы
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get("last_name")
-        phone_number = request.POST.get("phone_number")
-
-        # Обновляем соответствующие поля профиля пользователя
-        user = request.user
-        user.username = username
-        user.first_name = first_name
-        user.email = email
-        user.last_name = last_name
-        user.phone_number = phone_number
-        user.save()
-
+        services.get_and_update_fields(request)
         return redirect('profile')
 
     return render(request, 'users/profile.html', {'user': request.user})
@@ -91,7 +76,7 @@ def custom_password_reset_confirm(request, uidb64, token):
     # Декодируем uidb64 для получения пользователя
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        user = services.get_user_by_uid(uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
