@@ -211,7 +211,6 @@ def create_order(request, product_id):
     return render(request, "products/create_order.html", {"form": form})
 
 
-
 @login_required
 def orders_of_user(request):
     """

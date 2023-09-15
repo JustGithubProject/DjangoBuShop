@@ -72,12 +72,6 @@
                             <a class="nav-link" href="{% url 'get_products' %}">Товары</a>
                         </li>
 
-                        <li class="nav-item {%if current_page == 'top_rated_users' %}active{%endif%}">
-                            <a class="nav-link" href="{% url 'top_rated_users' %}">Элитные Пользователи</a>
-                        </li>
-                        <li class="nav-item {%if current_page == 'package_search'%}active{%endif%}">
-                            <a class="nav-link" href="{% url 'package_search' %}">Искать посылку</a>
-                        </li>
 
 
                         {%if user.is_authenticated%}

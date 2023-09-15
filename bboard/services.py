@@ -181,7 +181,7 @@ def get_user_orders(user):
     return Order.objects.select_related('product__user').filter(customer_name=user)
 
 
-def paginate_orders(request, orders, per_page=10):
+def paginate_orders(request, orders, per_page=1):
     """Paginate a list of orders."""
     paginator = Paginator(orders, per_page)
     page_number = request.GET.get('page')
