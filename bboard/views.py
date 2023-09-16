@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 import requests
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -240,46 +241,31 @@ def delete_chat(request, chat_id):
 
 
 def get_document_tracking(request, tracking_number):
-    """
-    Информация о посылке по накладной
-    """
-    api_url = f"{settings.NOVA_POSHTA_API_URL}"
-    payload = {
-        "apiKey": settings.NOVA_POSHTA_API_KEY,
-        "modelName": "TrackingDocument",
-        "calledMethod": "getStatusDocuments",
-        "methodProperties": {
-            "Documents": [
-                {"DocumentNumber": tracking_number}
-            ]
+    tracking_data = services.fetch_tracking_info(tracking_number)
+
+    if tracking_data:
+        weight = tracking_data.get("DocumentWeight")
+        cost_of_delivery = tracking_data.get("DocumentCost")
+        status_code = tracking_data.get("StatusCode")
+        status_code_decoding = decode_status.get(str(status_code), "Unknown")
+        number_squad = tracking_data.get("WarehouseRecipientNumber")
+        city_sender = tracking_data.get("CitySender")
+        decoded_city_sender = city_sender.encode().decode()
+        city_recipient = tracking_data.get("CityRecipient")
+        decoded_city_recipient = city_recipient.encode().decode()
+
+        context = {
+            "weight": weight,
+            "cost_of_delivery": cost_of_delivery,
+            "status_code_decoding": status_code_decoding,
+            "number_squad": number_squad,
+            "decoded_city_sender": decoded_city_sender,
+            "decoded_city_recipient": decoded_city_recipient
         }
-    }
 
-    response = requests.post(api_url, json=payload)
-    data = response.json()
-    ####################################
-    # Получение данных из json
-    weight = data["data"][0]["DocumentWeight"]
-    cost_of_delivery = data["data"][0]["DocumentCost"]
-    status_code = data["data"][0]["StatusCode"]
-    status_code_decoding = decode_status[str(status_code)]
-    number_squad = data["data"][0]["WarehouseRecipientNumber"]
-    city_sender = data["data"][0]["CitySender"]
-    decoded_city_sender = city_sender.encode().decode()
-    city_recipient = data["data"][0]["CityRecipient"]
-    decoded_city_recipient = city_recipient.encode().decode()
-    ######################################
-
-    context = {
-        "weight": weight,
-        "cost_of_delivery": cost_of_delivery,
-        "status_code_decoding": status_code_decoding,
-        "number_squad": number_squad,
-        "decoded_city_sender": decoded_city_sender,
-        "decoded_city_recipient": decoded_city_recipient
-    }
-
-    return render(request, "products/get_document_tracking.html", context=context)
+        return render(request, "products/get_document_tracking.html", context=context)
+    else:
+        return JsonResponse({"error": "Tracking data not found"}, status=404)
 
 
 ##################################################################################################

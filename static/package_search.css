@@ -20,7 +20,7 @@
     }
 }
 
-.search-container {
+.search-ass {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -39,7 +39,7 @@
     align-items: center; /* Выравнивание по центру */
 }
 
-.search-container h2 {
+.search-ass h2 {
     margin-bottom: 20px;
     font-size: 24px;
 }

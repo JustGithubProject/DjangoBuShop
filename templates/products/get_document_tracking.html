@@ -1,20 +1,22 @@
 {% extends 'products/new/base.html' %}
 {% load static %}
 
-{% block title %}Отслеживание посылки <<Новая почта>>{% endblock %}
+{% block title %}Отслеживание посылки - Новая почта{% endblock %}
+
 {% block styles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'get_document_tracking.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'get_document_tracking.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1 align="center">Информация о посылке</h1>
-    <div class="fade-in">
+<div class="container">
+    <h1 class="text-center">Информация</h1>
+    <div class="bd-ass">
         <p><strong>Вес:</strong> {{ weight }}</p>
-        <p><strong>Стоимость доставки:</strong> {{ cost_of_delivery }}₴</p>
+        <p><strong>Стоимость доставки:</strong> <span class="cost">{{ cost_of_delivery }}₴</span></p>
         <p><strong>Статус посылки:</strong> {{ status_code_decoding }}</p>
         <p><strong>Номер отделения:</strong> {{ number_squad }}</p>
         <p><strong>Город отправителя:</strong> {{ decoded_city_sender }}</p>
         <p><strong>Город получателя:</strong> {{ decoded_city_recipient }}</p>
     </div>
+</div>
 {% endblock %}
-

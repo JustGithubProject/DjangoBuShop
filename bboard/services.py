@@ -1,9 +1,11 @@
+import requests
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
+from project import settings
 from .models import Category
 from .models import Chat
 from .models import Message
@@ -198,4 +200,27 @@ def get_users_with_high_ratings():
 
 def get_user_by_username(username_):
     return User.objects.get(username=username_)
+
+
+def fetch_tracking_info(tracking_number):
+    api_url = settings.NOVA_POSHTA_API_URL
+    payload = {
+        "apiKey": settings.NOVA_POSHTA_API_KEY,
+        "modelName": "TrackingDocument",
+        "calledMethod": "getStatusDocuments",
+        "methodProperties": {
+            "Documents": [
+                {"DocumentNumber": tracking_number}
+            ]
+        }
+    }
+
+    response = requests.post(api_url, json=payload)
+    data = response.json()
+
+    if "data" in data and data["data"]:
+        tracking_data = data["data"][0]
+        return tracking_data
+    else:
+        return None
 
