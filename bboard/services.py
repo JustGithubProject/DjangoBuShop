@@ -52,7 +52,7 @@ def get_user_count():
 def search_products(query):
     if not query:
         return None
-    return Product.objects.filter(title__icontains=query)
+    return Product.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
 
 
 #####################################################################
