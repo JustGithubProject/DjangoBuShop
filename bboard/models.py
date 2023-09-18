@@ -112,3 +112,28 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    products = models.ManyToManyField(Product, through='CartItem', related_name='carts', verbose_name="Товары")
+
+    def __str__(self):
+        return f"Корзина пользователя {self.user}"
+
+    class Meta:
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name="Корзина")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    quantity = models.PositiveIntegerField(verbose_name="Количество")
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.title} в корзине {self.cart}"
+
+    class Meta:
+        verbose_name = "Элемент корзины"
+        verbose_name_plural = "Элементы корзины"
