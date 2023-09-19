@@ -22,4 +22,6 @@ urlpatterns = [
     path('rate_user/<str:username>/', views.rate_user, name='rate_user'),
     path('top_rated_users', views.top_rated_users, name='top_rated_users'),
     path("subscribe/", views.subscribe, name="subscribe"),
+    path("add_to_cart/<int:product_id>", views.add_to_cart, name="add_to_cart"),
+    path("cart/", views.get_cart, name="cart"),
 ]

@@ -40,7 +40,12 @@
                                 </h6>
                                 <h5>
                                     {{ product.price }}<span>UAH</span>
+                                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input type="submit" value="+" class="add-to-cart-button">
+                                    </form>
                                 </h5>
+
                             </div>
 
                         </div>

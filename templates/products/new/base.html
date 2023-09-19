@@ -79,6 +79,7 @@
                             <a class="nav-link" href="{% url 'user_buy' %}">Сообщения</a>
                         </li>
 
+
                         <li class="nav-item {%if current_page == 'create_product' %}active{%endif%}">
                             <a class="nav-link" href="{%url 'create_product'%}" style="text-decoration:none">Подать
                                 объявление</a>
@@ -86,6 +87,9 @@
                         <li class="nav-item {% if current_page == 'orders_of_user'%}active{%endif%}">
                             <a class="nav-link" href="{%url 'orders_of_user'%}" style="text-decoration:none">Ваши
                                 заказы</a>
+                        </li>
+                         <li class="nav-item">
+                            <a href="#" class="nav-link">Корзина</a>
                         </li>
                         {%endif%}
 

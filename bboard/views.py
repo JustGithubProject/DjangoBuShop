@@ -22,6 +22,8 @@ from project.settings import EMAIL_HOST_PASSWORD
 from project.settings import EMAIL_HOST_USER
 from project.settings import EMAIL_PORT
 from .forms import ReviewForm
+from .models import Cart
+from .models import CartItem
 from .models import Review
 
 from .utils import transliterate
@@ -383,6 +385,23 @@ def subscribe(request):
     return render(request, 'products/new/footer.html')
 
 
+@login_required
+def add_to_cart(request, product_id):
+    """
+        Контроллер для обработки формы, которая добавляет элемент в корзину
+    """
+    product = Product.objects.get(id=product_id)
+    user_cart, created = Cart.objects.get_or_create(user=request.user)
+
+    cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect("cart")
 
 
-
+@login_required
+def get_cart(request):
+    return render(request, "products/new/cart.html")
