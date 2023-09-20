@@ -1,7 +1,21 @@
 {% extends 'products/new/base.html' %}
+{% load static %}
 
 {% block title %}Корзина{% endblock %}
 
-{% block content %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'cart.css' %}">
+{% endblock %}
 
+{% block content %}
+    <div class="container">
+        {% for key, value in quantity_dict.items %}
+            <div class="product-block">
+                <h2>{{ value.product.title }}</h2>
+                <p>Количество: {{ value.quantity }} штук</p>
+                <hr>
+                <!-- Другие сведения о продукте, если необходимо -->
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

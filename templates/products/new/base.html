@@ -88,8 +88,8 @@
                             <a class="nav-link" href="{%url 'orders_of_user'%}" style="text-decoration:none">Ваши
                                 заказы</a>
                         </li>
-                         <li class="nav-item">
-                            <a href="#" class="nav-link">Корзина</a>
+                         <li class="nav-item {% if current_page == 'cart'%}active{%endif%}">
+                            <a href="{%url 'cart'%}" class="nav-link">Корзина</a>
                         </li>
                         {%endif%}
 

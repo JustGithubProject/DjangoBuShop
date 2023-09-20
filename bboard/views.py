@@ -404,4 +404,7 @@ def add_to_cart(request, product_id):
 
 @login_required
 def get_cart(request):
-    return render(request, "products/new/cart.html")
+    cart = Cart.objects.get(user=request.user)
+    items = cart.products.all()
+    quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
+    return render(request, "products/new/cart.html", {"items": items, "quantity_dict": quantity_dict})

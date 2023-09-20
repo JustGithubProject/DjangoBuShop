@@ -1,0 +1,15 @@
+
+.container {
+        margin: 20px auto;
+        max-width: 800px; /* Увеличьте максимальную ширину для примера */
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Добавление тени */
+        padding: 20px;
+}
+
+.product-block {
+        margin: 20px auto;
+        max-width: 100%; /* Занимает всю доступную ширину */
+
+        padding: 10px;
+}
