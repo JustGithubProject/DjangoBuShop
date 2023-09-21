@@ -408,3 +408,10 @@ def get_cart(request):
     items = cart.products.all()
     quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
     return render(request, "products/new/cart.html", {"items": items, "quantity_dict": quantity_dict})
+
+
+def delete_cart(request, product_id):
+    cart = Cart.objects.get(user=request.user)
+    cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
+    cart_item.delete()
+    return redirect(request.META.get("HTTP_REFERER", "home"))

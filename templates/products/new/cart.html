@@ -8,14 +8,26 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% for key, value in quantity_dict.items %}
-            <div class="product-block">
-                <h2>{{ value.product.title }}</h2>
-                <p>Количество: {{ value.quantity }} штук</p>
-                <hr>
-                <!-- Другие сведения о продукте, если необходимо -->
-            </div>
-        {% endfor %}
+<div class="container">
+    {% if quantity_dict %}
+    {% for key, value in quantity_dict.items %}
+    <div class="product-block">
+        <div class="product-info">
+            <h2 class="product-title">{{ value.product.title }}</h2>
+            <p class="product-quantity">Количество: {{ value.quantity }} штук</p>
+        </div>
+        <form method="POST" action="{% url 'delete_cart' product_id=key %}">
+            {% csrf_token %}
+            <button class="product-delete-button">Удалить</button>
+        </form>
+
+        <hr>
+        <!-- Другие сведения о продукте, если необходимо -->
     </div>
+
+    {% endfor %}
+    {% else %}
+    <h1 align="center">Ваша корзина пуста</h1>
+    {% endif %}
+</div>
 {% endblock %}
