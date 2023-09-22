@@ -395,10 +395,6 @@ def add_to_cart(request, product_id):
 
     cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
 
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-
     return redirect("cart")
 
 
@@ -407,7 +403,11 @@ def get_cart(request):
     cart = Cart.objects.get(user=request.user)
     items = cart.products.all()
     quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
-    return render(request, "products/new/cart.html", {"items": items, "quantity_dict": quantity_dict})
+    total_price = 0
+    for item in items:
+        total_price += quantity_dict[item.id].product.price
+    return render(request, "products/new/cart.html", {"items": items, "quantity_dict": quantity_dict,
+                                                      "total_price": total_price})
 
 
 def delete_cart(request, product_id):
