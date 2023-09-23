@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from .models import OrderCart
 from .models import Product, Order, Review
 
 
@@ -15,6 +16,13 @@ class OrderForm(forms.ModelForm):
     """The Form to create a order"""
     class Meta:
         model = Order
+        fields = ["name", "surname", "city", "department", "phone_number", "email"]
+
+
+class OrderCartForm(forms.ModelForm):
+    """The Form to create a order from cart"""
+    class Meta:
+        model = OrderCart
         fields = ["name", "surname", "city", "department", "phone_number", "email"]
 
 

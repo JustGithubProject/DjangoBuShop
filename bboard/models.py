@@ -55,7 +55,7 @@ class Product(models.Model):
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
     customer_name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Клиент")
-    email = models.EmailField(verbose_name="Email")
+    email = models.EmailField(verbose_name="Email", blank=True)
     name = models.CharField(max_length=100, null=True, verbose_name="Имя клиента")
     surname = models.CharField(max_length=100, null=True, verbose_name="Фамилия клиента")
     phone_number = models.CharField(max_length=50, null=True, verbose_name="Номер телефона")
@@ -69,6 +69,27 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
+
+
+class OrderCart(models.Model):
+    products = models.ManyToManyField(Product, verbose_name="Товар")
+    customer_name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Клиент")
+    # price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    email = models.EmailField(verbose_name="Email", blank=True)
+    name = models.CharField(max_length=100, null=True, verbose_name="Имя клиента")
+    surname = models.CharField(max_length=100, null=True, verbose_name="Фамилия клиента")
+    phone_number = models.CharField(max_length=50, null=True, verbose_name="Номер телефона")
+    city = models.CharField(max_length=100, null=True, verbose_name="Населенный пункт")
+    department = models.CharField(max_length=600, null=True, verbose_name="Отделение")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    def __str__(self):
+        return f"Order cart #{self.pk}"
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+
 
 
 class Chat(models.Model):

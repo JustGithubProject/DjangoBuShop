@@ -21,9 +21,11 @@ from project.settings import EMAIL_HOST
 from project.settings import EMAIL_HOST_PASSWORD
 from project.settings import EMAIL_HOST_USER
 from project.settings import EMAIL_PORT
+from .forms import OrderCartForm
 from .forms import ReviewForm
 from .models import Cart
 from .models import CartItem
+from .models import OrderCart
 from .models import Review
 
 from .utils import transliterate
@@ -415,3 +417,26 @@ def delete_cart(request, product_id):
     cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
     cart_item.delete()
     return redirect(request.META.get("HTTP_REFERER", "home"))
+
+
+def create_order_cart(request):
+    """Обработчик формы, которая создает заказ с корзины"""
+    if request.method == "POST":
+        form = OrderCartForm(request.POST)
+        if form.is_valid():
+            cart = Cart.objects.get(user=request.user)
+            if cart.products.exists():
+                order_cart = form.save(commit=False)
+                order_cart.customer_name = request.user
+                for product in cart.products.all():
+                    order_cart.products.add(product)
+
+                cart.products.clear()
+
+                order_cart.save()
+        else:
+            print(form.errors)
+    else:
+        form = OrderCartForm()
+    return render(request, "products/create_order_cart.html", {"form": form})
+
