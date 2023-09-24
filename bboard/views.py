@@ -426,17 +426,28 @@ def create_order_cart(request):
         if form.is_valid():
             cart = Cart.objects.get(user=request.user)
             if cart.products.exists():
+                total_price = 0
+                for product in cart.products.all():
+                    total_price += product.price
+
+                # Сначала создайте заказ и сохраните его
                 order_cart = form.save(commit=False)
                 order_cart.customer_name = request.user
+                order_cart.price = total_price
+                order_cart.save()
+
+                # Затем добавьте продукты к заказу
                 for product in cart.products.all():
                     order_cart.products.add(product)
 
+                # Очистите корзину
                 cart.products.clear()
 
-                order_cart.save()
+                return redirect("home")
         else:
             print(form.errors)
     else:
         form = OrderCartForm()
-    return render(request, "products/create_order_cart.html", {"form": form})
+    return render(request, "products/new/create_order_cart.html", {"form": form})
+
 

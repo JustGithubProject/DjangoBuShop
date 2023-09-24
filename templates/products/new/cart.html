@@ -26,7 +26,7 @@
     </div>
     {% endfor %}
     Общая цена - {{total_price}}UAH
-    <a href="">Купить</a>
+    <a href="{% url 'create_order_cart' %}">Купить</a>
     {% else %}
     <h1 align="center">Ваша корзина пуста</h1>
     {% endif %}

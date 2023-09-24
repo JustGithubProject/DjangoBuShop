@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from .models import OrderCart
 from .models import Product
 from .models import Category
 from .models import Order
@@ -48,3 +49,9 @@ class CartAdmin(admin.ModelAdmin):
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(OrderCart)
+class OrderCartAdmin(admin.ModelAdmin):
+    pass
+

@@ -74,7 +74,7 @@ class Order(models.Model):
 class OrderCart(models.Model):
     products = models.ManyToManyField(Product, verbose_name="Товар")
     customer_name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Клиент")
-    # price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     email = models.EmailField(verbose_name="Email", blank=True)
     name = models.CharField(max_length=100, null=True, verbose_name="Имя клиента")
     surname = models.CharField(max_length=100, null=True, verbose_name="Фамилия клиента")
@@ -87,9 +87,8 @@ class OrderCart(models.Model):
         return f"Order cart #{self.pk}"
 
     class Meta:
-        verbose_name = "Заказ"
-        verbose_name_plural = "Заказы"
-
+        verbose_name = "Заказ с корзины"
+        verbose_name_plural = "Заказы c корзины"
 
 
 class Chat(models.Model):
