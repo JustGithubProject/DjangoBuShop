@@ -451,3 +451,8 @@ def create_order_cart(request):
     return render(request, "products/new/create_order_cart.html", {"form": form})
 
 
+def orders_of_user_from_cart(request):
+    orders = services.get_orders_from_cart(request.user)
+    page_obj = services.paginate_orders(request, orders)
+    return render(request, "products/new/orders_of_cart.html", {"page_obj": page_obj})
+

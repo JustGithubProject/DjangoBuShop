@@ -14,8 +14,10 @@
 <div class="orders">
     {% for order in page_obj %}
     <div class="order">
-        <p>Имя: {{ order.product.title }}</p>
-        <p>Откуда: {{ order.product.user.city }}</p>
+        {% for product in order.products.all%}
+        <p>{{product.id}}: {{ product }}</p>
+        {%endfor%}
+        <p>Откуда: {{ order.products.user.city }}</p>
         <p>Куда: {{ order.city }}</p>
         <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
         <p>Номер Покупателя: {{ order.phone_number }}</p>
@@ -28,8 +30,7 @@
     </div>
     {% endfor %}
 
-    <a href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
-
+    <a href="{% url 'orders_of_user'%}">Перейти обратно в одиночные заказы</a>
 
     {% if page_obj.has_previous or page_obj.has_next %}
     <div class="pagination">

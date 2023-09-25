@@ -10,6 +10,7 @@ from .models import Category
 from .models import Chat
 from .models import Message
 from .models import Order
+from .models import OrderCart
 from .models import Product, Review
 from accounts.models import User
 from .forms import ReviewForm
@@ -223,4 +224,12 @@ def fetch_tracking_info(tracking_number):
         return tracking_data
     else:
         return None
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  orders_of_user_from_cart             #
+#####################################################################
+
+
+def get_orders_from_cart(user):
+    return OrderCart.objects.filter(customer_name=user)
 
