@@ -7,7 +7,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-
+from django.views.decorators.cache import cache_page
 from .forms import CustomPasswordResetEmailForm
 from .forms import RegistrationForm
 from .forms import LoginForm
@@ -24,6 +24,7 @@ def registration_view(request):
     else:
         form = RegistrationForm()
     return render(request, "users/registration.html", {'form': form})
+
 
 
 def login_view(request):
@@ -47,6 +48,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
 
 
 def profile(request):

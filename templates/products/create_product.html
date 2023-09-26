@@ -9,7 +9,7 @@
 
 <form method="POST" enctype="multipart/form-data" class="product-form">
     {% csrf_token %}
-    <p>* * * * *</p>
+    <p style="color:red">ВНИМАНИЕ: ТОВАР БУДЕТ ДОБАВЛЕН НА САЙТ В ТЕЧЕНИИ МИНУТЫ</p>
     <div class="form-group-cr">
         <label for="{{ form.category.id_for_label }}">Категория:</label>
         {{ form.category }}

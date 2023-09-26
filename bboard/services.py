@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
 from project import settings
+from .models import Cart
 from .models import Category
 from .models import Chat
 from .models import Message
@@ -232,4 +233,8 @@ def fetch_tracking_info(tracking_number):
 
 def get_orders_from_cart(user):
     return OrderCart.objects.filter(customer_name=user)
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  delete_cart                          #
+#####################################################################
 

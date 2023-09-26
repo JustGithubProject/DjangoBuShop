@@ -40,6 +40,7 @@ from .models import Category
 from . import services
 
 
+@cache_page(20)
 def home_view(request):
     """home_view --> Главная страница   """
     products = services.get_recent_products_with_users()
@@ -78,6 +79,7 @@ def search_view(request):
     return render(request, 'products/search_results.html', context)
 
 
+@cache_page(60)
 def get_products(request):
     categories = services.get_all_categories()
     selected_category_id = request.GET.get('category')
@@ -179,7 +181,7 @@ def user_sell(request):
 
 
 @login_required
-@cache_page(300)
+@cache_page(20)
 def create_product(request):
     """
     create_product -> view для создания Товара, любой пользователь может добавить свой товар
@@ -413,8 +415,8 @@ def get_cart(request):
 
 
 def delete_cart(request, product_id):
-    cart = Cart.objects.get(user=request.user)
-    cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
     cart_item.delete()
     return redirect(request.META.get("HTTP_REFERER", "home"))
 
