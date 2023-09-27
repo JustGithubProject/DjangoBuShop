@@ -24,14 +24,30 @@ from .utils import transliterate
 
 
 def get_recent_products_with_users():
+    """
+    Получение недавно добавленных продуктов с информацией о пользователях, добавивших их.
+
+    :return: QuerySet недавно добавленных продуктов.
+    """
     return Product.objects.order_by('-created_at').select_related('user')[:5]
 
 
 def get_recent_reviews_with_reviewers():
+    """
+    Получение недавних отзывов с информацией об авторах.
+
+    :return: QuerySet недавних отзывов с информацией об авторах.
+    """
     return Review.objects.order_by("date_posted").select_related('reviewer_name')[:10]
 
 
 def process_review_form(request):
+    """
+    Обработка формы отзыва.
+
+    :param request: Объект запроса Django.
+    :return: True, если форма успешно обработана, иначе False.
+    """
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -43,6 +59,11 @@ def process_review_form(request):
 
 
 def get_user_count():
+    """
+    Получение общего количества пользователей.
+
+    :return: Количество пользователей.
+    """
     return User.objects.count()
 
 
@@ -52,6 +73,12 @@ def get_user_count():
 
 
 def search_products(query):
+    """
+    Поиск продуктов по запросу.
+
+    :param query: Поисковый запрос.
+    :return: QuerySet продуктов, соответствующих запросу.
+    """
     if not query:
         return None
     return Product.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
@@ -62,16 +89,35 @@ def search_products(query):
 #####################################################################
 
 def get_all_categories():
+    """
+    Получение всех категорий товаров.
+
+    :return: QuerySet всех категорий.
+    """
     return Category.objects.all()
 
 
 def get_products_by_category(selected_category_id):
+    """
+    Получение продуктов по выбранной категории.
+
+    :param selected_category_id: Идентификатор выбранной категории.
+    :return: QuerySet продуктов, соответствующих выбранной категории.
+    """
     if selected_category_id:
         return Product.objects.filter(category__slug=selected_category_id)
     return Product.objects.order_by('-created_at')[:10]
 
 
 def paginate_products(products, page_number, per_page=9):
+    """
+    Пагинация списка продуктов.
+
+    :param products: QuerySet продуктов для пагинации.
+    :param page_number: Номер страницы для отображения.
+    :param per_page: Количество продуктов на странице (по умолчанию 9).
+    :return: Объект страницы с продуктами.
+    """
     paginator = Paginator(products, per_page)
     return paginator.get_page(page_number)
 
@@ -82,7 +128,11 @@ def paginate_products(products, page_number, per_page=9):
 
 def create_or_get_chat(sender, product):
     """
-    Функция для создания нового чата или получения существующего чата между отправителем и получателем.
+    Создание или получение чата между отправителем и получателем.
+
+    :param sender: Пользователь-отправитель.
+    :param product: Продукт-получатель.
+    :return: Объект чата.
     """
     chat_exists = Chat.objects.filter(sender=sender, receiver=product.user, product=product).first()
 
@@ -99,7 +149,13 @@ def create_or_get_chat(sender, product):
 
 
 def get_chat_and_messages(user, chat_id):
-    """Retrieve chat and messages for the given user and chat_id."""
+    """
+    Получение чата и сообщений для пользователя и чата с указанным ID.
+
+    :param user: Пользователь, который запрашивает чат.
+    :param chat_id: Идентификатор чата.
+    :return: Объект чата и QuerySet сообщений или None, если пользователь не имеет доступа к чату.
+    """
     chat = get_object_or_404(Chat.objects.select_related('receiver'), id=chat_id)
 
     if user != chat.sender and user != chat.receiver:
@@ -114,6 +170,14 @@ def get_chat_and_messages(user, chat_id):
 #####################################################################
 
 def create_and_save_message(chat, sender, content):
+    """
+    Создание и сохранение сообщения в чате.
+
+    :param chat: Чат, в который отправляется сообщение.
+    :param sender: Пользователь-отправитель.
+    :param content: Текст сообщения.
+    :return: True, если сообщение успешно создано и сохранено, иначе False.
+    """
     try:
         message = Message(chat=chat, sender=sender, content=content)
         message.save()
@@ -128,7 +192,13 @@ def create_and_save_message(chat, sender, content):
 #####################################################################
 
 def get_seller_chats(user, product):
-    """Возвращает чаты, где пользователь продавец и связаны с конкретным продуктом."""
+    """
+    Получение чатов, где пользователь является продавцом и они связаны с конкретным продуктом.
+
+    :param user: Пользователь-продавец.
+    :param product: Продукт, для которого нужны чаты.
+    :return: QuerySet чатов.
+    """
     return Chat.objects.filter(receiver=user, product=product).select_related('sender', 'product')
 
 #####################################################################
@@ -137,7 +207,13 @@ def get_seller_chats(user, product):
 
 
 def get_user_chats(user, chat_type):
-    """Возвращает чаты в зависимости от типа (покупка или продажа)."""
+    """
+    Получение чатов пользователя в зависимости от типа (покупка или продажа).
+
+    :param user: Пользователь, для которого нужны чаты.
+    :param chat_type: Тип чатов ('buy' или 'sell').
+    :return: QuerySet чатов пользователя в зависимости от типа.
+    """
     if chat_type == "buy":
         return Chat.objects.filter(sender=user).select_related('receiver', 'product')
     elif chat_type == "sell":
@@ -152,7 +228,12 @@ def get_user_chats(user, chat_type):
 #####################################################################
 
 def save_product(request, form):
-    """Сохраняет товар и генерирует slug."""
+    """
+    Сохранение товара и генерация slug.
+
+    :param request: Объект запроса Django.
+    :param form: Форма с данными о товаре.
+    """
     product = form.save(commit=False)
     product.user = request.user
 
@@ -169,7 +250,13 @@ def save_product(request, form):
 #####################################################################
 
 def save_order(request, form, product):
-    """Сохраняет заказ."""
+    """
+    Сохранение заказа.
+
+    :param request: Объект запроса Django.
+    :param form: Форма с данными о заказе.
+    :param product: Продукт, для которого создается заказ.
+    """
     order = form.save(commit=False)
     order.customer_name = request.user
     order.product = product
@@ -181,12 +268,24 @@ def save_order(request, form, product):
 #####################################################################
 
 def get_user_orders(user):
-    """Retrieve and return the orders of a specific user."""
+    """
+    Получение заказов определенного пользователя.
+
+    :param user: Пользователь, для которого нужны заказы.
+    :return: QuerySet заказов пользователя.
+    """
     return Order.objects.select_related('product__user').filter(customer_name=user)
 
 
 def paginate_orders(request, orders, per_page=1):
-    """Paginate a list of orders."""
+    """
+    Пагинация списка заказов.
+
+    :param request: Объект запроса Django.
+    :param orders: QuerySet заказов для пагинации.
+    :param per_page: Количество заказов на странице (по умолчанию 1).
+    :return: Объект страницы с заказами.
+    """
     paginator = Paginator(orders, per_page)
     page_number = request.GET.get('page')
     return paginator.get_page(page_number)
@@ -197,14 +296,31 @@ def paginate_orders(request, orders, per_page=1):
 #####################################################################
 
 def get_users_with_high_ratings():
+    """
+    Получение пользователей с высокими рейтингами.
+
+    :return: QuerySet пользователей с высокими рейтингами (больше 4).
+    """
     return User.objects.filter(average_rating__gt=4).order_by('-average_rating')[:10]
 
 
 def get_user_by_username(username_):
+    """
+    Получение пользователя по его имени пользователя.
+
+    :param username_: Имя пользователя.
+    :return: Объект пользователя.
+    """
     return User.objects.get(username=username_)
 
 
 def fetch_tracking_info(tracking_number):
+    """
+    Получение информации о трекинге по номеру трекинга.
+
+    :param tracking_number: Номер трекинга.
+    :return: Информация о трекинге или None, если данные не найдены.
+    """
     api_url = settings.NOVA_POSHTA_API_URL
     payload = {
         "apiKey": settings.NOVA_POSHTA_API_KEY,
@@ -232,6 +348,12 @@ def fetch_tracking_info(tracking_number):
 
 
 def get_orders_from_cart(user):
+    """
+    Получение заказов из корзины для пользователя.
+
+    :param user: Пользователь, для которого нужны заказы из корзины.
+    :return: QuerySet заказов из корзины для пользователя.
+    """
     return OrderCart.objects.filter(customer_name=user)
 
 #####################################################################

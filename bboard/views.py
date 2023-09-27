@@ -184,7 +184,17 @@ def user_sell(request):
 @cache_page(20)
 def create_product(request):
     """
-    create_product -> view для создания Товара, любой пользователь может добавить свой товар
+    Создание нового товара.
+
+    Это представление позволяет любому пользователю добавить свой товар на сайт. Пользователь может заполнить форму
+    с данными о товаре и загрузить изображение товара. После успешного создания товара, пользователь будет перенаправлен
+    на домашнюю страницу.
+
+    Кеширование: Это представление кешируется на 20 секунд, что помогает снизить нагрузку на сервер и ускорить
+    отображение страницы при повторных запросах в течение этого времени.
+
+    :param request: Объект запроса Django.
+    :return: Перенаправление на домашнюю страницу после успешного создания товара или отображение формы создания товара.
     """
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -201,7 +211,15 @@ def create_product(request):
 @login_required
 def create_order(request, product_id):
     """
-    create_order -> Делает заказ и сохраняет его в бд
+    Создание заказа для продукта.
+
+    Это представление позволяет пользователю создать заказ для определенного продукта и сохранить его в базе данных.
+    Для создания заказа необходимо заполнить форму с данными о заказе. Пользователь может создать заказ только
+    для продукта, который не принадлежит ему.
+
+    :param request: Объект запроса Django.
+    :param product_id: Идентификатор продукта, для которого создается заказ.
+    :return: Перенаправление на домашнюю страницу после успешного создания заказа или отображение формы заказа.
     """
     product = get_object_or_404(Product, pk=product_id)
 
@@ -221,7 +239,13 @@ def create_order(request, product_id):
 @login_required
 def orders_of_user(request):
     """
-    orders_of_users -> Все заказы определенного пользователя
+    orders_of_user -> Просмотр всех заказов определенного пользователя.
+
+    Это представление отображает список всех заказов, сделанных определенным пользователем.
+    Пользователь должен быть авторизован для доступа к этой странице.
+
+    :param request: Объект запроса Django.
+    :return: Ответ с отображением списка заказов пользователя.
     """
     orders = services.get_user_orders(request.user)
     page_obj = services.paginate_orders(request, orders)
@@ -230,7 +254,15 @@ def orders_of_user(request):
 
 def delete_chat(request, chat_id):
     """
-    delete_chat -> view для удаления чата, каждый пользователь может удалить свои чаты
+    Удаление чата.
+
+    Это представление позволяет пользователю удалить чат. Каждый пользователь может удалять только свои чаты.
+    Если пользователь является отправителем или получателем чата, чат будет удален. В противном случае пользователь
+    не имеет прав на удаление чата.
+
+    :param request: Объект запроса Django.
+    :param chat_id: Идентификатор чата, который нужно удалить.
+    :return: Перенаправление на страницу с чатами пользователя после успешного удаления, или сообщение об ошибке.
     """
     chat = get_object_or_404(Chat, id=chat_id)
 
@@ -247,6 +279,17 @@ def delete_chat(request, chat_id):
 
 
 def get_document_tracking(request, tracking_number):
+    """
+    Получение информации о трекинге документа.
+
+    Это представление позволяет пользователю получить информацию о трекинге документа по его
+    уникальному номеру. Информация включает в себя вес документа, стоимость доставки, статус,
+    номер с квадры, город отправителя и город получателя.
+
+    :param request: Объект запроса Django.
+    :param tracking_number: Уникальный номер трекинга документа.
+    :return: Ответ с информацией о трекинге или JSON-ответ с ошибкой, если данные не найдены.
+    """
     tracking_data = services.fetch_tracking_info(tracking_number)
 
     if tracking_data:
@@ -280,6 +323,17 @@ def get_document_tracking(request, tracking_number):
 
 
 def package_search(request):
+    """
+    Поиск информации о трекинге документа по номеру декларации.
+
+    Это представление обрабатывает GET-запрос, в котором пользователь указывает номер декларации.
+    Если номер декларации указан, представление перенаправляет пользователя на страницу с информацией
+    о трекинге документа, используя представление `get_document_tracking`. Если номер декларации не
+    указан, представление отображает страницу поиска декларации.
+
+    :param request: Объект запроса Django.
+    :return: Перенаправление на страницу с информацией о трекинге или страницу поиска декларации.
+    """
     declaration = request.GET.get("package_number")
     if declaration:
         return redirect('get_document_tracking', declaration)
@@ -324,6 +378,17 @@ def package_search(request):
 
 @login_required
 def rate_user(request, username):
+    """
+    Оценка пользователя.
+
+    Это представление позволяет пользователю оценить другого пользователя на сайте.
+    Пользователь может указать рейтинг в форме POST-запроса. Если оценка прошла
+    успешно, добавляется сообщение об успехе, в противном случае добавляется сообщение об ошибке.
+
+    :param request: Объект запроса Django.
+    :param username: Имя пользователя, которого пользователь хочет оценить.
+    :return: Перенаправление на предыдущую страницу с сообщением об успехе или ошибке.
+    """
     if request.method == "POST":
         rating = int(request.POST.get("rating", 0))
         user = services.get_user_by_username(username)
@@ -345,11 +410,30 @@ def rate_user(request, username):
 #############################################################################################
 
 def top_rated_users(request):
+    """
+    Просмотр пользователей с высоким рейтингом.
+
+    Это представление отображает список пользователей, у которых есть высокие рейтинги
+    на вашем сайте или в вашем приложении.
+
+    :param request: Объект запроса Django.
+    :return: Ответ с отображением списка пользователей с высокими рейтингами.
+    """
     users = services.get_users_with_high_ratings()
     return render(request, "products/new/top_rated_users.html", {"users": users})
 
 
 def subscribe(request):
+    """
+    Подписка пользователя на рассылку.
+
+    Это представление обрабатывает POST-запрос, в котором пользователь вводит свой
+    адрес электронной почты для подписки на рассылку. После успешной подписки
+    отправляется подтверждение на указанный адрес электронной почты.
+
+    :param request: Объект запроса Django.
+    :return: Перенаправление на домашнюю страницу после успешной подписки.
+    """
     if request.method == 'POST':
         email = request.POST.get('email')
         if email:
@@ -392,7 +476,13 @@ def subscribe(request):
 @login_required
 def add_to_cart(request, product_id):
     """
-        Контроллер для обработки формы, которая добавляет элемент в корзину
+    Добавление товара в корзину пользователя.
+
+    Это представление обрабатывает запрос на добавление выбранного товара в корзину пользователя.
+
+    :param request: Объект запроса Django.
+    :param product_id: Идентификатор товара, который нужно добавить в корзину.
+    :return: Перенаправление на страницу корзины после успешного добавления товара.
     """
     product = Product.objects.get(id=product_id)
     user_cart, created = Cart.objects.get_or_create(user=request.user)
@@ -404,6 +494,15 @@ def add_to_cart(request, product_id):
 
 @login_required
 def get_cart(request):
+    """
+    Просмотр корзины пользователя.
+
+    Это представление отображает содержимое корзины пользователя и вычисляет общую стоимость
+    продуктов в корзине.
+
+    :param request: Объект запроса Django.
+    :return: Ответ с отображением содержимого корзины и общей стоимостью.
+    """
     cart = Cart.objects.get(user=request.user)
     items = cart.products.all()
     quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
@@ -415,6 +514,15 @@ def get_cart(request):
 
 
 def delete_cart(request, product_id):
+    """
+    Удаление продукта из корзины пользователя.
+
+    Это представление удаляет выбранный продукт из корзины пользователя.
+
+    :param request: Объект запроса Django.
+    :param product_id: Идентификатор продукта, который нужно удалить.
+    :return: Перенаправление на текущую страницу.
+    """
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
     cart_item.delete()
@@ -422,7 +530,15 @@ def delete_cart(request, product_id):
 
 
 def create_order_cart(request):
-    """Обработчик формы, которая создает заказ с корзины"""
+    """
+      Создание заказа из корзины пользователя.
+
+      Это представление обрабатывает форму, создающую заказ на основе содержимого корзины
+      пользователя.
+
+      :param request: Объект запроса Django.
+      :return: Перенаправление на домашнюю страницу после создания заказа.
+    """
     if request.method == "POST":
         form = OrderCartForm(request.POST)
         if form.is_valid():
@@ -454,6 +570,15 @@ def create_order_cart(request):
 
 
 def orders_of_user_from_cart(request):
+    """
+    Просмотр заказов, созданных из корзины пользователя.
+
+    Это представление отображает список заказов, которые были созданы из корзины
+    пользователя.
+
+    :param request: Объект запроса Django.
+    :return: Ответ с отображением списка заказов.
+    """
     orders = services.get_orders_from_cart(request.user)
     page_obj = services.paginate_orders(request, orders)
     return render(request, "products/new/orders_of_cart.html", {"page_obj": page_obj})
