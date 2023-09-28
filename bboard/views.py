@@ -437,38 +437,8 @@ def subscribe(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         if email:
-            # Настройте параметры SMTP-сервера
-            smtp_host = EMAIL_HOST  # Замените на адрес вашего SMTP-сервера
-            smtp_port = EMAIL_PORT  # Замените на порт вашего SMTP-сервера
-            smtp_username = EMAIL_HOST_USER  # Замените на свое имя пользователя SMTP
-            smtp_password = EMAIL_HOST_PASSWORD  # Замените на свой пароль SMTP
-
-            # Создайте сообщение
-            subject = 'Subscription Confirmation'
-            message = f'Thank you for subscribing! Click the link to visit our website: http://127.0.0.1:8000/'
-            from_email = EMAIL_HOST_USER  # Замените на вашу электронную почту
-            to_email = email
-
-            msg = MIMEMultipart()
-            msg['From'] = from_email
-            msg['To'] = to_email
-            msg['Subject'] = subject
-
-            body = message
-            msg.attach(MIMEText(body, 'plain'))
-
-            # Отправьте сообщение через SMTP
-            try:
-                server = smtplib.SMTP(smtp_host, smtp_port)
-                server.starttls()
-                server.login(smtp_username, smtp_password)
-                server.sendmail(from_email, to_email, msg.as_string())
-                server.quit()
-
+            if services.send_subscription_confirmation(email):
                 return redirect("home")
-
-            except Exception as e:
-                print(e)
 
     return render(request, 'products/new/footer.html')
 
@@ -484,10 +454,10 @@ def add_to_cart(request, product_id):
     :param product_id: Идентификатор товара, который нужно добавить в корзину.
     :return: Перенаправление на страницу корзины после успешного добавления товара.
     """
-    product = Product.objects.get(id=product_id)
-    user_cart, created = Cart.objects.get_or_create(user=request.user)
+    product = services.get_product_by_id(product_id)
+    user_cart, created = services.get_or_create_cart_by_user(request.user)
 
-    cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
+    cart_item, created = services.get_or_create_cart_item_by_cart_and_product(user_cart, product)
 
     return redirect("cart")
 
@@ -542,25 +512,7 @@ def create_order_cart(request):
     if request.method == "POST":
         form = OrderCartForm(request.POST)
         if form.is_valid():
-            cart = Cart.objects.get(user=request.user)
-            if cart.products.exists():
-                total_price = 0
-                for product in cart.products.all():
-                    total_price += product.price
-
-                # Сначала создайте заказ и сохраните его
-                order_cart = form.save(commit=False)
-                order_cart.customer_name = request.user
-                order_cart.price = total_price
-                order_cart.save()
-
-                # Затем добавьте продукты к заказу
-                for product in cart.products.all():
-                    order_cart.products.add(product)
-
-                # Очистите корзину
-                cart.products.clear()
-
+            if services.create_order_from_cart(request.user, form):
                 return redirect("home")
         else:
             print(form.errors)

@@ -1,3 +1,7 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 import requests
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -6,7 +10,12 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
 from project import settings
+from project.settings import EMAIL_HOST
+from project.settings import EMAIL_HOST_PASSWORD
+from project.settings import EMAIL_HOST_USER
+from project.settings import EMAIL_PORT
 from .models import Cart
+from .models import CartItem
 from .models import Category
 from .models import Chat
 from .models import Message
@@ -357,6 +366,86 @@ def get_orders_from_cart(user):
     return OrderCart.objects.filter(customer_name=user)
 
 #####################################################################
-#               БИЗНЕС ЛОГИКА  delete_cart                          #
+#               БИЗНЕС ЛОГИКА  add_to_cart                          #
 #####################################################################
 
+
+def get_product_by_id(product_id):
+    return Product.objects.get(id=product_id)
+
+
+def get_or_create_cart_by_user(user):
+    user_cart, created = Cart.objects.get_or_create(user=user)
+    return user_cart, created
+
+
+def get_or_create_cart_item_by_cart_and_product(cart, product):
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    return cart_item, created
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  subscribe                            #
+#####################################################################
+
+
+def send_subscription_confirmation(email):
+    # Настройте параметры SMTP-сервера
+    smtp_host = EMAIL_HOST  # Замените на адрес вашего SMTP-сервера
+    smtp_port = EMAIL_PORT  # Замените на порт вашего SMTP-сервера
+    smtp_username = EMAIL_HOST_USER  # Замените на свое имя пользователя SMTP
+    smtp_password = EMAIL_HOST_PASSWORD  # Замените на свой пароль SMTP
+
+    # Создайте сообщение
+    subject = 'Subscription Confirmation'
+    message = f'Thank you for subscribing! Click the link to visit our website: http://127.0.0.1:8000/'
+    from_email = EMAIL_HOST_USER  # Замените на вашу электронную почту
+
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = email
+    msg['Subject'] = subject
+
+    body = message
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Отправьте сообщение через SMTP
+    try:
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+        server.sendmail(from_email, email, msg.as_string())
+        server.quit()
+
+        return True  # Подписка успешно отправлена
+
+    except Exception as e:
+        print(e)
+        return False  # Ошибка при отправке подписки
+
+
+#####################################################################
+#               БИЗНЕС ЛОГИКА  create_order_cart                    #
+#####################################################################
+
+def create_order_from_cart(user, form):
+    cart = Cart.objects.get(user=user)
+
+    if cart.products.exists():
+        total_price = sum(product.price for product in cart.products.all())
+
+        # Сначала создайте заказ и сохраните его
+        order_cart = form.save(commit=False)
+        order_cart.customer_name = user
+        order_cart.price = total_price
+        order_cart.save()
+
+        # Затем добавьте продукты к заказу
+        for product in cart.products.all():
+            order_cart.products.add(product)
+
+        # Очистите корзину
+        cart.products.clear()
+
+        return True  # Заказ успешно создан
+
+    return False  # Корзина пуста, заказ не создан
