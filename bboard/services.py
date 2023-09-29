@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import requests
+from django import template
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponseForbidden
@@ -188,7 +189,7 @@ def create_and_save_message(chat, sender, content):
     :return: True, если сообщение успешно создано и сохранено, иначе False.
     """
     try:
-        message = Message(chat=chat, sender=sender, content=content)
+        message = Message(chat=chat, sender=sender, content=content, read=False)
         message.save()
         return True
     except Exception as e:
@@ -449,3 +450,5 @@ def create_order_from_cart(user, form):
         return True  # Заказ успешно создан
 
     return False  # Корзина пуста, заказ не создан
+
+

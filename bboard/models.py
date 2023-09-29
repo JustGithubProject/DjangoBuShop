@@ -112,6 +112,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Отправитель')
     content = models.TextField(db_index=False, verbose_name='Содержание')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    read = models.BooleanField(default=False, verbose_name="Прочитано")
 
     def __str__(self):
         return f"Message of {self.sender}"

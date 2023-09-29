@@ -4,6 +4,8 @@ from email.mime.text import MIMEText
 
 import requests
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -40,7 +42,6 @@ from .models import Category
 from . import services
 
 
-@cache_page(20)
 def home_view(request):
     """home_view --> Главная страница   """
     products = services.get_recent_products_with_users()
@@ -52,8 +53,14 @@ def home_view(request):
     form = ReviewForm()
 
     quantity_users = services.get_user_count()
+    unread_messages_count_per_user = (
+        User.objects.annotate(
+            unread_count=Count('received_chats__messages', filter=Q(received_chats__messages__read=False)))
+        .filter(unread_count__gt=0)
+        .values('username', 'unread_count')
+    )
     return render(request, "products/new/index.html",
-                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users})
+                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def delete_review(request, review_id):
@@ -122,6 +129,11 @@ def chat_view(request, chat_id):
     chat, messages = services.get_chat_and_messages(request.user, chat_id)
     if chat is None:
         return HttpResponse("У вас нет доступа к этому чату.")
+
+    for message in messages:
+        if not message.read and message.sender != request.user:
+            message.read = True
+            message.save()
 
     return render(request, "products/chat.html", {"chat": chat, "messages": messages})
 
