@@ -189,7 +189,8 @@ def create_and_save_message(chat, sender, content):
     :return: True, если сообщение успешно создано и сохранено, иначе False.
     """
     try:
-        message = Message(chat=chat, sender=sender, content=content, read=False)
+        message = Message(chat=chat, sender=sender, content=content)
+        message.read = False
         message.save()
         return True
     except Exception as e:
@@ -450,5 +451,10 @@ def create_order_from_cart(user, form):
         return True  # Заказ успешно создан
 
     return False  # Корзина пуста, заказ не создан
+
+
+def get_unread_message_count(user):
+    # Подсчет непрочитанных сообщений для данного пользователя
+    return Message.objects.filter(chat__receiver=user, read=False).count()
 
 

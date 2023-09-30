@@ -1,44 +1,23 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-import requests
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.contrib import messages
-from django.utils import translation
 from django.views.decorators.cache import cache_page
 
-from accounts.models import User
-from project import settings
-from project.settings import EMAIL_HOST
-from project.settings import EMAIL_HOST_PASSWORD
-from project.settings import EMAIL_HOST_USER
-from project.settings import EMAIL_PORT
 from .forms import OrderCartForm
 from .forms import ReviewForm
 from .models import Cart
 from .models import CartItem
-from .models import OrderCart
 from .models import Review
-
-from .utils import transliterate
 from .utils import decode_status
 from .forms import ProductForm
 from .forms import OrderForm
 from .models import Chat
-from .models import Message
-from .models import Order
 from .models import Product
-from .models import Category
 from . import services
 
 
@@ -53,14 +32,10 @@ def home_view(request):
     form = ReviewForm()
 
     quantity_users = services.get_user_count()
-    unread_messages_count_per_user = (
-        User.objects.annotate(
-            unread_count=Count('received_chats__messages', filter=Q(received_chats__messages__read=False)))
-        .filter(unread_count__gt=0)
-        .values('username', 'unread_count')
-    )
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
     return render(request, "products/new/index.html",
-                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users, "unread_messages_count_per_user": unread_messages_count_per_user})
+                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users,
+                   "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def delete_review(request, review_id):
@@ -94,8 +69,11 @@ def get_products(request):
     page_number = request.GET.get("page")
     page_obj = services.paginate_products(products, page_number)
 
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+
     return render(request, 'products/new/product.html',
-                  {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id})
+                  {'categories': categories, 'products': page_obj, 'selected_category_id': selected_category_id,
+                   "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def product_detail_view(request, slug):
@@ -103,7 +81,9 @@ def product_detail_view(request, slug):
     product_detail_view --> Детально про товар, где можно написать продавцу или продавцу посмотреть сообщения
     """
     product = get_object_or_404(Product.objects.select_related('user'), slug=slug)
-    return render(request, 'products/product_detail.html', {'product': product, 'messages': messages})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, 'products/product_detail.html', {'product': product, 'messages': messages,
+                                                            "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -135,7 +115,10 @@ def chat_view(request, chat_id):
             message.read = True
             message.save()
 
-    return render(request, "products/chat.html", {"chat": chat, "messages": messages})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+
+    return render(request, "products/chat.html", {"chat": chat, "messages": messages,
+                                                  "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -171,7 +154,9 @@ def seller_messages(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
     chats = services.get_seller_chats(request.user, product)
-    return render(request, "products/seller_messages.html", {"chats": chats, "product": product})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/seller_messages.html", {"chats": chats, "product": product,
+                                                             "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -180,7 +165,9 @@ def user_buy(request):
     user_buy --> чаты, где пользователь что-то покупает
     """
     chats = services.get_user_chats(request.user, chat_type="buy")
-    return render(request, "products/buy.html", {"chats": chats, "temp": "buy"})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/buy.html",
+                  {"chats": chats, "temp": "buy", "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -189,7 +176,9 @@ def user_sell(request):
     user_sell --> чаты, где пользователь что-то продает
     """
     chats = services.get_user_chats(request.user, chat_type="sell")
-    return render(request, "products/sell.html", {"chats": chats, "temp": "sell"})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/sell.html",
+                  {"chats": chats, "temp": "sell", "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -217,7 +206,10 @@ def create_product(request):
             print(form.errors)
     else:
         form = ProductForm()
-    return render(request, 'products/create_product.html', {'form': form})
+
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, 'products/create_product.html',
+                  {'form': form, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -245,7 +237,10 @@ def create_order(request, product_id):
     else:
         form = OrderForm()
 
-    return render(request, "products/create_order.html", {"form": form})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+
+    return render(request, "products/create_order.html",
+                  {"form": form, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 @login_required
@@ -261,7 +256,10 @@ def orders_of_user(request):
     """
     orders = services.get_user_orders(request.user)
     page_obj = services.paginate_orders(request, orders)
-    return render(request, "products/orders.html", {"page_obj": page_obj})
+
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/orders.html",
+                  {"page_obj": page_obj, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def delete_chat(request, chat_id):
@@ -349,7 +347,10 @@ def package_search(request):
     declaration = request.GET.get("package_number")
     if declaration:
         return redirect('get_document_tracking', declaration)
-    return render(request, "products/package_search.html", {"declaration": declaration})
+
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/package_search.html",
+                  {"declaration": declaration, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 # def create_express_invoice_for_product(request):
@@ -491,8 +492,11 @@ def get_cart(request):
     total_price = 0
     for item in items:
         total_price += quantity_dict[item.id].product.price
+
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
     return render(request, "products/new/cart.html", {"items": items, "quantity_dict": quantity_dict,
-                                                      "total_price": total_price})
+                                                      "total_price": total_price,
+                                                      "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def delete_cart(request, product_id):
@@ -530,7 +534,9 @@ def create_order_cart(request):
             print(form.errors)
     else:
         form = OrderCartForm()
-    return render(request, "products/new/create_order_cart.html", {"form": form})
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/new/create_order_cart.html",
+                  {"form": form, "unread_messages_count_per_user": unread_messages_count_per_user})
 
 
 def orders_of_user_from_cart(request):
@@ -545,5 +551,7 @@ def orders_of_user_from_cart(request):
     """
     orders = services.get_orders_from_cart(request.user)
     page_obj = services.paginate_orders(request, orders)
-    return render(request, "products/new/orders_of_cart.html", {"page_obj": page_obj})
 
+    unread_messages_count_per_user = services.get_unread_message_count(request.user)
+    return render(request, "products/new/orders_of_cart.html",
+                  {"page_obj": page_obj, "unread_messages_count_per_user": unread_messages_count_per_user})
