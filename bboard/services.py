@@ -190,7 +190,6 @@ def create_and_save_message(chat, sender, content):
     """
     try:
         message = Message(chat=chat, sender=sender, content=content)
-        message.read = False
         message.save()
         return True
     except Exception as e:
@@ -453,8 +452,21 @@ def create_order_from_cart(user, form):
     return False  # Корзина пуста, заказ не создан
 
 
-def get_unread_message_count(user):
-    # Подсчет непрочитанных сообщений для данного пользователя
-    return Message.objects.filter(chat__receiver=user, read=False).count()
+def count_unread_messages(user):
+    chats = Chat.objects.filter(receiver=user)
+    total = 0
+    for chat in chats:
+        if user == chat.sender:
+            if chat.sender_unread:
+                total += 1
+        if user == chat.receiver:
+            if chat.receiver_unread:
+                total += 1
+    return total
+
+
+
+
+
 
 

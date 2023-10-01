@@ -98,6 +98,8 @@ class Chat(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     last_message = models.ForeignKey('Message', null=True, blank=True, on_delete=models.SET_NULL,
                                      related_name='chat_messages', verbose_name='Последнее сообщение')
+    sender_unread = models.BooleanField(default=False, verbose_name='Непрочитанные сообщения отправителя')
+    receiver_unread = models.BooleanField(default=False, verbose_name='Непрочитанные сообщения получателя')
 
     def __str__(self):
         return f"Chat -> sender={self.sender}, receiver={self.receiver}, product={self.product}"
@@ -112,10 +114,20 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Отправитель')
     content = models.TextField(db_index=False, verbose_name='Содержание')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    read = models.BooleanField(default=False, verbose_name="Прочитано")
 
     def __str__(self):
         return f"Message of {self.sender}"
+
+    def save(self, *args, **kwargs):
+        if self.sender == self.chat.sender:
+            self.chat.sender_unread = True
+        elif self.sender == self.chat.receiver:
+            self.chat.receiver_unread = True
+
+        self.chat.save()
+        super().save(*args, **kwargs)
+
+
 
     class Meta:
         verbose_name = "Сообщение"

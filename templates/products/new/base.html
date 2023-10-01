@@ -76,7 +76,7 @@
 
                         {%if user.is_authenticated%}
                         <li class="nav-item {%if current_page == 'user_buy' %}active{%endif%}">
-                            <a class="nav-link" href="{% url 'user_buy' %}"> {%if unread_messages_count_per_user%}({{unread_messages_count_per_user}}){%endif%}Сообщения</a>
+                            <a class="nav-link" href="{% url 'user_buy' %}"> {%if total_unread%}({{total_unread}}){%endif%}Сообщения</a>
                         </li>
 
 
