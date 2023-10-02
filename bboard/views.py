@@ -32,10 +32,10 @@ def home_view(request):
     form = ReviewForm()
 
     quantity_users = services.get_user_count()
-    total_unread = services.count_unread_messages(request.user)
+    count = request.session.get("message_count", 0)
+
     return render(request, "products/new/index.html",
-                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users,
-                   "total_unread": total_unread})
+                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users, "count": count})
 
 
 def delete_review(request, review_id):
@@ -104,15 +104,10 @@ def chat_view(request, chat_id):
     chat, messages = services.get_chat_and_messages(request.user, chat_id)
     if chat is None:
         return HttpResponse("У вас нет доступа к этому чату.")
+    count = services.count_messages(messages, request.user)
+    request.session["message_count"] = count
 
-    if request.user == chat.sender:
-        chat.sender_unread = False
-    elif request.user == chat.receiver:
-        chat.receiver_unread = False
-
-    total_unread = services.count_unread_messages(request.user)
-
-    return render(request, "products/chat.html", {"chat": chat, "messages": messages, "total_unread": total_unread})
+    return render(request, "products/chat.html", {"chat": chat, "messages": messages, "count": count})
 
 
 @login_required
@@ -136,6 +131,8 @@ def send_message_view(request, chat_id):
         result = services.create_and_save_message(chat, request.user, message_content)
         if result:
             messages.success(request, "Сообщение успешно отправлено")
+
+
 
     return redirect('chat', chat_id=chat_id)
 

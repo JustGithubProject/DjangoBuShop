@@ -452,17 +452,16 @@ def create_order_from_cart(user, form):
     return False  # Корзина пуста, заказ не создан
 
 
-def count_unread_messages(user):
-    chats = Chat.objects.filter(receiver=user)
-    total = 0
-    for chat in chats:
-        if user == chat.sender:
-            if chat.sender_unread:
-                total += 1
-        if user == chat.receiver:
-            if chat.receiver_unread:
-                total += 1
-    return total
+def count_messages(msgs, user):
+    count = 0
+    for message in msgs:
+        if not message.is_read and message.sender != user:
+            message.is_read = True
+            message.save()
+            count += 1
+    return count
+
+
 
 
 
