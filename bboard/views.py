@@ -104,8 +104,9 @@ def chat_view(request, chat_id):
     chat, messages = services.get_chat_and_messages(request.user, chat_id)
     if chat is None:
         return HttpResponse("У вас нет доступа к этому чату.")
+
     count = services.count_messages(messages, request.user)
-    request.session["message_count"] = count
+
 
     return render(request, "products/chat.html", {"chat": chat, "messages": messages, "count": count})
 

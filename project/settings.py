@@ -76,6 +76,7 @@ MIDDLEWARE = [
 
 ]
 
+
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [

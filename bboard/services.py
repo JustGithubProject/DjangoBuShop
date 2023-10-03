@@ -456,9 +456,9 @@ def count_messages(msgs, user):
     count = 0
     for message in msgs:
         if not message.is_read and message.sender != user:
+            count += 1
             message.is_read = True
             message.save()
-            count += 1
     return count
 
 
