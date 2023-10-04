@@ -12,6 +12,7 @@ from .forms import OrderCartForm
 from .forms import ReviewForm
 from .models import Cart
 from .models import CartItem
+from .models import Message
 from .models import Review
 from .utils import decode_status
 from .forms import ProductForm
@@ -107,7 +108,6 @@ def chat_view(request, chat_id):
 
     count = services.count_messages(messages, request.user)
 
-
     return render(request, "products/chat.html", {"chat": chat, "messages": messages, "count": count})
 
 
@@ -133,8 +133,6 @@ def send_message_view(request, chat_id):
         if result:
             messages.success(request, "Сообщение успешно отправлено")
 
-
-
     return redirect('chat', chat_id=chat_id)
 
 
@@ -146,6 +144,8 @@ def seller_messages(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
     chats = services.get_seller_chats(request.user, product)
+
+
     return render(request, "products/seller_messages.html", {"chats": chats, "product": product})
 
 
@@ -155,8 +155,17 @@ def user_buy(request):
     user_buy --> чаты, где пользователь что-то покупает
     """
     chats = services.get_user_chats(request.user, chat_type="buy")
+    dict_chat = {}  # Создаем пустой словарь
+
+    for chat in chats:
+        messages = Message.objects.filter(chat=chat).order_by('created_at').select_related('sender')
+        count = 0  # Счетчик для каждого чата
+        for message in messages:
+            if not message.is_read and message.sender != request.user:
+                count += 1
+        dict_chat[chat] = count  # Используем сам объект чата как ключ
     return render(request, "products/buy.html",
-                  {"chats": chats, "temp": "buy"})
+                  {"chats": chats, "temp": "buy", "dict_chat": dict_chat})
 
 
 @login_required
@@ -165,8 +174,17 @@ def user_sell(request):
     user_sell --> чаты, где пользователь что-то продает
     """
     chats = services.get_user_chats(request.user, chat_type="sell")
+    dict_chat = {}  # Создаем пустой словарь
+
+    for chat in chats:
+        messages = Message.objects.filter(chat=chat).order_by('created_at').select_related('sender')
+        count = 0  # Счетчик для каждого чата
+        for message in messages:
+            if not message.is_read and message.sender != request.user:
+                count += 1
+        dict_chat[chat] = count  # Используем сам объект чата как ключ
     return render(request, "products/sell.html",
-                  {"chats": chats, "temp": "sell"})
+                  {"chats": chats, "temp": "sell", "dict_chat": dict_chat})
 
 
 @login_required

@@ -1,5 +1,7 @@
 {% extends 'products/new/base.html' %}
 {% load static %}
+
+
 {% block title %}Ваши сообщения{% endblock %}
 {%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'buy_styles.css' %}">{% endblock %}
 {% block content %}
@@ -10,17 +12,18 @@
     </div>
     <div class="css-1b3tih6">
         {%if chats%}
-        {% for chat in chats %}
-        <a href="{%url 'chat' chat.id%}">
-            <div class="chat-container-445">
-                <p class="username-765">{{ chat.sender.username }} - {{chat.product.title}} </p>
-                <p class="last-message-3451">{{ chat.last_message.content|truncatechars:10 }}</p>
-                <form action="{% url 'delete_chat' chat.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit">Удалить чат</button>
-                </form>
-            </div>
-        </a>
+        {% for chat, count in dict_chat.items %}
+            <a href="{% url 'chat' chat.id %}">
+                <div class="chat-container-445">
+                    <p class="username-765">{{ chat.sender.username }} - {{ chat.product.title }}</p>
+                    <p class="last-message-3451">{{ chat.last_message.content|truncatechars:10 }}</p>
+                    <p class="unread-count"> {{ count }} сообщений</p>
+                    <form action="{% url 'delete_chat' chat.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Удалить чат</button>
+                    </form>
+                </div>
+            </a>
         {% endfor %}
         {%else%}
             <p align="center">Сообщений пока нет</p>
