@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from .models import User
 from .forms import RegistrationForm, LoginForm
 
 
@@ -38,6 +39,23 @@ class LoginViewTest(TestCase):
         }
         response = self.client.post(reverse("login"), data)
         self.assertEqual(response.status_code, 200)
+
+
+class LogoutViewTestCase(TestCase):
+    def setUp(self):
+        self.username = "testuser"
+        self.password = "testpassword"
+
+    def test_logout_view(self):
+        response = self.client.get(reverse("logout"))
+        self.assertRedirects(response, reverse("login"))
+
+
+class ProfileViewTestCase(TestCase):
+    def test_profile_view_get(self):
+        response = self.client.get(reverse("profile"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/profile.html")
 
 
 
