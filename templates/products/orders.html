@@ -48,6 +48,7 @@
     {% endif %}
 </div>
 {%else%}
-<h1 align="center">У вас нет заказов</h1>
+<h1 align="center">У вас нет одиночных заказов</h1>
+<a align="center" href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
 {%endif%}
 {% endblock %}

@@ -62,7 +62,6 @@ def search_view(request):
     return render(request, 'products/search_results.html', context)
 
 
-@cache_page(60)
 def get_products(request):
     categories = services.get_all_categories()
     selected_category_id = request.GET.get('category')
@@ -487,7 +486,10 @@ def get_cart(request):
     :param request: Объект запроса Django.
     :return: Ответ с отображением содержимого корзины и общей стоимостью.
     """
-    cart = Cart.objects.get(user=request.user)
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except:
+        cart = Cart.objects.create(user=request.user)
     items = cart.products.all()
     quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
     total_price = 0

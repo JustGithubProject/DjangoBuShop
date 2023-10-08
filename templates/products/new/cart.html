@@ -10,25 +10,26 @@
 {% block content %}
 <div class="container">
     {% if quantity_dict %}
-    {% for key, value in quantity_dict.items %}
-    <div class="product-block">
-        <div class="product-info">
-            <h2 class="product-title">{{ value.product.title }}</h2>
-            <p class="product-quantity">Количество: {{ value.quantity }} штук</p>
+    <h1 class="cart-title">Ваша корзина</h1>
+    <div class="cart-products">
+        {% for key, value in quantity_dict.items %}
+        <div class="product-block">
+            <img src="{{ value.product.image_1.url }}" alt="{{ value.product.title }}" class="product-thumbnail">
+            <div class="product-info">
+                <h2 class="product-title">{{ value.product.title }}</h2>
+                <p class="product-quantity">Количество: {{ value.quantity }} шт.</p>
+            </div>
+            <form method="POST" action="{% url 'delete_cart' product_id=key %}">
+                {% csrf_token %}
+                <button class="product-delete-button">Удалить</button>
+            </form>
         </div>
-        <form method="POST" action="{% url 'delete_cart' product_id=key %}">
-            {% csrf_token %}
-            <button class="product-delete-button">Удалить</button>
-        </form>
-
-        <hr>
-        <!-- Другие сведения о продукте, если необходимо -->
+        {% endfor %}
     </div>
-    {% endfor %}
-    Общая цена - {{total_price}}UAH
-    <a href="{% url 'create_order_cart' %}">Купить</a>
+    <p class="total-price">Общая сумма: {{ total_price }} UAH</p>
+    <a href="{% url 'create_order_cart' %}" class="buy-button">Оформить заказ</a>
     {% else %}
-    <h1 align="center">Ваша корзина пуста</h1>
+    <h1 class="empty-cart">Ваша корзина пуста</h1>
     {% endif %}
 </div>
 {% endblock %}
