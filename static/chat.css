@@ -1,11 +1,21 @@
 /* Add CSS styles for the chat interface */
 .chat-container {
-    max-width: 800px;
+    max-width: 1000px;
+    width: 90%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fffff;
+    border: 2px solid #e0e0e0; /* Изменяем рамку */
+    border-radius: 15px; /* Увеличиваем радиус скругления углов для главного блока */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Увеличиваем тень */
+    transition: box-shadow 0.3s ease;
+    position: relative; /* Добавляем позиционирование */
+}
+
+/* Добавляем анимацию при наведении на блок */
+.chat-container:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Усиленная тень при наведении */
+    transform: scale(1.02); /* Увеличение блока при наведении */
 }
 
 h2 {
@@ -18,12 +28,23 @@ h2 {
 .messages-container-new {
     max-height: 400px;
     overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc; /* Добавляем рамку для контейнера сообщений */
+    border-radius: 10px; /* Скругляем углы рамки сообщений */
 }
 
+/* Добавляем анимацию для сообщений */
 .message-new {
     padding: 10px 15px;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 10px 0;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Добавляем анимацию transform */
+}
+
+/* Анимация при наведении на сообщение */
+.message-new:hover {
+    background-color: #f0f0f0;
+    transform: translateX(0); /* Сброс смещения */
 }
 
 .message-new p {
@@ -59,7 +80,7 @@ input[type="text"] {
 /* Add a box-shadow effect when the input field is focused */
 input[type="text"]:focus {
     border-color: #4caf50;
-    box-shadow: 0 0 5px rgba(76, 22, 80, 0.5);
+    box-shadow: 0 0 10px rgba(76, 22, 80, 0.5); /* Усиленная тень при фокусе */
 }
 
 button[type="submit"] {
@@ -102,8 +123,8 @@ a {
 
 /* Hover effect on message boxes */
 .message-new:hover {
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
 }
 
 /* Responsive styles for smaller screens */

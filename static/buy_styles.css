@@ -8,12 +8,45 @@ body {
 
 /* Chats Container */
 .chats-199 {
-    max-width: 800px;
+    width: 1200px; /* Увеличьте значение, чтобы сделать блок шире */
+    height: 800px;
     margin: 20px auto;
     padding: 20px;
     border-radius: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.chats-199 h1 {
+    font-size: 24px;
+    color: #333; /* Цвет текста заголовка */
+    margin-bottom: 20px;
+}
+
+.chats-199 p {
+    font-size: 18px;
+    color: #666; /* Цвет текста подзаголовка */
+    margin-bottom: 20px;
+}
+
+.chats-199 .chat-text {
+    color: #444;
+}
+
+
+
+.chats-199 a {
+    padding: 8px 16px;
+    color: #3498db;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 16px;
+    transition: color 0.2s ease; /* Добавление плавного эффекта перехода для цвета текста ссылок */
+}
+
+.chats-199 a:hover {
+    color: #2980b9;
 }
 
 /* Navigation Links */
@@ -32,11 +65,12 @@ body {
     text-decoration: none;
     margin-right: 10px;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .css-1382m1k a:hover {
     background-color: #2980b9;
+    transform: translateY(-2px);
 }
 
 /* Chat List */
@@ -52,11 +86,12 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .chat-container-445:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
 }
 
 /* Username */
@@ -77,15 +112,10 @@ body {
 /* Remove text-decoration for links */
 a {
     text-decoration: none;
-}
-
-
-a {
-  text-decoration: none;
-  color: black;
+    color: black;
 }
 
 /* Стили для ссылок с классом "current-page" (текущая страница) */
 a.current-page {
-  color: #00ff80; /* Измените этот цвет на серый или другой цвет по вашему желанию */
+    color: #00ff80; /* Измените этот цвет на серый или другой цвет по вашему желанию */
 }
