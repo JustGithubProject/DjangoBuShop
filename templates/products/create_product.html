@@ -3,62 +3,67 @@
 
 {% block title %}Подать объявление{% endblock %}
 
-{%block styles%}<link rel="stylesheet" type="text/css" href="{% static 'create_product.css' %}">{% endblock %}
+{%block styles%}
+<link rel="stylesheet" type="text/css" href="{% static 'create_product.css' %}">{% endblock %}
 
 {% block content %}
+<div class="animate-fade">
+    <form method="POST" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
 
-<form method="POST" enctype="multipart/form-data" class="product-form">
-    {% csrf_token %}
-    <p style="color:red">ВНИМАНИЕ: ТОВАР БУДЕТ ДОБАВЛЕН НА САЙТ В ТЕЧЕНИИ МИНУТЫ</p>
-    <div class="form-group-cr">
-        <label for="{{ form.category.id_for_label }}">Категория:</label>
-        {{ form.category }}
-    </div>
-
-
-    <div class="form-group-cr">
-        <label for="{{ form.title.id_for_label }}">Название:</label>
-        {{ form.title }}
-    </div>
+        <div class="form-group-cr">
+            <label for="{{ form.category.id_for_label }}">Категория:</label>
+            {{ form.category }}
+        </div>
 
 
-    <div class="form-group-cr">
-        <label for="{{ form.description.id_for_label }}">Описание:</label>
-        {{ form.description }}
-    </div>
-
-    <div class="form-group-cr">
-        <label for="{{ form.price.id_for_label }}">Цена:</label>
-        {{ form.price }}
-    </div>
-
-    <div class="form-group-cr">
-        <label for="{{ form.image_1.id_for_label }}">Изображение 1:</label>
-        {{ form.image_1 }}
-    </div>
-
-    <div class="form-group-cr">
-        <label for="{{ form.image_2.id_for_label }}">Изображение 2:</label>
-        {{ form.image_2 }}
-    </div>
-
-    <div class="form-group-cr">
-        <label for="{{ form.image_3.id_for_label }}">Изображение 3:</label>
-        {{ form.image_3 }}
-    </div>
-
-    {% for field in form %}
-    {% if field.errors %}
-    <div class="form-group-cr">
-        <p class="text-danger">{{ field.errors }}</p>
-    </div>
-    {% endif %}
-    {% endfor %}
+        <div class="form-group-cr">
+            <label for="{{ form.title.id_for_label }}">Название:</label>
+            {{ form.title }}
+        </div>
 
 
-    <div class="form-group-cr">
-        <button type="submit" class="btn btn-primary">Создать продукт</button>
-    </div>
-</form>
+        <div class="form-group-cr">
+            <label for="{{ form.description.id_for_label }}">Описание:</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group-cr">
+            <label for="{{ form.price.id_for_label }}">Цена:</label>
+            {{ form.price }}
+        </div>
+
+        <div class="form-group-cr">
+            <label for="{{ form.image_1.id_for_label }}">Изображение 1:</label>
+            {{ form.image_1 }}
+        </div>
+
+        <div class="form-group-cr">
+            <label for="{{ form.image_2.id_for_label }}">Изображение 2:</label>
+            {{ form.image_2 }}
+        </div>
+
+        <div class="form-group-cr">
+            <label for="{{ form.image_3.id_for_label }}">Изображение 3:</label>
+            {{ form.image_3 }}
+        </div>
+
+        {% for field in form %}
+        {% if field.errors %}
+        <div class="form-group-cr">
+            <p class="text-danger">{{ field.errors }}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+
+        <div class="form-group-cr">
+            <button type="submit" class="btn btn-primary">Создать продукт</button>
+        </div>
+    </form>
+</div>
+
+
+
 
 {% endblock %}
