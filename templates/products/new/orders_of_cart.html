@@ -1,32 +1,40 @@
 {% extends 'products/new/base.html' %}
 {% load static %}
 
-
 {% block title %}Мои заказы{% endblock %}
 
-{%block styles%}
+{% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">
 {% endblock %}
-
 
 {% block content %}
 {% if page_obj %}
 <div class="orders">
     {% for order in page_obj %}
     <div class="order">
-        {% for product in order.products.all%}
-        <p>{{product.id}}: {{ product }}</p>
-        {%endfor%}
-        <p>Откуда: {{ order.products.user.city }}</p>
-        <p>Куда: {{ order.city }}</p>
-        <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
-        <p>Номер Покупателя: {{ order.phone_number }}</p>
-        {% if order.product.user.phone_number %}
-        <p>Номер продавца: {{ order.product.user.phone_number }}</p>
-        {% endif %}
-        <p>Продавец: {{ order.product.user.username }}</p>
-        <p>Отделение: {{ order.department }}</p>
-        <p>Создан: {{ order.created_at }}</p>
+        <div class="order-header">
+            <h2>{{ order.name }} {{ order.surname }}</h2>
+            <p>Откуда: {{ order.products.user.city }}</p>
+            <p>Куда: {{ order.city }}</p>
+        </div>
+        <div class="order-products">
+            {% for product in order.products.all %}
+            <div class="product">
+                <img src="{{product.image_1.url}}" alt="{{ product.title }}">
+                <p>{{ product.title }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="order-details">
+            <p>Номер Покупателя: {{ order.phone_number }}</p>
+            {% if order.product.user.phone_number %}
+            <p>Номер продавца: {{ order.product.user.phone_number }}</p>
+            {% endif %}
+            <p>Продавец: {{ order.product.user.username }}</p>
+            <p>Отделение: {{ order.department }}</p>
+            <p>Цена: {{order.price}}</p>
+            <p>Создан: {{ order.created_at }}</p>
+        </div>
     </div>
     {% endfor %}
 
@@ -48,7 +56,7 @@
     </div>
     {% endif %}
 </div>
-{%else%}
+{% else %}
 <h1 align="center">У вас нет заказов</h1>
-{%endif%}
+{% endif %}
 {% endblock %}

@@ -14,7 +14,10 @@
 <div class="orders">
     {% for order in page_obj %}
     <div class="order">
-        <p>Имя: {{ order.product.title }}</p>
+        <div class="product">
+            <img src="{{order.product.image_1.url}}" alt="{{ product.title }}">
+            <p>{{ order.product.title }}</p>
+        </div>
         <p>Откуда: {{ order.product.user.city }}</p>
         <p>Куда: {{ order.city }}</p>
         <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
@@ -22,6 +25,7 @@
         {% if order.product.user.phone_number %}
         <p>Номер продавца: {{ order.product.user.phone_number }}</p>
         {% endif %}
+        <p>Цена: {{order.product.price}}</p>
         <p>Продавец: {{ order.product.user.username }}</p>
         <p>Отделение: {{ order.department }}</p>
         <p>Создан: {{ order.created_at }}</p>

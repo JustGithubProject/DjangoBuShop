@@ -1,52 +1,112 @@
-
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
 
 /* Стили для контейнера заказов */
 .orders {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 81%;
+    width: 80%;
     max-width: 1100px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
 }
 
 /* Стили для блока заказа */
 .order {
-    background-color: #fff;
-    border: 1px solid #3498db; /* Синяя рамка для этого блока */
+    background-color: #f9f9f9;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-    min-height: 150px; /* Минимальная высота */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0; /* Увеличиваем верхний и нижний отступ */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .order:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-10px);
 }
 
-/* Стили для второго блока синяя рамка */
-.another-block {
-    background-color: #fff;
-    border: 1px solid #3498db; /* Синяя рамка для второго блока */
-    border-radius: 10px;
+/* Стили для заголовка заказа */
+.order-header {
+    text-align: center;
+    padding: 10px;
+    background-color: #ff7f50;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.order-header h2 {
+    font-size: 24px;
+    margin: 0;
+    color: #fff;
+}
+
+/* Стили для продуктов в заказе */
+.order-products {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px -10px; /* Избавляемся от отступов между продуктами */
+    justify-content: space-around;
+}
+
+/* Стили для каждого продукта в заказе */
+.product {
+    text-align: center;
+    margin: 10px; /* Уменьшаем отступы между продуктами */
     padding: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-    min-height: 150px; /* Минимальная высота */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: transform 0.3s ease;
 }
 
-.another-block:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
+.product img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.product img:hover {
+    transform: scale(1.1);
+}
+
+.product h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.product-description {
+    color: #777;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.product-price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #ff7f50;
+}
+
+/* Стили для деталей заказа */
+.order-details {
+    text-align: center;
+    padding: 20px;
+    background-color: #ff7f50;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 2px solid #ff7f50;
+}
+
+.order-details p {
+    font-size: 18px;
+    color: #fff;
 }
 
 /* Стили для пагинации */
@@ -57,9 +117,9 @@
 }
 
 .pagination a {
-    margin: 0 5px;
+    margin: 0 10px;
     text-decoration: none;
-    color: #444; /* Изменен цвет ссылок пагинации */
+    color: #444;
     transition: color 0.3s ease;
 }
 
@@ -68,7 +128,7 @@
 }
 
 .current-page {
-    margin: 0 5px;
+    margin: 0 10px;
     font-weight: bold;
     color: #ff7f50;
 }
