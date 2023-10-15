@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
-from django.test import Client, RequestFactory
+from django.test import Client
+from django.test import RequestFactory
+
 from accounts.models import User
 from bboard.forms import ReviewForm
 from bboard.utils import transliterate
@@ -9,6 +11,8 @@ from .. import services
 from ..models import Category
 from ..models import Review
 from ..views import delete_review
+from ..views import get_products
+from ..views import search_view
 
 
 @pytest.mark.django_db
@@ -107,6 +111,51 @@ def test_delete_review_superuser():
 
     assert response.status_code == 302  # Should redirect
 
+
+@pytest.mark.django_db
+def test_search_view():
+    user = User.objects.create_user(
+        username="testuser",
+        password="password1"
+    )
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+
+    factory = RequestFactory()
+    request = factory.get(f"/search/?query={product.title}")
+
+    response = search_view(request)
+    assert response.status_code == 200
+    assert product.title in str(response.content)
+    assert product.description in str(response.content)
+
+    request = factory.get("/search/?query=")
+
+    response = search_view(request)
+
+    assert response.status_code == 200
+
+    product.delete()
+
+
+@pytest.mark.django_db
+def test_get_products():
+    factory = RequestFactory()
+    request = factory.get("/get-products-from-inventory/")
+
+    response = get_products(request)
+
+    assert response.status_code == 200
 
 
 
