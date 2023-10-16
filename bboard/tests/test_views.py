@@ -10,8 +10,10 @@ from bboard.models import Product
 from .. import services
 from ..models import Category
 from ..models import Review
+from ..views import create_chat_view
 from ..views import delete_review
 from ..views import get_products
+from ..views import product_detail_view
 from ..views import search_view
 
 
@@ -158,4 +160,65 @@ def test_get_products():
     assert response.status_code == 200
 
 
+@pytest.mark.django_db
+def test_product_detail_view():
+    user = User.objects.create_user(
+        username="testuser",
+        password="password1"
+    )
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    factory = RequestFactory()
+    request = factory.get(f"/product/{product.slug}")
+    response = product_detail_view(request, product.slug)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_create_chat_view_authenticated_user():
+    user = User.objects.create_user(
+        username="testuser",
+        password="password1"
+    )
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+
+    # Создаем фейковый запрос
+    factory = RequestFactory()
+    url = reverse('create_chat', args=[product.slug])
+    request = factory.get(url)
+    request.user = user
+
+    # Вызываем представление
+    response = create_chat_view(request, slug=product.slug)
+
+    # Проверяем, что статус ответа равен 302 (ожидаем перенаправление)
+    assert response.status_code == 302
+
+    # Проверяем, что чат был создан
+    chat = services.create_or_get_chat(user, product)
+    assert chat is not None
+
+    # Проверяем, что пользователь перенаправлен в чат
+    assert response.url == reverse('chat', args=[chat.id])
 
