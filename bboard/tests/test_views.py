@@ -1,4 +1,5 @@
 import pytest
+from django.http import HttpResponse
 from django.urls import reverse
 from django.test import Client
 from django.test import RequestFactory
@@ -9,7 +10,10 @@ from bboard.utils import transliterate
 from bboard.models import Product
 from .. import services
 from ..models import Category
+from ..models import Chat
+from ..models import Message
 from ..models import Review
+from ..views import chat_view
 from ..views import create_chat_view
 from ..views import delete_review
 from ..views import get_products
@@ -221,4 +225,90 @@ def test_create_chat_view_authenticated_user():
 
     # Проверяем, что пользователь перенаправлен в чат
     assert response.url == reverse('chat', args=[chat.id])
+
+
+@pytest.mark.django_db
+def test_chat_view_access():
+    # Создаем экземпляр фабрики запросов
+    factory = RequestFactory()
+
+    # Создаем тестового пользователя и авторизуем его
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+    user3 = User.objects.create_user(username="testuser3", password="testpassword3")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    chat = Chat.objects.create(
+        sender=product.user,
+        receiver=user2,
+        product=product,
+    )
+    request = factory.get(f'/chat/{chat.id}/')  # Замените URL на свой chat_view
+    request.user = user2
+    # Может потребоваться создать объект chat и messages с помощью services
+
+    # Вызываем представление и получаем HTTP-ответ
+    response = chat_view(request, chat_id=chat.id)  # Замените chat_id на существующий чат
+
+    # Проверяем, что представление возвращает HttpResponse с ожидаемым текстом
+    assert isinstance(response, HttpResponse)
+    print(response.content.decode())
+    assert "У вас нет доступа к этому чату." not in response.content.decode()
+
+    # Проверяем статус кода ответа
+    assert response.status_code == 200  # Замените на ожидаемый статус код
+    factory = RequestFactory()
+    request = factory.get(f'/chat/{chat.id}/')
+    request.user = user3
+    response = chat_view(request, chat_id=chat.id)
+    assert "У вас нет доступа к этому чату." in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_get_chat_and_messages():
+    # Создаем экземпляр фабрики запросов
+    factory = RequestFactory()
+
+    # Создаем тестового пользователя и авторизуем его
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    chat = Chat.objects.create(
+        sender=product.user,
+        receiver=user2,
+        product=product,
+    )
+    Message.objects.create(
+        chat=chat,
+        sender=user2,
+        content="test content"
+    )
+
+    chat_, messages_ = services.get_chat_and_messages(user2, chat.id)
+
+    assert chat_ is not None and messages_ is not None
+
 
