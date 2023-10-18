@@ -19,6 +19,8 @@ from ..views import delete_review
 from ..views import get_products
 from ..views import product_detail_view
 from ..views import search_view
+from ..views import seller_messages
+from ..views import user_buy
 
 
 @pytest.mark.django_db
@@ -310,5 +312,61 @@ def test_get_chat_and_messages():
     chat_, messages_ = services.get_chat_and_messages(user2, chat.id)
 
     assert chat_ is not None and messages_ is not None
+
+
+@pytest.mark.django_db
+def test_seller_messages():
+    user1 = User.objects.create_user(username="testuser1", password="testpassword1")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    factory = RequestFactory()
+    request = factory.get(reverse("seller_messages", args=[product.slug]))
+    request.user = user2
+
+    response = seller_messages(request, product.slug)
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_user_buy():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    chat = Chat.objects.create(
+        sender=product.user,
+        receiver=user2,
+        product=product,
+    )
+    factory = RequestFactory()
+    request = factory.get(reverse("user_buy"))
+    request.user = user1
+    response = user_buy(request)
+
+    assert response.status_code == 200
 
 

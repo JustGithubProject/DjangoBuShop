@@ -144,7 +144,6 @@ def seller_messages(request, slug):
 
     chats = services.get_seller_chats(request.user, product)
 
-
     return render(request, "products/seller_messages.html", {"chats": chats, "product": product})
 
 
