@@ -9,18 +9,21 @@ from bboard.forms import ReviewForm
 from bboard.utils import transliterate
 from bboard.models import Product
 from .. import services
+from ..forms import ProductForm
 from ..models import Category
 from ..models import Chat
 from ..models import Message
 from ..models import Review
 from ..views import chat_view
 from ..views import create_chat_view
+from ..views import create_product
 from ..views import delete_review
 from ..views import get_products
 from ..views import product_detail_view
 from ..views import search_view
 from ..views import seller_messages
 from ..views import user_buy
+from ..views import user_sell
 
 
 @pytest.mark.django_db
@@ -357,7 +360,7 @@ def test_user_buy():
         price=20.2,
         slug=transliterate("Product")
     )
-    chat = Chat.objects.create(
+    Chat.objects.create(
         sender=product.user,
         receiver=user2,
         product=product,
@@ -368,5 +371,72 @@ def test_user_buy():
     response = user_buy(request)
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_user_sell():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    Chat.objects.create(
+        sender=product.user,
+        receiver=user2,
+        product=product,
+    )
+    factory = RequestFactory()
+    request = factory.get(reverse("user_sell"))
+    request.user = user1
+    response = user_sell(request)
+
+    chats = services.get_user_chats(request.user, chat_type="sell")
+    assert chats is not None
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_create_product_get():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    factory = RequestFactory()
+    request = factory.get(reverse("create_product"))
+    request.user = user1
+    response = create_product(request)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_create_product_post():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+
+    form_data = {
+        'user': user1,
+        'category': category,
+        'title': "Product",
+        'description': "Product dec",
+        'price': 20.2,
+        'slug': transliterate("Product"),
+        "image_1": "image_1/image_1.png",
+        "image_2": "image_2/image_2.png",
+        "image_3": "image_3/image_3.png",
+    }
+
+    form = ProductForm(data=form_data)
+    assert form.is_valid()
 
 
