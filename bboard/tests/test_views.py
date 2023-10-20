@@ -16,6 +16,7 @@ from ..models import Message
 from ..models import Review
 from ..views import chat_view
 from ..views import create_chat_view
+from ..views import create_order
 from ..views import create_product
 from ..views import delete_review
 from ..views import get_products
@@ -435,8 +436,47 @@ def test_create_product_post():
         "image_2": "image_2/image_2.png",
         "image_3": "image_3/image_3.png",
     }
-
+    factory = RequestFactory()
     form = ProductForm(data=form_data)
     assert form.is_valid()
 
+
+@pytest.mark.django_db
+def test_create_order():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    factory = RequestFactory()
+    request = factory.get(reverse("create_order", args=[product.id]))
+    request.user = user2
+    response = create_order(request, product.id)
+    assert response.status_code == 200
+
+    factory = RequestFactory()
+    form_data = {
+        "product": product,
+        "customer_name": user2,
+        "name": "TestName",
+        "surname": "TestSurname",
+        "city": "New York",
+        "department": "something1255",
+        "phone_number": "38056727145",
+        "email": "Test@gmail.com"
+    }
+    request = factory.post(reverse("create_order", args=[product.id]), data=form_data)
+    request.user = user2
+    response = create_order(request, product.id)
+    assert response.status_code == 302
 
