@@ -18,8 +18,11 @@ from ..views import chat_view
 from ..views import create_chat_view
 from ..views import create_order
 from ..views import create_product
+from ..views import delete_chat
 from ..views import delete_review
+from ..views import get_document_tracking
 from ..views import get_products
+from ..views import orders_of_user
 from ..views import product_detail_view
 from ..views import search_view
 from ..views import seller_messages
@@ -479,4 +482,68 @@ def test_create_order():
     request.user = user2
     response = create_order(request, product.id)
     assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_orders_of_user():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    factory = RequestFactory()
+    request = factory.get(reverse('orders_of_user'))
+    request.user = user1
+
+    response = orders_of_user(request)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_delete_chat():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+    chat1 = Chat.objects.create(
+        sender=product.user,
+        receiver=user2,
+        product=product,
+    )
+
+    factory = RequestFactory()
+    request = factory.get(reverse('delete_chat', args=[chat1.id]))
+    request.user = user2
+    response = delete_chat(request, chat1.id)
+
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_get_document_tracking_success():
+    factory = RequestFactory()
+    request = factory.get(reverse('get_document_tracking', args=['20400343432012']))
+
+    response = get_document_tracking(request, '20400343432012')
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_get_document_tracking_not_found():
+    factory = RequestFactory()
+    request = factory.get(reverse('get_document_tracking', args=['124441']))
+
+    response = get_document_tracking(request, '3131')
+
+    assert response.status_code == 404
+
+
 
