@@ -462,9 +462,17 @@ def count_messages(msgs, user):
     return count
 
 
+#####################################################################
+#               БИЗНЕС ЛОГИКА  get_cart                             #
+#####################################################################
 
 
+def get_cart_by_user(user):
+    return Cart.objects.get(user=user)
 
+
+def create_cart_by_user(user):
+    return Cart.objects.create(user=user)
 
 
 

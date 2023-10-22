@@ -486,9 +486,9 @@ def get_cart(request):
     :return: Ответ с отображением содержимого корзины и общей стоимостью.
     """
     try:
-        cart = Cart.objects.get(user=request.user)
+        cart = services.get_cart_by_user(request.user)
     except:
-        cart = Cart.objects.create(user=request.user)
+        cart = services.create_cart_by_user(request.user)
     items = cart.products.all()
     quantity_dict = {item.id: CartItem.objects.get(cart=cart, product_id=item.id) for item in items}
     total_price = 0

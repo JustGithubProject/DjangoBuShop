@@ -23,9 +23,13 @@ from ..views import delete_review
 from ..views import get_document_tracking
 from ..views import get_products
 from ..views import orders_of_user
+from ..views import package_search
 from ..views import product_detail_view
+from ..views import rate_user
 from ..views import search_view
 from ..views import seller_messages
+from ..views import subscribe
+from ..views import top_rated_users
 from ..views import user_buy
 from ..views import user_sell
 
@@ -544,6 +548,62 @@ def test_get_document_tracking_not_found():
     response = get_document_tracking(request, '3131')
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_package_search():
+    factory = RequestFactory()
+    url = reverse("package_search")
+    data = {'package_number': '20400343432012'}
+
+    request = factory.get(url, data)
+
+    response = package_search(request)
+
+    assert response.status_code == 302
+    assert response.url == reverse('get_document_tracking', args=['20400343432012'])
+
+
+@pytest.mark.django_db
+def test_top_rated_users():
+    user1 = User.objects.create_user(username="testuser", password="testpassword", average_rating=5.0)
+    user2 = User.objects.create_user(username="testuser2", password="testpassword", average_rating=5.0)
+
+    factory = RequestFactory()
+    url = reverse('top_rated_users')
+    request = factory.get(url)
+    response = top_rated_users(request)
+
+    users = services.get_users_with_high_ratings()
+    assert response.status_code == 200
+    assert len(users) == 2
+
+
+@pytest.mark.django_db
+def test_subscribe_get():
+    factory = RequestFactory()
+    request = factory.get(reverse("subscribe"))
+    response = subscribe(request)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_subscribe_post():
+    factory = RequestFactory()
+    data = {
+        "email": "euqurqu@gmail.com"
+    }
+    request = factory.post(reverse("subscribe"), data=data)
+
+    response = subscribe(request)
+    assert response.status_code == 302
+    assert response.url == reverse("home")
+
+
+
+
+
+
 
 
 
