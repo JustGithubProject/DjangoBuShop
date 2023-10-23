@@ -14,12 +14,14 @@ from ..models import Category
 from ..models import Chat
 from ..models import Message
 from ..models import Review
+from ..views import add_to_cart
 from ..views import chat_view
 from ..views import create_chat_view
 from ..views import create_order
 from ..views import create_product
 from ..views import delete_chat
 from ..views import delete_review
+from ..views import get_cart
 from ..views import get_document_tracking
 from ..views import get_products
 from ..views import orders_of_user
@@ -600,8 +602,44 @@ def test_subscribe_post():
     assert response.url == reverse("home")
 
 
+@pytest.mark.django_db
+def test_get_cart():
+    user1 = User.objects.create_user(username="testuser2", password="testpassword", average_rating=5.0)
+    factory = RequestFactory()
+
+    request = factory.get(reverse("cart"))
+    request.user = user1
+
+    response = get_cart(request)
+
+    assert response.status_code == 200
 
 
+@pytest.mark.django_db
+def test_add_to_cart():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    user2 = User.objects.create_user(username="testuser2", password="testpassword2")
+
+    category = Category.objects.create(
+        name='Category 2',
+        slug=transliterate("Category 2")
+    )
+    product = Product.objects.create(
+        user=user1,
+        category=category,
+        title="Product",
+        description="Product dec",
+        price=20.2,
+        slug=transliterate("Product")
+    )
+
+    factory = RequestFactory()
+    request = factory.get(reverse("add_to_cart", args=[product.id]))
+    request.user = user2
+
+    response = add_to_cart(request, product.id)
+
+    assert response.status_code == 302
 
 
 
