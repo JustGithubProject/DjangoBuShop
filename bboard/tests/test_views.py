@@ -9,7 +9,10 @@ from bboard.forms import ReviewForm
 from bboard.utils import transliterate
 from bboard.models import Product
 from .. import services
+from ..forms import OrderCartForm
 from ..forms import ProductForm
+from ..models import Cart
+from ..models import CartItem
 from ..models import Category
 from ..models import Chat
 from ..models import Message
@@ -18,13 +21,16 @@ from ..views import add_to_cart
 from ..views import chat_view
 from ..views import create_chat_view
 from ..views import create_order
+from ..views import create_order_cart
 from ..views import create_product
+from ..views import delete_cart
 from ..views import delete_chat
 from ..views import delete_review
 from ..views import get_cart
 from ..views import get_document_tracking
 from ..views import get_products
 from ..views import orders_of_user
+from ..views import orders_of_user_from_cart
 from ..views import package_search
 from ..views import product_detail_view
 from ..views import rate_user
@@ -640,6 +646,35 @@ def test_add_to_cart():
     response = add_to_cart(request, product.id)
 
     assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_create_order_cart():
+    form_data = {
+        "name": "fgsgsg",
+        "surname": "surname1",
+        "city": "Kuerf",
+        "department": "114gfsgsg gdg",
+        "phone_number": "184175195",
+        "email": "test@gmail.com"
+    }
+    form = OrderCartForm(data=form_data)
+
+    assert form.is_valid()
+
+
+@pytest.mark.django_db
+def test_orders_of_user_from_cart():
+    user1 = User.objects.create_user(username="testuser", password="testpassword")
+    factory = RequestFactory()
+    request = factory.get(reverse("orders_of_user_from_cart"))
+    request.user = user1
+
+    response = orders_of_user_from_cart(request)
+
+    assert response.status_code == 200
+
+
 
 
 
