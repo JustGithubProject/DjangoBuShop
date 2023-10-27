@@ -1,58 +1,59 @@
 {% extends 'products/new/base.html' %}
 {% load static %}
 
-
 {% block title %}Мои заказы{% endblock %}
 
-{%block styles%}
-<link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'orders.css' %}">
 {% endblock %}
 
-
 {% block content %}
-{% if page_obj %}
-<div class="orders">
-    {% for order in page_obj %}
-    <div class="order">
-        <div class="product">
-            <img src="{{order.product.image_1.url}}" alt="{{ product.title }}">
-            <p>{{ order.product.title }}</p>
+    {% if page_obj %}
+        <div class="orders">
+            {% for order in page_obj %}
+                <div class="order">
+                    <div class="product-image">
+                        <img src="{{ order.product.image_1.url }}" alt="{{ order.product.title }}">
+                    </div>
+                    <div class="product-details">
+                        <p>{{ order.product.title }}</p>
+                    </div>
+                    <div class="order-info">
+                        <p>Откуда: {{ order.product.user.city }}</p>
+                        <p>Куда: {{ order.city }}</p>
+                        <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
+                        <p>Номер Покупателя: {{ order.phone_number }}</p>
+                        {% if order.product.user.phone_number %}
+                            <p>Номер продавца: {{ order.product.user.phone_number }}</p>
+                        {% endif %}
+                        <p>Цена: {{ order.product.price }}</p>
+                        <p>Продавец: {{ order.product.user.username }}</p>
+                        <p>Отделение: {{ order.department }}</p>
+                        <p>Создан: {{ order.created_at }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <a class="centered-link" href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
+
+            {% if page_obj.has_previous or page_obj.has_next %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">Первая</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                    {% endif %}
+
+                    <span class="current-page">{{ page_obj.number }}</span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
-        <p>Откуда: {{ order.product.user.city }}</p>
-        <p>Куда: {{ order.city }}</p>
-        <p>Покупатель: {{ order.name }} {{ order.surname }}</p>
-        <p>Номер Покупателя: {{ order.phone_number }}</p>
-        {% if order.product.user.phone_number %}
-        <p>Номер продавца: {{ order.product.user.phone_number }}</p>
-        {% endif %}
-        <p>Цена: {{order.product.price}}</p>
-        <p>Продавец: {{ order.product.user.username }}</p>
-        <p>Отделение: {{ order.department }}</p>
-        <p>Создан: {{ order.created_at }}</p>
-    </div>
-    {% endfor %}
-
-    <a href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
-
-
-    {% if page_obj.has_previous or page_obj.has_next %}
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-        <a href="?page=1">Первая</a>
-        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
-        {% endif %}
-
-        <span class="current-page">{{ page_obj.number }}</span>
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
-        {% endif %}
-    </div>
+    {% else %}
+        <h1 class="no-orders-message">У вас нет одиночных заказов</h1>
+        <a class="centered-link" href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
     {% endif %}
-</div>
-{%else%}
-<h1 align="center">У вас нет одиночных заказов</h1>
-<a align="center" href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
-{%endif%}
 {% endblock %}
