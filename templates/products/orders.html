@@ -37,7 +37,7 @@
             <a class="centered-link" href="{% url 'orders_of_user_from_cart' %}">Заказы через корзину</a>
 
             {% if page_obj.has_previous or page_obj.has_next %}
-                <div class="pagination">
+                <div class="pagination" align="center">
                     {% if page_obj.has_previous %}
                         <a href="?page=1">Первая</a>
                         <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>

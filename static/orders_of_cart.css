@@ -1,0 +1,201 @@
+/* Common Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5e5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for Orders */
+.orders {
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 20px;
+    padding: 20px;
+    width: 95%;
+    max-width: 1200px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    color: #333;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Apply the hover effect to the entire container */
+.orders:hover {
+    transform: scale(1.02);
+}
+
+/* Style for Each Order */
+.order {
+    background-color: #fff;
+    border: 2px solid #e1e1e1;
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/* Order Header Styles */
+.order-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+/* Location Styles */
+.location {
+    font-size: 18px;
+    color: #555;
+    margin: 5px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Order Products Styles */
+.order-products {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+.product {
+    width: calc(33.33% - 20px);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Apply hover effect to product containers */
+.product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Product Image Styles */
+.product-image {
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-image img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Apply hover effect to product images */
+.product-image img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+.product-title {
+    font-size: 18px;
+    color: #333;
+    margin: 5px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Order Details Styles */
+.order-details {
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Details, Price, and Created Styles */
+.details, .price, .created {
+    font-size: 18px;
+    color: #555;
+    margin: 5px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.page-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: 1px solid #e1e1e1;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.page-link:hover {
+    background-color: #ff7f50;
+    color: #fff;
+}
+
+/* No Orders Message Styles */
+.no-orders-message {
+    text-align: center;
+    font-size: 28px;
+    color: #ff7f50;
+    margin: 20px 0;
+}
+
+/* Centered Link Styles */
+.centered-link {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    color: #ff7f50;
+    text-decoration: none;
+    margin: 20px auto;
+    transition: color 0.3s ease;
+}
