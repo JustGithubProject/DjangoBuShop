@@ -20,6 +20,7 @@
     background-color: #0056b3; /* Darker blue color on hover */
 }
 
+
 </style>
 <!-- jQery -->
 <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
@@ -77,6 +78,7 @@
 
     <div class="pagination">
         <ul class="pagination-list">
+            {% if products.paginator.num_pages > 1 %}
             {% if products.has_previous %}
             <li class="pagination-item">
                 {% if selected_category_id %}
@@ -119,6 +121,7 @@
                 <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
                 {% endif %}
             </li>
+            {% endif %}
             {% endif %}
         </ul>
     </div>

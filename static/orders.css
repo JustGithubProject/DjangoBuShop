@@ -73,15 +73,15 @@ body {
     margin: 10px 0;
 }
 
-/* Pagination Styles */
+
 /* Pagination Styles */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+
     text-align: center;
-    margin-left: -20px; /* Добавляем отрицательное значение для сдвига блока пагинации влево */
 }
 
 .pagination a {
@@ -100,6 +100,8 @@ body {
     background-color: #ff7f50;
     color: #fff;
 }
+
+
 
 
 /* No Orders Message Styles */
@@ -124,4 +126,12 @@ body {
 
 .centered-link:hover {
     color: #ff5733;
+}
+
+
+.pagination-container {
+    margin-right:1000px;
+    display: flex;
+    justify-content: center; /* Center horizontally within the "orders" container */
+    margin-top: 20px; /* Adjust as needed to control the vertical position */
 }
