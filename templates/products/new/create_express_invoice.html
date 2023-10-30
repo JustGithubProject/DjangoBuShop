@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создание накладной</title>
+</head>
+<body>
+    <h1>Создание накладной</h1>
+    <form method="get" action="{% url 'create_invoice' %}">
+        {% csrf_token %}
+        <label for="customer_name">Имя клиента:</label>
+        <input type="text" id="customer_name" name="customer_name" required><br><br>
+
+        <label for="phone_number">Номер телефона:</label>
+        <input type="text" id="phone_number" name="phone_number" required><br><br>
+
+        <label for="city">Населенный пункт:</label>
+        <input type="text" id="city" name="city" required><br><br>
+
+        <input type="submit" value="Создать накладную">
+    </form>
+</body>
+</html>

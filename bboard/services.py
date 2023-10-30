@@ -476,4 +476,62 @@ def create_cart_by_user(user):
 
 
 
+# create express invoice for product NOVA POSHTA
+def create_express_invoice_for_product(
+        cost,
+        datetime,
+        weight,
+        city_sender,
+        sender,
+        sender_address,
+        contact_sender,
+        sender_phone,
+        city_recipient,
+        recipient,
+        recipient_address,
+        contact_recipient,
+        recipient_phone
+    ):
+    api_url = f"{settings.NOVA_POSHTA_API_URL}"
+    payload = {
+        "apiKey": settings.NOVA_POSHTA_API_KEY,
+        "modelName": "InternetDocument",
+        "calledMethod": "save",
+        "methodProperties": {
+            "SenderWarehouseIndex": "101/102",
+            "RecipientWarehouseIndex": "101/102",
+            "PayerType": "ThirdPerson",
+            "PaymentMethod": "Cash",
+            "DateTime": datetime,  # дд.мм.рррр
+            "CargoType": "Cargo",
+            # Значение "Cargo" обычно означает, что отправляемый груз является грузом, а не письмом или документом.
+            "VolumeGeneral": "0.45",
+            "Weight": weight,
+            "ServiceType": "DoorsWarehouse",
+            "SeatsAmount": "2",
+            "Description": "Додатковий опис відправлення",
+            "Cost": cost,
+            "CitySender": city_sender,
+            "Sender": sender,
+            "SenderAddress": sender_address,
+            "ContactSender": contact_sender,
+            "SendersPhone": sender_phone,
+            "CityRecipient": city_recipient,
+            "Recipient": recipient,
+            "RecipientAddress": recipient_address,
+            "ContactRecipient": contact_recipient,
+            "RecipientsPhone": recipient_phone
+        }
+    }
+    response = requests.post(api_url, json=payload)
+    data = response.json()
 
+    if "data" in data and data['data']:
+        express_invoice = data["data"][0]["Ref"]  # Ідентификатор експрес-накладной
+        cost_on_site = data["data"][0]["CostOnSite"]  # Вартість доставки
+        estimated_delivery_date = data["data"][0]["EstimatedDeliveryDate"]  # Прогнозована дата доставки
+        int_doc_number = data["data"][0]["IntDocNumber"]  # Номер експрес-накладной
+        type_document = data["data"][0]["TypeDocument"]  # Тип експрес-накладной
+        return express_invoice, cost_on_site, estimated_delivery_date, int_doc_number, type_document
+    else:
+        return

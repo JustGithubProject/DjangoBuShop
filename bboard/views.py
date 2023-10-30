@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
 
+from project import settings
 from .forms import OrderCartForm
 from .forms import ReviewForm
 from .models import Cart
@@ -36,7 +37,8 @@ def home_view(request):
     count = request.session.get("message_count", 0)
 
     return render(request, "products/new/index.html",
-                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users, "count": count})
+                  {"products": products, "form": form, "reviews": reviews, "quantity_users": quantity_users,
+                   "count": count})
 
 
 def delete_review(request, review_id):
@@ -352,37 +354,71 @@ def package_search(request):
                   {"declaration": declaration})
 
 
-# def create_express_invoice_for_product(request):
-#     api_url = f"{settings.NOVA_POSHTA_API_URL}"
-#     payload = {
-#         "apiKey": settings.NOVA_POSHTA_API_KEY,
-#         "modelName": "InternetDocument",
-#         "calledMethod": "save",
-#         "methodProperties": {
-#             "SenderWarehouseIndex": "101/102",
-#             "RecipientWarehouseIndex": "101/102",
-#             "PayerType": "ThirdPerson",
-#             "PaymentMethod": "NonCash",
-#             "DateTime": "дд.мм.рррр",
-#             "CargoType": "Cargo",
-#             "VolumeGeneral": "0.45",
-#             "Weight": "0.5",
-#             "ServiceType": "DoorsWarehouse",
-#             "SeatsAmount": "2",
-#             "Description": "Додатковий опис відправлення",
-#             "Cost": "15000",
-#             "CitySender": "00000000-0000-0000-0000-000000000000",
-#             "Sender": "00000000-0000-0000-0000-000000000000",
-#             "SenderAddress": "00000000-0000-0000-0000-000000000000",
-#             "ContactSender": "00000000-0000-0000-0000-000000000000",
-#             "SendersPhone": "380660000000",
-#             "CityRecipient": "00000000-0000-0000-0000-000000000000",
-#             "Recipient": "00000000-0000-0000-0000-000000000000",
-#             "RecipientAddress": "00000000-0000-0000-0000-000000000000",
-#             "ContactRecipient": "00000000-0000-0000-0000-000000000000",
-#             "RecipientsPhone": "380660000000"
-#         }
-#     }
+def create_invoice(request):
+    if request.method == "GET":
+        cost = request.get.GET("Cost")
+        datetime = request.get.GET("DateTime")
+        weight = request.get.GET("Weight")
+        city_sender = request.get.GET("CitySender")
+        sender = request.get.GET('Sender')
+        sender_address = request.get.GET("SenderAddress")
+        contact_sender = request.get.GET("ContactSender")
+        sender_phone = request.get.GET('SendersPhone')
+        city_recipient = request.get.GET("CityRecipient")
+        recipient = request.get.GET("Recipient")
+        recipient_address = request.get.GET("RecipientAddress")
+        contact_recipient = request.get.GET("ContactRecipient")
+        recipient_phone = request.get.GET("RecipientsPhone")
+
+        required_params = [
+            cost, datetime, weight, city_sender, sender, sender_address,
+            contact_sender, sender_phone, city_recipient, recipient,
+            recipient_address, contact_recipient, recipient_phone
+        ]
+
+        if all(required_params):
+            services.create_express_invoice_for_product()
+            return HttpResponse("Накладная успешно создана")
+        else:
+            return HttpResponse("Не все необходимые данные были предоставлены")
+    else:
+        return HttpResponse("Метод запроса не поддерживается")
+
+
+
+def create_express_invoice_for_product(request):
+    api_url = f"{settings.NOVA_POSHTA_API_URL}"
+    payload = {
+        "apiKey": settings.NOVA_POSHTA_API_KEY,
+        "modelName": "InternetDocument",
+        "calledMethod": "save",
+        "methodProperties": {
+            "SenderWarehouseIndex": "101/102",
+            "RecipientWarehouseIndex": "101/102",
+            "PayerType": "ThirdPerson",
+            "PaymentMethod": "Cash",
+            "DateTime": "дд.мм.рррр",
+            "CargoType": "Cargo",
+            # Значение "Cargo" обычно означает, что отправляемый груз является грузом, а не письмом или документом.
+            "VolumeGeneral": "0.45",
+            "Weight": "0.5",
+            "ServiceType": "DoorsWarehouse",
+            "SeatsAmount": "2",
+            "Description": "Додатковий опис відправлення",
+            "Cost": "15000",
+            "CitySender": "00000000-0000-0000-0000-000000000000",
+            "Sender": "00000000-0000-0000-0000-000000000000",
+            "SenderAddress": "00000000-0000-0000-0000-000000000000",
+            "ContactSender": "00000000-0000-0000-0000-000000000000",
+            "SendersPhone": "380660000000",
+            "CityRecipient": "00000000-0000-0000-0000-000000000000",
+            "Recipient": "00000000-0000-0000-0000-000000000000",
+            "RecipientAddress": "00000000-0000-0000-0000-000000000000",
+            "ContactRecipient": "00000000-0000-0000-0000-000000000000",
+            "RecipientsPhone": "380660000000"
+        }
+    }
+
 
 ######################################
 #  rate_user -> оценка пользователя  #
