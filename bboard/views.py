@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
+from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
 from project import settings
@@ -355,69 +356,88 @@ def package_search(request):
 
 
 def create_invoice(request):
-    if request.method == "GET":
-        cost = request.get.GET("Cost")
-        datetime = request.get.GET("DateTime")
-        weight = request.get.GET("Weight")
-        city_sender = request.get.GET("CitySender")
-        sender = request.get.GET('Sender')
-        sender_address = request.get.GET("SenderAddress")
-        contact_sender = request.get.GET("ContactSender")
-        sender_phone = request.get.GET('SendersPhone')
-        city_recipient = request.get.GET("CityRecipient")
-        recipient = request.get.GET("Recipient")
-        recipient_address = request.get.GET("RecipientAddress")
-        contact_recipient = request.get.GET("ContactRecipient")
-        recipient_phone = request.get.GET("RecipientsPhone")
+    cost = request.GET.get("Cost")
+    datetime = request.GET.get("DateTime")
+    weight = request.GET.get("Weight")
+    city_sender = request.GET.get("CitySender")
+    sender = request.GET.get('Sender')
+    sender_address = request.GET.get("SenderAddress")
+    contact_sender = request.GET.get("ContactSender")
+    sender_phone = request.GET.get('SendersPhone')
+    city_recipient = request.GET.get("CityRecipient")
+    recipient = request.GET.get("Recipient")
+    recipient_address = request.GET.get("RecipientAddress")
+    contact_recipient = request.GET.get("ContactRecipient")
+    recipient_phone = request.GET.get("RecipientsPhone")
 
-        required_params = [
-            cost, datetime, weight, city_sender, sender, sender_address,
-            contact_sender, sender_phone, city_recipient, recipient,
-            recipient_address, contact_recipient, recipient_phone
-        ]
+    required_params = [
+        cost, datetime, weight, city_sender, sender, sender_address,
+        contact_sender, sender_phone, city_recipient, recipient,
+        recipient_address, contact_recipient, recipient_phone
+    ]
 
-        if all(required_params):
-            services.create_express_invoice_for_product()
-            return HttpResponse("Накладная успешно создана")
-        else:
-            return HttpResponse("Не все необходимые данные были предоставлены")
-    else:
-        return HttpResponse("Метод запроса не поддерживается")
-
-
-
-def create_express_invoice_for_product(request):
-    api_url = f"{settings.NOVA_POSHTA_API_URL}"
-    payload = {
-        "apiKey": settings.NOVA_POSHTA_API_KEY,
-        "modelName": "InternetDocument",
-        "calledMethod": "save",
-        "methodProperties": {
-            "SenderWarehouseIndex": "101/102",
-            "RecipientWarehouseIndex": "101/102",
-            "PayerType": "ThirdPerson",
-            "PaymentMethod": "Cash",
-            "DateTime": "дд.мм.рррр",
-            "CargoType": "Cargo",
-            # Значение "Cargo" обычно означает, что отправляемый груз является грузом, а не письмом или документом.
-            "VolumeGeneral": "0.45",
-            "Weight": "0.5",
-            "ServiceType": "DoorsWarehouse",
-            "SeatsAmount": "2",
-            "Description": "Додатковий опис відправлення",
-            "Cost": "15000",
-            "CitySender": "00000000-0000-0000-0000-000000000000",
-            "Sender": "00000000-0000-0000-0000-000000000000",
-            "SenderAddress": "00000000-0000-0000-0000-000000000000",
-            "ContactSender": "00000000-0000-0000-0000-000000000000",
-            "SendersPhone": "380660000000",
-            "CityRecipient": "00000000-0000-0000-0000-000000000000",
-            "Recipient": "00000000-0000-0000-0000-000000000000",
-            "RecipientAddress": "00000000-0000-0000-0000-000000000000",
-            "ContactRecipient": "00000000-0000-0000-0000-000000000000",
-            "RecipientsPhone": "380660000000"
+    if all(required_params):
+        express_invoice, cost_on_site, estimated_delivery_date, int_doc_number, type_document = services.create_express_invoice_for_product(
+            cost=cost,
+            datetime=datetime,
+            weight=weight,
+            city_sender=city_sender,
+            sender=sender,
+            sender_address=sender_address,
+            contact_sender=contact_sender,
+            sender_phone=sender_phone,
+            city_recipient=city_recipient,
+            recipient=recipient,
+            recipient_address=recipient_address,
+            contact_recipient=contact_recipient,
+            recipient_phone=recipient_phone
+        )
+        context = {
+            "int_doc_number": int_doc_number
         }
-    }
+        return render(request, "products/new/get_express_invoice.html", context=context)
+    else:
+        return HttpResponse("Не все необходимые данные были предоставлены")
+
+
+def package_create(request):
+    cost = request.GET.get("Cost")
+    datetime = request.GET.get("DateTime")
+    weight = request.GET.get("Weight")
+    city_sender = request.GET.get("CitySender")
+    sender = request.GET.get('Sender')
+    sender_address = request.GET.get("SenderAddress")
+    contact_sender = request.GET.get("ContactSender")
+    sender_phone = request.GET.get('SendersPhone')
+    city_recipient = request.GET.get("CityRecipient")
+    recipient = request.GET.get("Recipient")
+    recipient_address = request.GET.get("RecipientAddress")
+    contact_recipient = request.GET.get("ContactRecipient")
+    recipient_phone = request.GET.get("RecipientsPhone")
+
+    required_params = [
+        cost, datetime, weight, city_sender, sender, sender_address,
+        contact_sender, sender_phone, city_recipient, recipient,
+        recipient_address, contact_recipient, recipient_phone
+    ]
+    if all(required_params):
+        return redirect(
+            reverse('create_invoice'),
+            cost=cost,
+            datetime=datetime,
+            weight=weight,
+            city_sender=city_sender,
+            sender=sender,
+            sender_address=sender_address,
+            contact_sender=contact_sender,
+            sender_phone=sender_phone,
+            city_recipient=city_recipient,
+            recipient=recipient,
+            recipient_address=recipient_address,
+            contact_recipient=contact_recipient,
+            recipient_phone=recipient_phone)
+    return render(request, "products/new/create_express_invoice.html")
+
 
 
 ######################################

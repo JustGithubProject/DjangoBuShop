@@ -1,22 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Создание накладной</title>
-</head>
-<body>
+{% extends 'products/new/base.html' %}
+
+{% block title %}Создание накладной{% endblock %}
+
+{% block content %}
     <h1>Создание накладной</h1>
-    <form method="get" action="{% url 'create_invoice' %}">
-        {% csrf_token %}
-        <label for="customer_name">Имя клиента:</label>
-        <input type="text" id="customer_name" name="customer_name" required><br><br>
+    <form method="get">
+        <label for="cost">Стоимость:</label>
+        <input type="text" id="cost" name="Cost" value="{{ cost }}" required><br><br>
 
-        <label for="phone_number">Номер телефона:</label>
-        <input type="text" id="phone_number" name="phone_number" required><br><br>
+        <label for="datetime">Дата и время:</label>
+        <input type="text" id="datetime" name="DateTime" value="{{ datetime }}" required><br><br>
 
-        <label for="city">Населенный пункт:</label>
-        <input type="text" id="city" name="city" required><br><br>
+        <label for="weight">Вес:</label>
+        <input type="text" id="weight" name="Weight" value="{{ weight }}" required><br><br>
+
+        <label for="city_sender">Город отправителя:</label>
+        <input type="text" id="city_sender" name="CitySender" value="{{ city_sender }}" required><br><br>
+
+        <label for="sender">Отправитель:</label>
+        <input type="text" id="sender" name="Sender" value="{{ sender }}" required><br><br>
+
+        <label for="sender_address">Адрес отправителя:</label>
+        <input type="text" id="sender_address" name="SenderAddress" value="{{ sender_address }}" required><br><br>
+
+        <label for="contact_sender">Контакт отправителя:</label>
+        <input type="text" id="contact_sender" name="ContactSender" value="{{ contact_sender }}" required><br><br>
+
+        <label for="sender_phone">Телефон отправителя:</label>
+        <input type="text" id="sender_phone" name="SendersPhone" value="{{ sender_phone }}" required><br><br>
+
+        <label for="city_recipient">Город получателя:</label>
+        <input type="text" id="city_recipient" name="CityRecipient" value="{{ city_recipient }}" required><br><br>
+
+        <label for="recipient">Получатель:</label>
+        <input type="text" id="recipient" name="Recipient" value="{{ recipient }}" required><br><br>
+
+        <label for="recipient_address">Адрес получателя:</label>
+        <input type="text" id="recipient_address" name="RecipientAddress" value="{{ recipient_address }}" required><br><br>
+
+        <label for="contact_recipient">Контакт получателя:</label>
+        <input type="text" id="contact_recipient" name="ContactRecipient" value="{{ contact_recipient }}" required><br><br>
+
+        <label for="recipient_phone">Телефон получателя:</label>
+        <input type="text" id="recipient_phone" name="RecipientsPhone" value="{{ recipient_phone }}" required><br><br>
 
         <input type="submit" value="Создать накладную">
     </form>
-</body>
-</html>
+{% endblock %}
