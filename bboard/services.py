@@ -475,7 +475,6 @@ def create_cart_by_user(user):
     return Cart.objects.create(user=user)
 
 
-
 # create express invoice for product NOVA POSHTA
 def create_express_invoice_for_product(
         cost,
@@ -525,7 +524,7 @@ def create_express_invoice_for_product(
     }
     response = requests.post(api_url, json=payload)
     data = response.json()
-
+    print(data)
     if "data" in data and data['data']:
         express_invoice = data["data"][0]["Ref"]  # Ідентификатор експрес-накладной
         cost_on_site = data["data"][0]["CostOnSite"]  # Вартість доставки
@@ -533,5 +532,4 @@ def create_express_invoice_for_product(
         int_doc_number = data["data"][0]["IntDocNumber"]  # Номер експрес-накладной
         type_document = data["data"][0]["TypeDocument"]  # Тип експрес-накладной
         return express_invoice, cost_on_site, estimated_delivery_date, int_doc_number, type_document
-    else:
-        return
+

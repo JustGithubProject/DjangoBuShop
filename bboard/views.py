@@ -354,44 +354,47 @@ def package_search(request):
     return render(request, "products/package_search.html",
                   {"declaration": declaration})
 
+def extract_params_from_request(request):
+    params = {
+        "cost": request.GET.get("Cost"),
+        "datetime": request.GET.get("DateTime"),
+        "weight": request.GET.get("Weight"),
+        "city_sender": request.GET.get("CitySender"),
+        "sender": request.GET.get('Sender'),
+        "sender_address": request.GET.get("SenderAddress"),
+        "contact_sender": request.GET.get("ContactSender"),
+        "sender_phone": request.GET.get('SendersPhone'),
+        "city_recipient": request.GET.get("CityRecipient"),
+        "recipient": request.GET.get("Recipient"),
+        "recipient_address": request.GET.get("RecipientAddress"),
+        "contact_recipient": request.GET.get("ContactRecipient"),
+        "recipient_phone": request.GET.get("RecipientsPhone")
+    }
+    return params
+
 
 def create_invoice(request):
-    cost = request.GET.get("Cost")
-    datetime = request.GET.get("DateTime")
-    weight = request.GET.get("Weight")
-    city_sender = request.GET.get("CitySender")
-    sender = request.GET.get('Sender')
-    sender_address = request.GET.get("SenderAddress")
-    contact_sender = request.GET.get("ContactSender")
-    sender_phone = request.GET.get('SendersPhone')
-    city_recipient = request.GET.get("CityRecipient")
-    recipient = request.GET.get("Recipient")
-    recipient_address = request.GET.get("RecipientAddress")
-    contact_recipient = request.GET.get("ContactRecipient")
-    recipient_phone = request.GET.get("RecipientsPhone")
-
-    required_params = [
-        cost, datetime, weight, city_sender, sender, sender_address,
-        contact_sender, sender_phone, city_recipient, recipient,
-        recipient_address, contact_recipient, recipient_phone
-    ]
-
+    params = request.session.get("params")
+    required_params = list(params.values())
+    print(required_params)
     if all(required_params):
-        express_invoice, cost_on_site, estimated_delivery_date, int_doc_number, type_document = services.create_express_invoice_for_product(
-            cost=cost,
-            datetime=datetime,
-            weight=weight,
-            city_sender=city_sender,
-            sender=sender,
-            sender_address=sender_address,
-            contact_sender=contact_sender,
-            sender_phone=sender_phone,
-            city_recipient=city_recipient,
-            recipient=recipient,
-            recipient_address=recipient_address,
-            contact_recipient=contact_recipient,
-            recipient_phone=recipient_phone
-        )
+        print("Я тут")
+        express_invoice, cost_on_site, estimated_delivery_date, int_doc_number, type_document = \
+            services.create_express_invoice_for_product(
+                cost=required_params[0],
+                datetime=required_params[1],
+                weight=required_params[2],
+                city_sender=required_params[3],
+                sender=required_params[4],
+                sender_address=required_params[5],
+                contact_sender=required_params[6],
+                sender_phone=required_params[7],
+                city_recipient=required_params[8],
+                recipient=required_params[9],
+                recipient_address=required_params[10],
+                contact_recipient=required_params[11],
+                recipient_phone=required_params[12]
+            )
         context = {
             "int_doc_number": int_doc_number
         }
@@ -401,41 +404,12 @@ def create_invoice(request):
 
 
 def package_create(request):
-    cost = request.GET.get("Cost")
-    datetime = request.GET.get("DateTime")
-    weight = request.GET.get("Weight")
-    city_sender = request.GET.get("CitySender")
-    sender = request.GET.get('Sender')
-    sender_address = request.GET.get("SenderAddress")
-    contact_sender = request.GET.get("ContactSender")
-    sender_phone = request.GET.get('SendersPhone')
-    city_recipient = request.GET.get("CityRecipient")
-    recipient = request.GET.get("Recipient")
-    recipient_address = request.GET.get("RecipientAddress")
-    contact_recipient = request.GET.get("ContactRecipient")
-    recipient_phone = request.GET.get("RecipientsPhone")
+    params = extract_params_from_request(request)
+    required_params = list(params.values())
+    request.session["params"] = params
 
-    required_params = [
-        cost, datetime, weight, city_sender, sender, sender_address,
-        contact_sender, sender_phone, city_recipient, recipient,
-        recipient_address, contact_recipient, recipient_phone
-    ]
     if all(required_params):
-        return redirect(
-            reverse('create_invoice'),
-            cost=cost,
-            datetime=datetime,
-            weight=weight,
-            city_sender=city_sender,
-            sender=sender,
-            sender_address=sender_address,
-            contact_sender=contact_sender,
-            sender_phone=sender_phone,
-            city_recipient=city_recipient,
-            recipient=recipient,
-            recipient_address=recipient_address,
-            contact_recipient=contact_recipient,
-            recipient_phone=recipient_phone)
+        return redirect(reverse('create_invoice'))
     return render(request, "products/new/create_express_invoice.html")
 
 

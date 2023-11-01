@@ -41,6 +41,9 @@
             <div>
                <a style="color:white" href="{% url 'top_rated_users' %}">Элитные Пользователи</a>
                 <a style="color:white" href="{% url 'package_search' %}">Отследить посылку</a>
+              {%if user.is_authenticated%}
+                <a  style="color: white" href="{%url 'package_create'%}">Создать накладную</a>
+              {%endif%}
             </div>
           </div>
         </div>

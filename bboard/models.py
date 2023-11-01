@@ -159,3 +159,12 @@ class CartItem(models.Model):
         verbose_name = "Товар в корзине"
         verbose_name_plural = "Товары в корзине"
 
+
+class Invoice(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Получатель")
+    id_invoice = models.CharField(max_length=10, verbose_name="Идентификатор экспресс-накладной")
+    cost_on_site = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость доставки")
+    estimated_delivery_date = models.CharField(max_length=60, verbose_name="Прогнозируемая дата доставки")
+    int_doc_number = models.CharField(max_length=100, verbose_name="Номер экспресс-накладной")
+    type_document = models.CharField(max_length=100, verbose_name="Тип экспресс-накладной")
+
