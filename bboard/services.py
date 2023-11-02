@@ -497,8 +497,8 @@ def create_express_invoice_for_product(
         "modelName": "InternetDocument",
         "calledMethod": "save",
         "methodProperties": {
-            "SenderWarehouseIndex": "101/102",
-            "RecipientWarehouseIndex": "101/102",
+            "SenderWarehouseIndex": "134",
+            "RecipientWarehouseIndex": "168",
             "PayerType": "ThirdPerson",
             "PaymentMethod": "Cash",
             "DateTime": datetime,  # дд.мм.рррр

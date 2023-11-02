@@ -1,8 +1,14 @@
 {% extends 'products/new/base.html' %}
-
+{% load static %}
 {% block title %}Создание накладной{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'create_express_invoice.html.css' %}">
+{% endblock %}
+
 {% block content %}
+<div class="container">
+    <div class="form-container">
     <h1>Создание накладной</h1>
     <form method="get">
         <label for="cost">Стоимость:</label>
@@ -46,4 +52,6 @@
 
         <input type="submit" value="Создать накладную">
     </form>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,79 @@
+/* Обновленные стили для красивого отображения формы */
+
+/* Старые стили */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f7f7f7; /* Light gray background */
+}
+
+.form-container {
+  text-align: center;
+  background-color: #ffffff; /* White background for the form container */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 400px;
+}
+
+.form-container h1 {
+  color: #007BFF; /* Blue heading */
+}
+
+.form-container label, .form-container input {
+  display: block;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-container input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-container input[type="submit"] {
+  background-color: #007BFF; /* Blue button background */
+  color: #fff; /* White button text */
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s; /* Add a smooth transition */
+}
+
+.form-container input[type="submit"]:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Новые стили для центрирования формы и анимаций */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f7f7f7; /* Light gray background */
+}
+
+.container {
+  text-align: center;
+  animation: slide-in 0.5s ease-in-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
