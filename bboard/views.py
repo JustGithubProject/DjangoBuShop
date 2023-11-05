@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from project import settings
 from .forms import OrderCartForm
 from .forms import ReviewForm
 from .models import Cart
@@ -354,6 +353,7 @@ def package_search(request):
     return render(request, "products/package_search.html",
                   {"declaration": declaration})
 
+
 def extract_params_from_request(request):
     params = {
         "cost": request.GET.get("Cost"),
@@ -411,7 +411,6 @@ def package_create(request):
     if all(required_params):
         return redirect(reverse('create_invoice'))
     return render(request, "products/new/create_express_invoice.html")
-
 
 
 ######################################
@@ -583,3 +582,7 @@ def orders_of_user_from_cart(request):
 
     return render(request, "products/new/orders_of_cart.html",
                   {"page_obj": page_obj})
+
+#############################################################
+#                  THE END                                  #
+#############################################################
